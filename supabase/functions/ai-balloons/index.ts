@@ -38,11 +38,12 @@ Deno.serve(async (req) => {
     if (mode === "plan") {
       const colors: string[] = (body.colors || []).map(String).slice(0, 60);
       const AROUND = ["window-arch", "half-arches", "hoop", "doorway", "table", "backdrop-top", "floor"];
-      const prompt = `You are the balloon designer for Petit Atelier Events, a party decor rental in Utah. Turn the customer's request into balloon pieces. Reply with JSON only:
+      const prompt = `You are the balloon designer for Petit Atelier Events, a party decor rental in Utah. Most customers plan kids birthday parties, so read the request carefully, word by word: a character, show, movie or game name means its well-known signature colors. Never invent an unrelated theme. Turn the customer's request into balloon pieces. Reply with JSON only:
 {"theme": short theme name or "", "character": true if they mention a licensed character, show, game or brand,
  "message": one or two friendly sentences in ${body.lang === "es" ? "Spanish" : "English"} describing the design and one easy accent idea (never promise printed licensed characters; we match colors and feel),
  "pieces": [ {"kind": one of ["classic","organic","full","column","cluster"], "around": one of ${JSON.stringify(AROUND)}, "cover": one of ["full","half","corner","base"], "strands": 1-3, "ft": length in feet or 0 to size it to the piece automatically, "count": clusters count if kind is cluster, "colors": 2 to 6 names chosen ONLY from ${JSON.stringify(colors)} that best match the theme (for a character or game use its signature colors, for example Mario Bros: Red, Royal blue, Yellow, Green, Brown, White), "chrome": bool, "greenery": bool, "confetti": bool, "statement": 0-4, "foils": 0-3 } ]}
 "main arch" or "the arch" means window-arch. "around" the arch means cover "full". Use one piece unless they ask for several. Pieces already on their stage: ${JSON.stringify((body.pieces || []).slice(0, 20))}
+${body.theme?.name ? `\nDetected theme: ${String(body.theme.name).slice(0, 60)}. Use exactly these colors: ${JSON.stringify((body.theme.colors || []).filter((c: string) => colors.includes(c)))}.` : ''}${(body.named || []).length ? `\nThe customer named these colors, use them: ${JSON.stringify((body.named || []).filter((c: string) => colors.includes(c)))}.` : ''}
 Customer request: ${JSON.stringify(text)}`;
       const r = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",

@@ -21,6 +21,7 @@ const B_AROUND = {
 const B_COVER = { full: ['All the way around', 'Todo alrededor', 1], half: ['One side, up and over', 'Un lado, subiendo', .55], corner: ['Top corner cascade', 'Cascada en la esquina', .32], base: ['Both bases', 'En las dos bases', .36] };
 const BR = () => ({ ...B_DEFAULT_RATES, ...(ST.S?.balloon || {}) });
 const bName = (o, es) => o ? (es ? o[1] : o[0]) : '';
+const balSlug = c => c.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 /* geometry of what the garland goes around, in stage units (x0..x1, top/bottom) */
 function bTarget(cfg) {
@@ -92,13 +93,10 @@ function syncBalloonColors() { ST.colors = [...new Set(bLines().flatMap(p => bCf
 /* drawn balloons along the path, deterministic per placement */
 function garlandSVG(pl) {
   const cfg = bCfg(pl); const pts = bPath(cfg); if (!pts.length) return '';
-  const cols = (cfg.colors.length ? cfg.colors : ['Blush', 'Cream', 'Chrome gold']).map(c => (BALLOON_COLORS.find(b => b[0] === c) || [0, 0, '#ddd'])[2]);
+  const cols = (cfg.colors.length ? cfg.colors : ['Blush', 'Cream', 'Chrome gold']).map(balSlug);
   let seed = [...pl.uid].reduce((s, c) => s * 31 + c.charCodeAt(0), 7) >>> 0; const rnd = () => (seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296;
   const dens = { classic: 1, organic: 1.25, full: 1.7, column: 1.3, cluster: 1 }[cfg.kind] || 1.2, strands = ['column', 'cluster'].includes(cfg.kind) ? 1 : (cfg.strands || 1);
   const out = []; const R0 = { classic: 19, organic: 20, full: 22, column: 19, cluster: 19 }[cfg.kind];
-  const ids = cols.map((c, i) => `bg${pl.uid}_${i}`);
-  const defs = cols.map((c, i) => `<radialGradient id="${ids[i]}" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset=".25" stop-color="${c}"/><stop offset="1" stop-color="${c}" stop-opacity=".92"/></radialGradient>`).join('')
-    + `<radialGradient id="ch${pl.uid}" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff"/><stop offset=".3" stop-color="#e9d39a"/><stop offset=".7" stop-color="#a7843a"/><stop offset="1" stop-color="#5a4520"/></radialGradient>`;
   if (cfg.kind === 'cluster') { for (const [x, y] of pts) for (let i = 0; i < 9; i++) { const r = 12 + rnd() * 14; out.push([x + (rnd() - .5) * 60, y + (rnd() - .5) * 54, r, Math.floor(rnd() * cols.length)]); } }
   else {
     for (let s = 0; s < strands; s++) {
@@ -108,7 +106,7 @@ function garlandSVG(pl) {
         if (acc < step && i) continue; acc = 0;
         const q = pts[Math.min(pts.length - 1, i + 1)] || p, nx = -(q[1] - p[1]), ny = q[0] - p[0], nl = Math.hypot(nx, ny) || 1;
         const per = cfg.kind === 'classic' ? 2 : 3;
-        for (let k = 0; k < per; k++) { const big = cfg.kind === 'classic' ? 1 : (rnd() < .12 ? 1.6 : rnd() < .4 ? .45 : .7 + rnd() * .45);
+        for (let k = 0; k < per; k++) { const big = cfg.kind === 'classic' ? 1 : (rnd() < .1 ? 1.35 : rnd() < .3 ? .5 : .78 + rnd() * .35);
           const r = R0 * big * (cfg.kind === 'full' && rnd() < .07 ? 1.6 : 1); const j = cfg.kind === 'classic' ? (k ? 12 : -12) : (rnd() - .5) * 40;
           const ci = cfg.kind === 'classic' ? (Math.round(i / 3) + k) % cols.length : Math.floor(rnd() * cols.length);
           out.push([p[0] + nx / nl * (off + j), p[1] + ny / nl * (off + j), r, ci]); } }
@@ -116,10 +114,11 @@ function garlandSVG(pl) {
     if (cfg.statement) for (let i = 0; i < cfg.statement; i++) { const p = pts.filter(Boolean)[Math.floor((i + .5) / cfg.statement * pts.filter(Boolean).length)]; out.push([p[0] + 6, p[1] - 4, 44, Math.floor(rnd() * cols.length)]); }
   }
   const leaves = cfg.greenery ? pts.filter((p, i) => p && i % 9 === 0).map(([x, y]) => `<ellipse cx="${(x + (rnd() - .5) * 30).toFixed(0)}" cy="${(y + (rnd() - .5) * 30).toFixed(0)}" rx="13" ry="5" fill="#6f8f6a" transform="rotate(${(rnd() * 180).toFixed(0)} ${x.toFixed(0)} ${y.toFixed(0)})" opacity=".9"/>`).join('') : '';
-  out.sort((m, n) => n[2] - m[2]);
-  const balls = out.map(([x, y, r, ci]) => { const chrome = cfg.chrome && rnd() < .18; return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="url(#${chrome ? 'ch' + pl.uid : ids[ci]})"/>`; }).join('');
-  const sh = cfg.kind === 'cluster' || cfg.around === 'floor' ? '' : '';
-  return `<defs>${defs}</defs><g class="garland" filter="url(#soft2)">${leaves}${balls}</g>${sh}`;
+  out.sort((m, n) => n[2] - m[2] || m[1] - n[1]);
+  const chromeSlug = (cfg.colors || []).includes('Chrome silver') ? 'chrome-silver' : (cfg.colors || []).includes('Rose gold') ? 'rose-gold' : 'chrome-gold';
+  const balls = out.map(([x, y, r, ci]) => { const slug = cfg.chrome && r < R0 * .9 && rnd() < .3 ? chromeSlug : cols[ci]; const v = rnd() < .5 ? 0 : 1, rot = ((rnd() - .5) * 50).toFixed(0), w = (2 * r).toFixed(1), h = (2.08 * r).toFixed(1);
+    return `<image href="img/bal/${slug}_${v}.webp" x="${(x - r).toFixed(1)}" y="${(y - r * 1.04).toFixed(1)}" width="${w}" height="${h}" transform="rotate(${rot} ${x.toFixed(1)} ${y.toFixed(1)})" preserveAspectRatio="none"/>`; }).join('');
+  return `<g class="garland" filter="url(#soft2)">${leaves}${balls}</g>`;
 }
 
 /* ---------- the builder panel ---------- */
@@ -164,40 +163,65 @@ function planCard(plan) {
 }
 
 /* ---------- understanding a request (AI first, keywords as backup) ---------- */
-const wordIn = (t, w) => new RegExp('(^|[^a-z0-9áéíóúñü])' + w.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '($|[^a-z0-9áéíóúñü])').test(t);
+/* text matching that pays attention to the actual words: accents/punctuation ignored, whole words only, plurals ok, longest match wins */
+const normT = x => ' ' + String(x).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/['’]/g, '').replace(/[^a-z0-9]+/g, ' ').trim() + ' ';
+const hasWord = (t, w) => { const k = normT(w).trim(); return !!k && (t.includes(' ' + k + ' ') || t.includes(' ' + k + 's ') || t.includes(' ' + k + 'es ')); };
+function findTheme(text) {
+  const t = normT(text); let best = null, len = 0;
+  for (const th of THEMES) for (const k of th.k) if (hasWord(t, k) && k.length > len) { best = th; len = k.length; }
+  return best;
+}
+const COLOR_ALIASES = { 'pink': 'Pastel pink', 'rosa': 'Pastel pink', 'light pink': 'Pastel pink', 'rosado': 'Pastel pink', 'magenta': 'Hot pink', 'fuchsia': 'Hot pink', 'fucsia': 'Hot pink',
+  'gold': 'Chrome gold', 'golden': 'Chrome gold', 'dorado': 'Chrome gold', 'oro': 'Chrome gold', 'silver': 'Chrome silver', 'plateado': 'Chrome silver', 'plata': 'Chrome silver', 'gray': 'Chrome silver', 'grey': 'Chrome silver', 'gris': 'Chrome silver',
+  'blue': 'Royal blue', 'azul': 'Royal blue', 'light blue': 'Baby blue', 'azul claro': 'Baby blue', 'celeste': 'Baby blue', 'dark blue': 'Navy', 'azul oscuro': 'Navy',
+  'mint': 'Sage', 'menta': 'Sage', 'olive': 'Eucalyptus', 'dark green': 'Eucalyptus', 'light green': 'Lime', 'violet': 'Purple', 'violeta': 'Purple', 'lila': 'Lilac',
+  'beige': 'Cream', 'ivory': 'Cream', 'marfil': 'Cream', 'nude': 'Peach', 'coral': 'Peach', 'tan': 'Brown', 'cafe': 'Brown', 'marron': 'Brown', 'transparent': 'Clear', 'transparente': 'Clear', 'rosegold': 'Rose gold', 'rose gold': 'Rose gold', 'oro rosa': 'Rose gold' };
+function namedColors(text) {
+  let t = normT(text); const found = [];
+  const add = c => { if (!found.includes(c)) found.push(c); };
+  /* longest names first so "baby blue" wins over "blue" */
+  const names = [...BALLOON_COLORS.flatMap(([en, es]) => [[en, en], [es, en]]), ...Object.entries(COLOR_ALIASES)].sort((a, b) => b[0].length - a[0].length);
+  for (const [w, c] of names) { const k = normT(w).trim(); if (!k) continue; const re = new RegExp(' ' + k + '(s|es)? ', 'g'); if (re.test(t)) { add(c); t = t.replace(re, ' # '); } }
+  return found.slice(0, 6);
+}
 function keywordPlan(text) {
-  const t = text.toLowerCase(); const theme = THEMES.find(x => x.k.some(k => wordIn(t, k)));
-  const named = BALLOON_COLORS.filter(([en, es]) => wordIn(t, en) || wordIn(t, es)).map(c => c[0]);
+  const t = normT(text); const theme = findTheme(text); const named = namedColors(text);
   const colors = (named.length ? named : theme ? theme.colors : ST.colors.length ? ST.colors : ['Blush', 'Cream', 'Chrome gold']).slice(0, 6);
-  const around = /(hoop|aro\b|round arch|circle|círculo|circulo)/.test(t) ? 'hoop' : /(door|entrance|entrada|puerta)/.test(t) ? 'doorway' : /(table|mesa)/.test(t) ? 'table' : /(open arch|arcos abiertos|arches)/.test(t) ? 'half-arches' : /(floor|piso|ground)/.test(t) ? 'floor' : /(backdrop|wall|pared|fondo|panel)/.test(t) ? 'backdrop-top' : 'window-arch';
-  const kind = /(column|columna|tower|torre)/.test(t) ? 'column' : /(cluster|racimo|bouquet|ramo)/.test(t) ? 'cluster' : /(classic|clásic|clasic|pattern|patrón)/.test(t) ? 'classic' : /(full|luxe|lujo|llena|big|grande)/.test(t) ? 'full' : 'organic';
-  const cover = /(around|alrededor|whole|toda|todo|full|completo|entire)/.test(t) ? 'full' : /(corner|esquina|top|arriba)/.test(t) ? 'corner' : /(base|bottom|abajo)/.test(t) ? 'base' : 'half';
-  const strands = /(double|doble|two lines|dos líneas|2 lines|2 líneas)/.test(t) ? 2 : /(triple|three lines|tres líneas|3 lines)/.test(t) ? 3 : 1;
-  const m = t.match(/(\d{1,2})\s*(ft|feet|foot|pies|pie)/);
-  return { source: 'rules', theme: theme ? (ES() ? theme.es : theme.name) : '', character: !!theme?.character, message: theme ? (ES() ? theme.tip_es : theme.tip) : '',
-    pieces: [{ kind, around, cover, strands, colors, ft: m ? +m[1] : 0, auto: !m, chrome: /(chrome|cromad|metallic|metálic|gold|dorad)/.test(t) && !named.includes('Chrome gold'), greenery: /(green(ery)?\b|leaves|hojas|follaje|eucal)/.test(t), confetti: /(confetti|confeti)/.test(t), statement: /(giant|gigante|jumbo|big balloon)/.test(t) ? 2 : 0, foils: /(number|número|numero|foil)/.test(t) ? 1 : 0 }] };
+  const has = (...w) => w.some(x => hasWord(t, x));
+  const around = has('hoop', 'aro', 'circle', 'circulo', 'round arch', 'arco redondo') ? 'hoop' : has('door', 'doorway', 'entrance', 'entrada', 'puerta') ? 'doorway' : has('table', 'mesa', 'dessert table', 'cake table') ? 'table' : has('open arches', 'arcos abiertos', 'arches', 'arcos') ? 'half-arches' : has('floor', 'piso', 'ground', 'suelo') ? 'floor' : has('backdrop', 'wall', 'pared', 'fondo', 'panel', 'panels') ? 'backdrop-top' : 'window-arch';
+  const kind = has('column', 'columna', 'tower', 'torre') ? 'column' : has('cluster', 'racimo', 'bouquet', 'ramo') ? 'cluster' : has('classic', 'clasica', 'clasico', 'pattern', 'patron') ? 'classic' : has('full', 'luxe', 'lujo', 'llena', 'big garland', 'huge') ? 'full' : 'organic';
+  const cover = has('one side', 'side', 'un lado', 'lado', 'half', 'mitad', 'cascade', 'cascada') ? 'half' : has('corner', 'esquina', 'top corner') ? 'corner' : has('bases', 'both sides bottom', 'bottom', 'abajo') ? 'base' : has('around', 'alrededor', 'whole', 'toda', 'todo el', 'completo', 'entire', 'all around', 'all the way') ? 'full' : 'half';
+  const strands = has('double', 'doble', 'two lines', 'dos lineas', '2 lines', '2 lineas', 'two strands') ? 2 : has('triple', 'three lines', 'tres lineas', '3 lines', '3 lineas', 'three strands') ? 3 : 1;
+  const m = t.match(/ (\d{1,2}) ?(ft|feet|foot|pies|pie) /);
+  return { source: 'rules', themeObj: theme, named, theme: theme ? (ES() ? theme.es : theme.name) : '', character: !!theme?.character, message: theme ? (ES() ? theme.tip_es : theme.tip) : '',
+    pieces: [{ kind, around, cover, strands, colors, ft: m ? +m[1] : 0, auto: !m, chrome: !!theme?.chrome || (has('chrome', 'cromado', 'metallic', 'metalico') && !named.includes('Chrome gold')), greenery: has('greenery', 'leaves', 'hojas', 'follaje', 'eucalyptus', 'eucalipto'), confetti: has('confetti', 'confeti'), statement: has('giant', 'gigante', 'jumbo', 'big balloon', 'globos grandes') ? 2 : 0, foils: has('number', 'numero', 'foil', 'age') ? 1 : 0 }] };
 }
 async function claudeSample() { try { return window.claude?.use ? await window.claude.use('sample') : null; } catch { return null; } }
-function aiPrompt(text) {
+function aiPrompt(text, kp) {
   const pieces = ST.placements.filter(p => !A(p.id)?.perFt).map(p => A(p.id)?.name).filter(Boolean);
-  return `You are the balloon designer for Petit Atelier Events, a party decor rental in Utah. Turn the customer's request into balloon pieces. Reply with JSON only:
+  return `You are the balloon designer for Petit Atelier Events, a party decor rental in Utah. Most customers plan kids birthday parties, so read the request carefully, word by word: a character, show, movie or game name (Mario Bros, Bluey, Paw Patrol, Frozen...) means its well-known signature colors. Never invent an unrelated theme. Turn the customer's request into balloon pieces. Reply with JSON only:
 {"theme": short theme name or "", "character": true if they mention a licensed character, show, game or brand,
  "message": one or two friendly sentences in ${ST.lang === 'es' ? 'Spanish' : 'English'} describing the design and one easy accent idea (never promise printed licensed characters; we match colors and feel),
  "pieces": [ {"kind": one of ["classic","organic","full","column","cluster"], "around": one of ${JSON.stringify(Object.keys(B_AROUND))}, "cover": one of ["full","half","corner","base"], "strands": 1-3, "ft": length in feet or 0 to size it to the piece automatically, "count": clusters count if kind is cluster, "colors": 2 to 6 names chosen ONLY from ${JSON.stringify(BALLOON_COLORS.map(c => c[0]))} that best match the theme (for a character or game, use its signature colors, for example Mario Bros: Red, Royal blue, Yellow, Green, Brown, White), "chrome": bool, "greenery": bool, "confetti": bool, "statement": 0-4 giant balloons, "foils": 0-3 foil or number balloons } ]}
 "main arch" or "the arch" means window-arch. "around" the arch means cover "full". Use one piece unless they ask for several (for example garland plus columns). Pieces already on their stage: ${JSON.stringify(pieces)}.
+${kp?.themeObj && !kp.named.length ? `\nDetected theme: ${kp.themeObj.name}. Use exactly these colors: ${JSON.stringify(kp.themeObj.colors)}.` : ''}${kp?.named.length ? `\nThe customer named these colors, use them: ${JSON.stringify(kp.named)}.` : ''}
 Customer request: ${JSON.stringify(text)}`;
 }
 async function aiPlan() {
   const text = ($('#bReq')?.value || ST.balloon.request || '').trim(); ST.balloon.request = text;
   if (!text) { toast(ES() ? 'Escribe tu idea primero' : 'Describe your idea first'); return; }
   $('#aiOut').innerHTML = `<p class="small muted">✦ ${ES() ? 'Diseñando…' : 'Designing…'}</p>`;
-  let plan = null;
+  let plan = null; const kp0 = keywordPlan(text);
   try {
-    if (LIVE) { const { data, error } = await sb.functions.invoke('ai-balloons', { body: { mode: 'plan', text, lang: ST.lang, pieces: ST.placements.filter(p => !A(p.id)?.perFt).map(p => A(p.id)?.name).filter(Boolean), colors: BALLOON_COLORS.map(c => c[0]) } }); if (!error && data?.pieces) plan = { ...data, source: 'ai' }; }
-    else { const sample = await claudeSample(); if (sample) { const r = await sample(aiPrompt(text), { modelTier: 'quick' }); const j = JSON.parse((r.text.match(/\{[\s\S]*\}/) || ['{}'])[0]); if (j.pieces?.length) plan = { ...j, source: 'ai' }; } }
+    if (LIVE) { const { data, error } = await sb.functions.invoke('ai-balloons', { body: { mode: 'plan', text, lang: ST.lang, theme: kp0.themeObj && !kp0.named.length ? { name: kp0.themeObj.name, colors: kp0.themeObj.colors } : null, named: kp0.named, pieces: ST.placements.filter(p => !A(p.id)?.perFt).map(p => A(p.id)?.name).filter(Boolean), colors: BALLOON_COLORS.map(c => c[0]) } }); if (!error && data?.pieces) plan = { ...data, source: 'ai' }; }
+    else { const sample = await claudeSample(); if (sample) { const r = await sample(aiPrompt(text, kp0), { modelTier: 'quick' }); const j = JSON.parse((r.text.match(/\{[\s\S]*\}/) || ['{}'])[0]); if (j.pieces?.length) plan = { ...j, source: 'ai' }; } }
   } catch (err) { console.warn('AI plan failed', err); }
-  if (!plan) plan = keywordPlan(text);
-  const kp = keywordPlan(text).pieces[0];
+  if (!plan) plan = kp0;
+  const kp = kp0.pieces[0];
+  /* the customer's words win: a recognized theme or colors they named override whatever the AI picked */
+  const forced = kp0.named.length ? kp0.named : kp0.themeObj ? kp0.themeObj.colors : null;
+  if (forced) for (const p of plan.pieces) { p.colors = forced.slice(0, 6); if (kp0.themeObj?.chrome && !kp0.named.length) p.chrome = true; }
+  if (kp0.themeObj) { plan.theme = ES() ? kp0.themeObj.es : kp0.themeObj.name; plan.character = !!kp0.themeObj.character; if (!plan.message) plan.message = ES() ? kp0.themeObj.tip_es : kp0.themeObj.tip; }
   for (const p of bLines().filter(p => p.cfg?.fromAI)) ST.placements = ST.placements.filter(x => x !== p);
   for (const raw of plan.pieces.slice(0, 4)) {
     const c = { ...raw }; if (!B_KINDS[c.kind]) c.kind = 'organic'; if (!B_AROUND[c.around]) c.around = kp.around; if (!B_COVER[c.cover]) c.cover = kp.cover;
