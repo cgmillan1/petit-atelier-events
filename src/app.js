@@ -183,8 +183,13 @@ function renderProjects() {
   $('#heroH').textContent = es ? 'Mira cómo nace una fiesta.' : 'Watch a party come to life.';
   $('#heroLead').textContent = es ? 'Estos son montajes reales de Karol. Mira cómo aparece cada pieza, una por una, y reserva el mismo look para tu fecha.' : 'These are real setups Karol built. Watch each piece appear, one by one, then book the same look for your date.';
   const st = $('#projStage'); st.style.aspectRatio = `${p.w} / ${p.h}`; st.style.width = `min(100%, calc(72vh * ${(p.w / p.h).toFixed(3)}))`; st.style.margin = '0 auto';
-  if (p.video) {
-    st.innerHTML = `<video src="${esc(p.video)}" poster="img/proj/${p.id}.jpg" autoplay muted playsinline loop aria-label="${esc(p.name)} setup coming together"></video><span class="tag">${es ? 'Proyecto real de Karol' : 'A real Petit Atelier setup'}</span>`;
+  const useVid = p.video && !p.noVideo && !reduced();
+  if (useVid) {
+    st.style.aspectRatio = `${p.vw} / ${p.vh}`; st.style.width = `min(100%, calc(72vh * ${(p.vw / p.vh).toFixed(3)}))`;
+    st.innerHTML = `<video class="pv" src="${esc(p.video)}" poster="img/proj/${p.id}_start.jpg" muted playsinline preload="auto" aria-label="${esc(es ? p.es : p.name)}: ${es ? 'el montaje aparece pieza por pieza' : 'the setup appearing piece by piece'}"></video><img class="full" src="img/proj/${p.id}_final.jpg" alt="${esc(es ? p.es : p.name)} by Petit Atelier Events"><span class="tag">${es ? 'Proyecto real de Karol' : 'A real Petit Atelier setup'}</span>`;
+    const v = st.querySelector('video');
+    v.addEventListener('ended', () => { PJ.vidDone = true; st.querySelector('.full')?.classList.add('on'); showStep(0); });
+    v.addEventListener('error', () => { p.noVideo = true; renderProjects(); playProject(true); });
   } else {
     st.innerHTML = `<img class="base" src="img/proj/${p.id}_empty.jpg" alt="${esc(p.name)}: the empty space before setup" width="${p.w}" height="${p.h}">`
       + p.steps.map((s, i) => `<img class="layer" data-k="${i + 1}" src="img/proj/${p.id}.jpg" alt="" style="--ox:${(p.at[i][0] * 100).toFixed(1)}%;--oy:${(p.at[i][1] * 100).toFixed(1)}%;-webkit-mask-image:url(img/proj/${p.id}_c${i + 1}.png);mask-image:url(img/proj/${p.id}_c${i + 1}.png)">`).join('')
@@ -195,7 +200,7 @@ function renderProjects() {
   $('#projCtaT').textContent = es ? '¿Te encanta este look?' : 'Love this look?';
   $('#projCtaP').textContent = es ? 'Karol lo puede recrear para tu fecha. O diseña tu propio montaje con sus piezas reales y mira el precio al instante.' : 'Karol can recreate it for your date. Or design your own setup with her real pieces and see the price as you go.';
   $('#projUse').textContent = es ? 'Quiero este look' : 'I want this look'; $('#projOwn').textContent = es ? 'Diseñar el mío' : 'Design my own';
-  $('#projPrev').hidden = $('#projNext').hidden = $('#projPlay').hidden = !!p.video;
+  $('#projPrev').hidden = $('#projNext').hidden = !!useVid; $('#projPlay').hidden = false;
   showStep(PJ.step, true);
 }
 /* --- sparkle particles + fairy flight (one rAF loop per stage) --- */
@@ -232,7 +237,7 @@ function wave() { const f = $('#fairy'); if (!f) return; f.classList.remove('wav
 function burst(x, y, big) { const F = PJ.fx; if (F) emit(F, x * F.W, y * F.H, big ? 220 : 70, big ? 2.2 : 1.3); }
 function showStep(k, instant) {
   const p = PJP(), n = p.steps.length + 1; const prev = PJ.step; PJ.step = Math.max(0, Math.min(n, k)); const es = ES();
-  if (p.video) { $('#projCount').textContent = es ? 'Video del montaje' : 'Setup video'; $('#projStep').textContent = es ? p.es : p.name; return; }
+  if (p.video && !p.noVideo && !reduced()) { $('#projCount').textContent = es ? p.es : p.name; $('#projStep').textContent = PJ.vidDone ? (es ? '¡Listo para la fiesta!' : 'Ready to party!') : (es ? 'Un espacio vacío... y un poco de magia' : 'An empty space... and a little magic'); $('#projPlay').textContent = PJ.vidDone ? (es ? 'Repetir' : 'Replay') : (es ? 'Ver' : 'Play'); return; }
   const fwd = PJ.step === prev + 1 && !instant && !reduced();
   const apply = () => { $$('#projStage .layer').forEach(l => l.classList.toggle('on', +l.dataset.k <= PJ.step)); $('#projStage .full')?.classList.toggle('on', PJ.step >= n); };
   if (PJ.step >= 1 && PJ.step < n) {
@@ -250,7 +255,8 @@ function showStep(k, instant) {
 }
 function playProject(restart) {
   clearInterval(PJ.timer); PJ.timer = null;
-  const p = PJP(), n = p.steps.length + 1; if (p.video) return;
+  const p = PJP(), n = p.steps.length + 1;
+  if (p.video && !p.noVideo && !reduced()) { const v = $('#projStage video'); if (!v) return; PJ.vidDone = false; $('#projStage .full')?.classList.remove('on'); v.currentTime = 0; v.play().catch(() => {}); showStep(0); return; }
   if (restart || PJ.step >= n) showStep(0, true);
   if (reduced()) { showStep(n, true); return; }
   PJ.timer = setInterval(() => { if (PJ.step >= n) { clearInterval(PJ.timer); PJ.timer = null; showStep(n); return; } showStep(PJ.step + 1); }, 800);
@@ -519,6 +525,7 @@ function bindSite() {
     const th = t.closest('[data-theme]'); if (th) { const T0 = THEMES.find(x => x.name === th.dataset.theme); ST.balloon.request = ES() ? `Guirnalda alrededor del arco, fiesta ${T0.es}` : `Garland around the arch for a ${T0.name} party`; document.getElementById('studio').scrollIntoView(); renderBalloon(); aiPlan(); }
     const zm = t.closest('[data-zoom]'); if (zm) openModal(`<img src="${esc(zm.dataset.zoom)}" alt="" style="width:100%;border-radius:14px">`);
     const pj = t.closest('[data-proj]'); if (pj) { PJ.id = pj.dataset.proj; PJ.step = 0; renderProjects(); playProject(true); }
+    if (t.id === 'projPlay' && $('#projStage video')) { playProject(true); return; }
     if (t.id === 'projPlay') { if (PJ.timer) { clearInterval(PJ.timer); PJ.timer = null; showStep(PJ.step); } else playProject(); }
     if (t.id === 'projNext') { clearInterval(PJ.timer); PJ.timer = null; showStep(PJ.step + 1); }
     if (t.id === 'projPrev') { clearInterval(PJ.timer); PJ.timer = null; showStep(PJ.step - 1, true); }
