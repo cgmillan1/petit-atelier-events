@@ -168,59 +168,92 @@ function renderPieces() {
   $('#pieces').innerHTML = list.map(a => { const dis = ST.date ? (c[a.id] || 0) >= availLeft(a.id) : (c[a.id] || 0) >= a.qty;
     return `<button class="piece" data-place="${a.id}" ${dis ? 'disabled' : ''} title="${esc(nm(a))}"><div class="th">${thumb(a)}</div><div>${esc(nm(a))}<small>${a.perFt ? money(a.price) + ' ' + T('perft') : money(a.price)}${ST.date && !a.made && availLeft(a.id) <= 0 ? ' · ' + T('booked') : ''}</small></div><span>${c[a.id] ? '×' + c[a.id] : '+'}</span></button>`; }).join('');
 }
-/* ---------- Karol's real projects (hero): a little fairy builds the setup piece by piece ---------- */
-const PJ = { id: PROJECTS[0].id, step: 0, timer: null, seen: false };
-const FAIRY = `<svg viewBox="0 0 60 60" aria-hidden="true"><g class="wings" opacity=".75"><ellipse cx="22" cy="24" rx="12" ry="7" fill="#f6dbe4" transform="rotate(-30 22 24)"/><ellipse cx="38" cy="24" rx="12" ry="7" fill="#f6dbe4" transform="rotate(30 38 24)"/><ellipse cx="23" cy="34" rx="8" ry="5" fill="#e7f0e4" transform="rotate(20 23 34)"/><ellipse cx="37" cy="34" rx="8" ry="5" fill="#e7f0e4" transform="rotate(-20 37 34)"/></g>
-<circle cx="30" cy="20" r="5" fill="#f3d3bd"/><path d="M25 18c1-5 9-6 10 0c-2-2-7-2-10 0z" fill="#b8733a"/><path d="M26 26h8l4 16H22z" fill="#9fbf98"/><path d="M27 42l-1 8M33 42l1 8" stroke="#f3d3bd" stroke-width="2"/>
-<g class="wand"><path d="M34 30l12-10" stroke="#c9a24a" stroke-width="1.6"/><path d="M46 14l1.6 3.6 3.9.4-2.9 2.6.8 3.8-3.4-2-3.4 2 .8-3.8-2.9-2.6 3.9-.4z" fill="#ffd36b"/></g></svg>`;
+/* ---------- Karol's real projects (hero): a fairy builds the real setup item by item ----------
+   Base = the empty room (AI cleanup of Karol's photo). Each step = Karol's real photo masked to that item (img/proj/{id}_c{k}.png).
+   The fairy (img/proj/fairy.webp, original character) flies to each item; her wand sparkles and the item pops into place. */
+const PJ = { id: PROJECTS[0].id, step: 0, timer: null, seen: false, fx: null };
+const TIP = [.066, .087];            // wand star position inside the fairy sprite (fractions)
 const PJP = () => PROJECTS.find(x => x.id === PJ.id);
+const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 function renderProjects() {
   const es = ES(), p = PJP();
   $('#projTabs').innerHTML = PROJECTS.map(x => `<button class="chip" data-proj="${x.id}" aria-pressed="${x.id === PJ.id}">${esc(es ? x.es : x.name)}</button>`).join('');
   $('#heroH').textContent = es ? 'Mira cómo nace una fiesta.' : 'Watch a party come to life.';
-  $('#heroLead').textContent = es ? 'Estos son montajes reales de Karol. Elige uno, míralo armarse pieza por pieza y reserva el mismo look para tu fecha.' : 'These are real setups Karol built. Pick one, watch it come together piece by piece, then book the same look for your date.';
-  $('#projStage').style.aspectRatio = `${p.w} / ${p.h}`; $('#projStage').style.width = `min(100%, calc(72vh * ${(p.w / p.h).toFixed(3)}))`; $('#projStage').style.margin = '0 auto';
+  $('#heroLead').textContent = es ? 'Estos son montajes reales de Karol. Mira cómo aparece cada pieza, una por una, y reserva el mismo look para tu fecha.' : 'These are real setups Karol built. Watch each piece appear, one by one, then book the same look for your date.';
+  const st = $('#projStage'); st.style.aspectRatio = `${p.w} / ${p.h}`; st.style.width = `min(100%, calc(72vh * ${(p.w / p.h).toFixed(3)}))`; st.style.margin = '0 auto';
   if (p.video) {
-    $('#projStage').innerHTML = `<video src="${esc(p.video)}" poster="img/proj/${p.id}.jpg" autoplay muted playsinline loop aria-label="${esc(p.name)} setup coming together"></video><span class="tag">${es ? 'Proyecto real de Karol' : 'A real Petit Atelier setup'}</span>`;
+    st.innerHTML = `<video src="${esc(p.video)}" poster="img/proj/${p.id}.jpg" autoplay muted playsinline loop aria-label="${esc(p.name)} setup coming together"></video><span class="tag">${es ? 'Proyecto real de Karol' : 'A real Petit Atelier setup'}</span>`;
   } else {
-    $('#projStage').innerHTML = `<img class="base" src="img/proj/${p.id}_sketch.jpg" alt="${esc(p.name)} setup plan" width="${p.w}" height="${p.h}">`
-      + p.steps.map((s, i) => { const [cx, cy] = p.at[i]; const dx = Math.round((cx - .5) * 160), dy = Math.round((cy - .5) * 120 - 60); return `<img class="layer" data-k="${i + 1}" src="img/proj/${p.id}.jpg" alt="" style="--fx:${dx}px;--fy:${dy}px;-webkit-mask-image:url(img/proj/${p.id}_m${i + 1}.png);mask-image:url(img/proj/${p.id}_m${i + 1}.png)">`; }).join('')
-      + `<img class="full" src="img/proj/${p.id}.jpg" alt="${esc(es ? p.es : p.name)} by Petit Atelier Events"><div class="fairy" id="fairy" style="left:92%;top:8%">${FAIRY}</div><span class="tag">${es ? 'Proyecto real de Karol' : 'A real Petit Atelier setup'}</span>`;
+    st.innerHTML = `<img class="base" src="img/proj/${p.id}_empty.jpg" alt="${esc(p.name)}: the empty space before setup" width="${p.w}" height="${p.h}">`
+      + p.steps.map((s, i) => `<img class="layer" data-k="${i + 1}" src="img/proj/${p.id}.jpg" alt="" style="--ox:${(p.at[i][0] * 100).toFixed(1)}%;--oy:${(p.at[i][1] * 100).toFixed(1)}%;-webkit-mask-image:url(img/proj/${p.id}_c${i + 1}.png);mask-image:url(img/proj/${p.id}_c${i + 1}.png)">`).join('')
+      + `<img class="full" src="img/proj/${p.id}.jpg" alt="${esc(es ? p.es : p.name)} by Petit Atelier Events"><canvas class="fx"></canvas><div class="fairy" id="fairy"><img src="img/proj/fairy.webp" alt=""></div><span class="tag">${es ? 'Proyecto real de Karol' : 'A real Petit Atelier setup'}</span>`;
+    fxInit();
   }
   $('#projSteps').innerHTML = p.steps.map((s, i) => `<i data-k="${i + 1}" title="${esc(es ? s[1] : s[0])}"></i>`).join('');
   $('#projCtaT').textContent = es ? '¿Te encanta este look?' : 'Love this look?';
   $('#projCtaP').textContent = es ? 'Karol lo puede recrear para tu fecha. O diseña tu propio montaje con sus piezas reales y mira el precio al instante.' : 'Karol can recreate it for your date. Or design your own setup with her real pieces and see the price as you go.';
   $('#projUse').textContent = es ? 'Quiero este look' : 'I want this look'; $('#projOwn').textContent = es ? 'Diseñar el mío' : 'Design my own';
   $('#projPrev').hidden = $('#projNext').hidden = $('#projPlay').hidden = !!p.video;
-  showStep(PJ.step);
+  showStep(PJ.step, true);
 }
-function sparkle(x, y) {
-  const st = $('#projStage'); for (let i = 0; i < 14; i++) { const s = document.createElement('i'); s.className = 'spark'; s.style.left = x; s.style.top = y; const a = Math.random() * 6.28, r = 30 + Math.random() * 70; s.style.setProperty('--sx', Math.cos(a) * r + 'px'); s.style.setProperty('--sy', Math.sin(a) * r + 'px'); st.appendChild(s); setTimeout(() => s.remove(), 1100); }
+/* --- sparkle particles + fairy flight (one rAF loop per stage) --- */
+function fxInit() {
+  if (PJ.fx) cancelAnimationFrame(PJ.fx.raf);
+  const st = $('#projStage'), cv = st.querySelector('canvas.fx'), fe = $('#fairy');
+  const F = { cv, ctx: cv.getContext('2d'), fe, parts: [], x: .9, y: .05, from: null, to: null, t0: 0, dur: 1, trail: true, raf: 0 };
+  const size = () => { const r = st.getBoundingClientRect(), d = Math.min(2, devicePixelRatio || 1); cv.width = r.width * d; cv.height = r.height * d; F.W = r.width; F.H = r.height; F.d = d; };
+  size(); F.size = size;
+  const tick = now => {
+    if (!cv.isConnected) return;
+    if (cv.width !== Math.round(st.clientWidth * F.d)) size();
+    if (F.to) { let k = Math.min(1, (now - F.t0) / F.dur); const e = k < .5 ? 2 * k * k : 1 - (-2 * k + 2) ** 2 / 2; const mx = (F.from[0] + F.to[0]) / 2, my = Math.min(F.from[1], F.to[1]) - .14;
+      F.x = (1 - e) ** 2 * F.from[0] + 2 * (1 - e) * e * mx + e * e * F.to[0]; F.y = (1 - e) ** 2 * F.from[1] + 2 * (1 - e) * e * my + e * e * F.to[1]; if (k >= 1) F.to = null; }
+    const fw = fe.offsetWidth; fe.style.transform = `translate(${F.x * F.W - TIP[0] * fw}px, ${F.y * F.H - TIP[1] * fw}px)`;
+    if (F.trail && !reduced()) for (let i = 0; i < 2; i++) emit(F, F.x * F.W, F.y * F.H, 1);
+    const c = F.ctx; c.setTransform(F.d, 0, 0, F.d, 0, 0); c.clearRect(0, 0, F.W, F.H); c.globalCompositeOperation = 'lighter';
+    F.parts = F.parts.filter(q => (q.life -= 16) > 0);
+    for (const q of F.parts) { q.x += q.vx; q.y += q.vy; q.vy += .03; q.vx *= .985; const a = Math.max(0, q.life / q.max); c.globalAlpha = a; c.fillStyle = q.c;
+      if (q.star) { c.save(); c.translate(q.x, q.y); c.rotate(q.r += .1); c.beginPath(); for (let k = 0; k < 8; k++) { const r = k % 2 ? q.s * .35 : q.s; c.lineTo(Math.cos(k * Math.PI / 4) * r, Math.sin(k * Math.PI / 4) * r); } c.fill(); c.restore(); }
+      else { c.beginPath(); c.arc(q.x, q.y, q.s * a, 0, 6.283); c.fill(); } }
+    c.globalAlpha = 1; F.raf = requestAnimationFrame(tick);
+  };
+  F.raf = requestAnimationFrame(tick); PJ.fx = F;
 }
-function showStep(k) {
+const SPARK = ['#fff6d5', '#ffd36b', '#ffe9a8', '#f7c6d9', '#e9d5ff', '#ffffff'];
+function emit(F, x, y, n, power = .6) {
+  for (let i = 0; i < n; i++) { const a = Math.random() * 6.283, v = Math.random() * power * 4; const life = 500 + Math.random() * 900;
+    F.parts.push({ x: x + (Math.random() - .5) * 6, y: y + (Math.random() - .5) * 6, vx: Math.cos(a) * v, vy: Math.sin(a) * v - .4, s: 1.5 + Math.random() * (power > 1 ? 5 : 3), life, max: life, c: SPARK[i % SPARK.length], star: Math.random() < .35, r: Math.random() * 3 }); }
+  if (F.parts.length > 900) F.parts.splice(0, F.parts.length - 900);
+}
+function flyTo(x, y, dur = 900) { const F = PJ.fx; if (!F) return; F.from = [F.x, F.y]; F.to = [x, y]; F.t0 = performance.now(); F.dur = dur; }
+function wave() { const f = $('#fairy'); if (!f) return; f.classList.remove('wave'); void f.offsetWidth; f.classList.add('wave'); }
+function burst(x, y, big) { const F = PJ.fx; if (F) emit(F, x * F.W, y * F.H, big ? 220 : 70, big ? 2.2 : 1.3); }
+function showStep(k, instant) {
   const p = PJP(), n = p.steps.length + 1; const prev = PJ.step; PJ.step = Math.max(0, Math.min(n, k)); const es = ES();
   if (p.video) { $('#projCount').textContent = es ? 'Video del montaje' : 'Setup video'; $('#projStep').textContent = es ? p.es : p.name; return; }
-  const f = $('#fairy');
-  if (f) {
-    if (PJ.step >= 1 && PJ.step < n) { const [cx, cy] = p.at[PJ.step - 1]; const x = Math.min(.9, cx + .08) * 100 + '%', y = Math.max(.06, cy - .1) * 100 + '%'; f.style.opacity = 1; f.style.left = x; f.style.top = y; if (PJ.step > prev) setTimeout(() => sparkle(cx * 100 + '%', cy * 100 + '%'), 700); }
-    else if (PJ.step >= n) { f.style.left = '88%'; f.style.top = '10%'; if (n > prev) { sparkle('50%', '45%'); } setTimeout(() => { if (PJ.step >= n) f.style.opacity = 0; }, 1400); }
-    else { f.style.opacity = 1; f.style.left = '92%'; f.style.top = '8%'; }
-  }
-  const delay = PJ.step > prev ? 650 : 0;
-  setTimeout(() => $$('#projStage .layer').forEach(l => l.classList.toggle('on', +l.dataset.k <= PJ.step)), delay);
-  $('#projStage .full')?.classList.toggle('on', PJ.step >= n);
+  const fwd = PJ.step === prev + 1 && !instant && !reduced();
+  const apply = () => { $$('#projStage .layer').forEach(l => l.classList.toggle('on', +l.dataset.k <= PJ.step)); $('#projStage .full')?.classList.toggle('on', PJ.step >= n); };
+  if (PJ.step >= 1 && PJ.step < n) {
+    const [cx, cy] = p.at[PJ.step - 1]; const tx = Math.min(.93, cx + .06), ty = Math.max(.06, cy - .08);
+    if (fwd) { flyTo(tx, ty, 850); setTimeout(wave, 800); setTimeout(() => { burst(cx, cy); apply(); }, 1050); }
+    else { if (PJ.fx) { PJ.fx.to = null; PJ.fx.x = tx; PJ.fx.y = ty; } apply(); }
+  } else if (PJ.step >= n) {
+    if (fwd) { flyTo(.5, .32, 800); setTimeout(() => { const f = $('#fairy'); f.classList.remove('spin'); void f.offsetWidth; f.classList.add('spin'); burst(.5, .45, true); apply(); }, 850); setTimeout(() => flyTo(.86, .1, 1100), 2000); }
+    else { if (PJ.fx) { PJ.fx.to = null; PJ.fx.x = .86; PJ.fx.y = .1; } apply(); }
+  } else { if (PJ.fx) { if (fwd || !instant) flyTo(.86, .1, 700); else { PJ.fx.x = .86; PJ.fx.y = .1; } } apply(); }
   $$('#projSteps i').forEach(li => li.classList.toggle('on', +li.dataset.k <= PJ.step));
   $('#projCount').textContent = PJ.step && PJ.step < n ? `${es ? 'Paso' : 'Step'} ${PJ.step} ${es ? 'de' : 'of'} ${n - 1}` : (es ? p.es : p.name);
-  $('#projStep').textContent = PJ.step === 0 ? (es ? 'Empieza con un espacio vacío' : 'It starts with an empty space') : PJ.step >= n ? (es ? '¡Listo para la fiesta!' : 'Ready to party!') : (es ? p.steps[PJ.step - 1][1] : p.steps[PJ.step - 1][0]);
+  $('#projStep').textContent = PJ.step === 0 ? (es ? 'Un espacio vacío... y un poco de magia' : 'An empty space... and a little magic') : PJ.step >= n ? (es ? '¡Listo para la fiesta!' : 'Ready to party!') : (es ? p.steps[PJ.step - 1][1] : p.steps[PJ.step - 1][0]);
   $('#projPlay').textContent = PJ.timer ? (es ? 'Pausa' : 'Pause') : PJ.step >= n ? (es ? 'Repetir' : 'Replay') : (es ? 'Ver' : 'Play');
 }
 function playProject(restart) {
   clearInterval(PJ.timer); PJ.timer = null;
   const p = PJP(), n = p.steps.length + 1; if (p.video) return;
-  if (restart || PJ.step >= n) showStep(0);
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { showStep(n); return; }
-  PJ.timer = setInterval(() => { if (PJ.step >= n) { clearInterval(PJ.timer); PJ.timer = null; showStep(n); return; } showStep(PJ.step + 1); }, 1700);
-  showStep(PJ.step);
+  if (restart || PJ.step >= n) showStep(0, true);
+  if (reduced()) { showStep(n, true); return; }
+  PJ.timer = setInterval(() => { if (PJ.step >= n) { clearInterval(PJ.timer); PJ.timer = null; showStep(n); return; } showStep(PJ.step + 1); }, 2000);
+  setTimeout(() => { if (PJ.timer && PJ.step === 0) showStep(1); }, 900);
+  showStep(PJ.step, true);
 }
 function useProject() {
   const p = PJP(); const ins = INSP(p.insp);
@@ -550,7 +583,7 @@ function bindSite() {
     const pj = t.closest('[data-proj]'); if (pj) { PJ.id = pj.dataset.proj; PJ.step = 0; renderProjects(); playProject(true); }
     if (t.id === 'projPlay') { if (PJ.timer) { clearInterval(PJ.timer); PJ.timer = null; showStep(PJ.step); } else playProject(); }
     if (t.id === 'projNext') { clearInterval(PJ.timer); PJ.timer = null; showStep(PJ.step + 1); }
-    if (t.id === 'projPrev') { clearInterval(PJ.timer); PJ.timer = null; showStep(PJ.step - 1); }
+    if (t.id === 'projPrev') { clearInterval(PJ.timer); PJ.timer = null; showStep(PJ.step - 1, true); }
     if (t.id === 'projUse') useProject();
     if (t.id === 'aiPlanBtn') aiPlan();
     if (t.id === 'aiRenderBtn') aiRender();
