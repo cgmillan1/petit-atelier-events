@@ -168,44 +168,65 @@ function renderPieces() {
   $('#pieces').innerHTML = list.map(a => { const dis = ST.date ? (c[a.id] || 0) >= availLeft(a.id) : (c[a.id] || 0) >= a.qty;
     return `<button class="piece" data-place="${a.id}" ${dis ? 'disabled' : ''} title="${esc(nm(a))}"><div class="th">${thumb(a)}</div><div>${esc(nm(a))}<small>${a.perFt ? money(a.price) + ' ' + T('perft') : money(a.price)}${ST.date && !a.made && availLeft(a.id) <= 0 ? ' · ' + T('booked') : ''}</small></div><span>${c[a.id] ? '×' + c[a.id] : '+'}</span></button>`; }).join('');
 }
-/* ---------- Karol's real projects: sketch to finished setup, step by step ---------- */
+/* ---------- Karol's real projects (hero): a little fairy builds the setup piece by piece ---------- */
 const PJ = { id: PROJECTS[0].id, step: 0, timer: null, seen: false };
+const FAIRY = `<svg viewBox="0 0 60 60" aria-hidden="true"><g class="wings" opacity=".75"><ellipse cx="22" cy="24" rx="12" ry="7" fill="#f6dbe4" transform="rotate(-30 22 24)"/><ellipse cx="38" cy="24" rx="12" ry="7" fill="#f6dbe4" transform="rotate(30 38 24)"/><ellipse cx="23" cy="34" rx="8" ry="5" fill="#e7f0e4" transform="rotate(20 23 34)"/><ellipse cx="37" cy="34" rx="8" ry="5" fill="#e7f0e4" transform="rotate(-20 37 34)"/></g>
+<circle cx="30" cy="20" r="5" fill="#f3d3bd"/><path d="M25 18c1-5 9-6 10 0c-2-2-7-2-10 0z" fill="#b8733a"/><path d="M26 26h8l4 16H22z" fill="#9fbf98"/><path d="M27 42l-1 8M33 42l1 8" stroke="#f3d3bd" stroke-width="2"/>
+<g class="wand"><path d="M34 30l12-10" stroke="#c9a24a" stroke-width="1.6"/><path d="M46 14l1.6 3.6 3.9.4-2.9 2.6.8 3.8-3.4-2-3.4 2 .8-3.8-2.9-2.6 3.9-.4z" fill="#ffd36b"/></g></svg>`;
+const PJP = () => PROJECTS.find(x => x.id === PJ.id);
 function renderProjects() {
-  const es = ES(), p = PROJECTS.find(x => x.id === PJ.id);
+  const es = ES(), p = PJP();
   $('#projTabs').innerHTML = PROJECTS.map(x => `<button class="chip" data-proj="${x.id}" aria-pressed="${x.id === PJ.id}">${esc(es ? x.es : x.name)}</button>`).join('');
-  $('#projTitle').textContent = es ? 'Mira cómo se arman los montajes de Karol' : 'Watch Karol’s setups come together';
-  $('#projStage').style.aspectRatio = `${p.w} / ${p.h}`;
-  $('#projStage').innerHTML = `<img class="base" src="img/proj/${p.id}_sketch.jpg" alt="${esc(p.name)} setup plan" width="${p.w}" height="${p.h}">`
-    + p.steps.map((s, i) => `<img class="layer" data-k="${i + 1}" src="img/proj/${p.id}.jpg" alt="" style="-webkit-mask-image:url(img/proj/${p.id}_m${i + 1}.png);mask-image:url(img/proj/${p.id}_m${i + 1}.png)">`).join('')
-    + `<img class="full" src="img/proj/${p.id}.jpg" alt="${esc(es ? p.es : p.name)} by Petit Atelier Events"><span class="tag">${es ? 'Proyecto real de Karol' : 'A real Petit Atelier setup'}</span>`;
-  $('#projSteps').innerHTML = p.steps.map((s, i) => `<li data-k="${i + 1}">${esc(es ? s[1] : s[0])}</li>`).join('') + `<li data-k="${p.steps.length + 1}">${es ? '¡Listo para la fiesta!' : 'Ready to party!'}</li>`;
+  $('#heroH').textContent = es ? 'Mira cómo nace una fiesta.' : 'Watch a party come to life.';
+  $('#heroLead').textContent = es ? 'Estos son montajes reales de Karol. Elige uno, míralo armarse pieza por pieza y reserva el mismo look para tu fecha.' : 'These are real setups Karol built. Pick one, watch it come together piece by piece, then book the same look for your date.';
+  $('#projStage').style.aspectRatio = `${p.w} / ${p.h}`; $('#projStage').style.width = `min(100%, calc(72vh * ${(p.w / p.h).toFixed(3)}))`; $('#projStage').style.margin = '0 auto';
+  if (p.video) {
+    $('#projStage').innerHTML = `<video src="${esc(p.video)}" poster="img/proj/${p.id}.jpg" autoplay muted playsinline loop aria-label="${esc(p.name)} setup coming together"></video><span class="tag">${es ? 'Proyecto real de Karol' : 'A real Petit Atelier setup'}</span>`;
+  } else {
+    $('#projStage').innerHTML = `<img class="base" src="img/proj/${p.id}_sketch.jpg" alt="${esc(p.name)} setup plan" width="${p.w}" height="${p.h}">`
+      + p.steps.map((s, i) => { const [cx, cy] = p.at[i]; const dx = Math.round((cx - .5) * 160), dy = Math.round((cy - .5) * 120 - 60); return `<img class="layer" data-k="${i + 1}" src="img/proj/${p.id}.jpg" alt="" style="--fx:${dx}px;--fy:${dy}px;-webkit-mask-image:url(img/proj/${p.id}_m${i + 1}.png);mask-image:url(img/proj/${p.id}_m${i + 1}.png)">`; }).join('')
+      + `<img class="full" src="img/proj/${p.id}.jpg" alt="${esc(es ? p.es : p.name)} by Petit Atelier Events"><div class="fairy" id="fairy" style="left:92%;top:8%">${FAIRY}</div><span class="tag">${es ? 'Proyecto real de Karol' : 'A real Petit Atelier setup'}</span>`;
+  }
+  $('#projSteps').innerHTML = p.steps.map((s, i) => `<i data-k="${i + 1}" title="${esc(es ? s[1] : s[0])}"></i>`).join('');
   $('#projCtaT').textContent = es ? '¿Te encanta este look?' : 'Love this look?';
-  $('#projCtaP').textContent = es ? 'Karol lo puede recrear para tu fecha, o diseña el tuyo con sus piezas reales.' : 'Karol can recreate it for your date, or you can design your own with her real pieces.';
+  $('#projCtaP').textContent = es ? 'Karol lo puede recrear para tu fecha. O diseña tu propio montaje con sus piezas reales y mira el precio al instante.' : 'Karol can recreate it for your date. Or design your own setup with her real pieces and see the price as you go.';
   $('#projUse').textContent = es ? 'Quiero este look' : 'I want this look'; $('#projOwn').textContent = es ? 'Diseñar el mío' : 'Design my own';
+  $('#projPrev').hidden = $('#projNext').hidden = $('#projPlay').hidden = !!p.video;
   showStep(PJ.step);
 }
+function sparkle(x, y) {
+  const st = $('#projStage'); for (let i = 0; i < 14; i++) { const s = document.createElement('i'); s.className = 'spark'; s.style.left = x; s.style.top = y; const a = Math.random() * 6.28, r = 30 + Math.random() * 70; s.style.setProperty('--sx', Math.cos(a) * r + 'px'); s.style.setProperty('--sy', Math.sin(a) * r + 'px'); st.appendChild(s); setTimeout(() => s.remove(), 1100); }
+}
 function showStep(k) {
-  const p = PROJECTS.find(x => x.id === PJ.id), n = p.steps.length + 1; PJ.step = Math.max(0, Math.min(n, k)); const es = ES();
-  $$('#projStage .layer').forEach(l => l.classList.toggle('on', +l.dataset.k <= PJ.step));
+  const p = PJP(), n = p.steps.length + 1; const prev = PJ.step; PJ.step = Math.max(0, Math.min(n, k)); const es = ES();
+  if (p.video) { $('#projCount').textContent = es ? 'Video del montaje' : 'Setup video'; $('#projStep').textContent = es ? p.es : p.name; return; }
+  const f = $('#fairy');
+  if (f) {
+    if (PJ.step >= 1 && PJ.step < n) { const [cx, cy] = p.at[PJ.step - 1]; const x = Math.min(.9, cx + .08) * 100 + '%', y = Math.max(.06, cy - .1) * 100 + '%'; f.style.opacity = 1; f.style.left = x; f.style.top = y; if (PJ.step > prev) setTimeout(() => sparkle(cx * 100 + '%', cy * 100 + '%'), 700); }
+    else if (PJ.step >= n) { f.style.left = '88%'; f.style.top = '10%'; if (n > prev) { sparkle('50%', '45%'); } setTimeout(() => { if (PJ.step >= n) f.style.opacity = 0; }, 1400); }
+    else { f.style.opacity = 1; f.style.left = '92%'; f.style.top = '8%'; }
+  }
+  const delay = PJ.step > prev ? 650 : 0;
+  setTimeout(() => $$('#projStage .layer').forEach(l => l.classList.toggle('on', +l.dataset.k <= PJ.step)), delay);
   $('#projStage .full')?.classList.toggle('on', PJ.step >= n);
-  $$('#projSteps li').forEach(li => { li.classList.toggle('on', +li.dataset.k <= PJ.step); li.classList.toggle('now', +li.dataset.k === PJ.step); });
-  $('#projCount').textContent = PJ.step ? `${es ? 'Paso' : 'Step'} ${PJ.step} ${es ? 'de' : 'of'} ${n}` : (es ? 'El plan' : 'The plan');
-  $('#projStep').textContent = PJ.step === 0 ? (es ? 'Todo empieza con un boceto' : 'It starts with a sketch') : PJ.step >= n ? (es ? '¡Listo para la fiesta!' : 'Ready to party!') : (es ? p.steps[PJ.step - 1][1] : p.steps[PJ.step - 1][0]);
-  $('#projPlay').textContent = PJ.timer ? (es ? 'Pausa' : 'Pause') : PJ.step >= n ? (es ? 'Repetir' : 'Replay') : (es ? 'Reproducir' : 'Play');
+  $$('#projSteps i').forEach(li => li.classList.toggle('on', +li.dataset.k <= PJ.step));
+  $('#projCount').textContent = PJ.step && PJ.step < n ? `${es ? 'Paso' : 'Step'} ${PJ.step} ${es ? 'de' : 'of'} ${n - 1}` : (es ? p.es : p.name);
+  $('#projStep').textContent = PJ.step === 0 ? (es ? 'Empieza con un espacio vacío' : 'It starts with an empty space') : PJ.step >= n ? (es ? '¡Listo para la fiesta!' : 'Ready to party!') : (es ? p.steps[PJ.step - 1][1] : p.steps[PJ.step - 1][0]);
+  $('#projPlay').textContent = PJ.timer ? (es ? 'Pausa' : 'Pause') : PJ.step >= n ? (es ? 'Repetir' : 'Replay') : (es ? 'Ver' : 'Play');
 }
 function playProject(restart) {
   clearInterval(PJ.timer); PJ.timer = null;
-  const p = PROJECTS.find(x => x.id === PJ.id), n = p.steps.length + 1;
+  const p = PJP(), n = p.steps.length + 1; if (p.video) return;
   if (restart || PJ.step >= n) showStep(0);
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) { showStep(n); return; }
-  PJ.timer = setInterval(() => { if (PJ.step >= n) { clearInterval(PJ.timer); PJ.timer = null; showStep(n); return; } showStep(PJ.step + 1); }, 1300);
+  PJ.timer = setInterval(() => { if (PJ.step >= n) { clearInterval(PJ.timer); PJ.timer = null; showStep(n); return; } showStep(PJ.step + 1); }, 1700);
   showStep(PJ.step);
 }
 function useProject() {
-  const p = PROJECTS.find(x => x.id === PJ.id); const ins = INSP(p.insp);
+  const p = PJP(); const ins = INSP(p.insp);
   ST.balloon.style = p.insp; ST.colors = ins.colors.slice(0, 3); ST.balloon.request = ES() ? p.req_es : p.req; ST.balloon.plan = null;
   ensureBalloon(ins.ft); saveDraft(); renderAll(); document.getElementById('studio').scrollIntoView();
-  toast(ES() ? 'Agregamos los globos de este look. Agrega tus piezas y Karol lo recrea.' : 'We added this look’s balloons. Add your pieces and Karol recreates the rest.');
+  toast(ES() ? 'Agregamos los globos de este look. Agrega tus piezas y Karol recrea el resto.' : 'We added this look’s balloons. Add your pieces and Karol recreates the rest.');
 }
 
 /* ---------- balloon designer: inspirations, colors, custom request, AI ---------- */
@@ -337,6 +358,7 @@ function renderLooks() {
 }
 let heroLook = 0;
 function renderHero() {
+  if (!$('#heroStage')) return;
   const l = LOOKS[heroLook]; const pl = lookPlacements(l);
   const tot = pl.reduce((s, p) => { const a = A(p.id); return s + (a.perFt ? a.price * 10 : a.price); }, 0);
   $('#heroStage').innerHTML = `<svg viewBox="0 0 1000 620" role="img" aria-label="${esc(l.name)} setup">${sceneSVG(pl, l.wall, false)}
@@ -551,6 +573,6 @@ function bindSite() {
   document.addEventListener('input', e => { if (e.target.id === 'roomScale') { ST.roomScale = +e.target.value; renderStage(); } if (e.target.id === 'bReq') { ST.balloon.request = e.target.value.slice(0, 600); saveDraft(); } });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
   $('#lookupForm').addEventListener('submit', lookup);
-  try { const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting) && !PJ.seen) { PJ.seen = true; playProject(true); } }, { threshold: .35 }); io.observe($('#projects')); } catch { }
+  try { const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting) && !PJ.seen) { PJ.seen = true; playProject(true); } }, { threshold: .35 }); io.observe($('#projStage')); } catch { }
   bindStage();
 }
