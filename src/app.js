@@ -186,10 +186,13 @@ function renderProjects() {
   const useVid = p.video && !p.noVideo && !reduced();
   if (useVid) {
     st.style.aspectRatio = `${p.vw} / ${p.vh}`; st.style.width = `min(100%, calc(72vh * ${(p.vw / p.vh).toFixed(3)}))`;
-    st.innerHTML = `<video class="pv" src="${esc(p.video)}" poster="img/proj/${p.id}_start.jpg" muted playsinline preload="auto" aria-label="${esc(es ? p.es : p.name)}: ${es ? 'el montaje aparece pieza por pieza' : 'the setup appearing piece by piece'}"></video><img class="full" src="img/proj/${p.id}_final.jpg" alt="${esc(es ? p.es : p.name)} by Petit Atelier Events"><span class="tag">${es ? 'Proyecto real de Karol' : 'A real Petit Atelier setup'}</span>`;
-    const v = st.querySelector('video');
-    v.addEventListener('ended', () => { PJ.vidDone = true; st.querySelector('.full')?.classList.add('on'); showStep(0); });
-    v.addEventListener('error', () => { p.noVideo = true; renderProjects(); playProject(true); });
+    const clips = [].concat(p.video);
+    st.innerHTML = clips.map((src, i) => `<video class="pv" data-i="${i}" src="${esc(src)}" ${i ? 'style="opacity:0"' : `poster="img/proj/${p.id}_start.jpg"`} muted playsinline preload="auto" aria-label="${esc(es ? p.es : p.name)}: ${es ? 'el montaje aparece pieza por pieza' : 'the setup appearing piece by piece'}"></video>`).join('') + `<img class="full" src="img/proj/${p.id}_final.jpg" alt="${esc(es ? p.es : p.name)} by Petit Atelier Events"><span class="tag">${es ? 'Proyecto real de Karol' : 'A real Petit Atelier setup'}</span>`;
+    const vids = [...st.querySelectorAll('video')];
+    vids.forEach((v, i) => {
+      v.addEventListener('ended', () => { const nx = vids[i + 1]; if (nx) { nx.currentTime = 0; nx.style.opacity = 1; nx.play().catch(() => {}); v.style.opacity = 0; } else { PJ.vidDone = true; st.querySelector('.full')?.classList.add('on'); showStep(0); } });
+      v.addEventListener('error', () => { p.noVideo = true; renderProjects(); playProject(true); });
+    });
   } else {
     st.innerHTML = `<img class="base" src="img/proj/${p.id}_empty.jpg" alt="${esc(p.name)}: the empty space before setup" width="${p.w}" height="${p.h}">`
       + p.steps.map((s, i) => `<img class="layer" data-k="${i + 1}" src="img/proj/${p.id}.jpg" alt="" style="--ox:${(p.at[i][0] * 100).toFixed(1)}%;--oy:${(p.at[i][1] * 100).toFixed(1)}%;-webkit-mask-image:url(img/proj/${p.id}_c${i + 1}.png);mask-image:url(img/proj/${p.id}_c${i + 1}.png)">`).join('')
@@ -256,7 +259,7 @@ function showStep(k, instant) {
 function playProject(restart) {
   clearInterval(PJ.timer); PJ.timer = null;
   const p = PJP(), n = p.steps.length + 1;
-  if (p.video && !p.noVideo && !reduced()) { const v = $('#projStage video'); if (!v) return; PJ.vidDone = false; $('#projStage .full')?.classList.remove('on'); v.currentTime = 0; v.play().catch(() => {}); showStep(0); return; }
+  if (p.video && !p.noVideo && !reduced()) { const vs = $$('#projStage video'); if (!vs.length) return; PJ.vidDone = false; $('#projStage .full')?.classList.remove('on'); vs.forEach((x, i) => { x.pause(); x.currentTime = 0; x.style.opacity = i ? 0 : 1; }); vs[0].play().catch(() => {}); showStep(0); return; }
   if (restart || PJ.step >= n) showStep(0, true);
   if (reduced()) { showStep(n, true); return; }
   PJ.timer = setInterval(() => { if (PJ.step >= n) { clearInterval(PJ.timer); PJ.timer = null; showStep(n); return; } showStep(PJ.step + 1); }, 800);
