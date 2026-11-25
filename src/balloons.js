@@ -186,7 +186,7 @@ function namedColors(text) {
 }
 function keywordPlan(text) {
   const t = normT(text); const theme = findTheme(text); const named = namedColors(text);
-  const colors = (named.length ? named : theme ? theme.colors : ST.colors.length ? ST.colors : ['Blush', 'Cream', 'Chrome gold']).slice(0, 6);
+  const colors = (named.length ? named : theme ? theme.colors : ['Blush', 'Cream', 'Chrome gold']).slice(0, 6);
   const has = (...w) => w.some(x => hasWord(t, x));
   const around = has('hoop', 'aro', 'circle', 'circulo', 'round arch', 'arco redondo') ? 'hoop' : has('door', 'doorway', 'entrance', 'entrada', 'puerta') ? 'doorway' : has('table', 'mesa', 'dessert table', 'cake table') ? 'table' : has('open arches', 'arcos abiertos', 'arches', 'arcos') ? 'half-arches' : has('floor', 'piso', 'ground', 'suelo') ? 'floor' : has('backdrop', 'wall', 'pared', 'fondo', 'panel', 'panels') ? 'backdrop-top' : 'window-arch';
   const kind = has('column', 'columna', 'tower', 'torre') ? 'column' : has('cluster', 'racimo', 'bouquet', 'ramo') ? 'cluster' : has('classic', 'clasica', 'clasico', 'pattern', 'patron') ? 'classic' : has('full', 'luxe', 'lujo', 'llena', 'big garland', 'huge') ? 'full' : 'organic';
@@ -216,7 +216,7 @@ async function aiPlan() {
     if (LIVE) { const { data, error } = await sb.functions.invoke('ai-balloons', { body: { mode: 'plan', text, lang: ST.lang, theme: kp0.themeObj && !kp0.named.length ? { name: kp0.themeObj.name, colors: kp0.themeObj.colors } : null, named: kp0.named, pieces: ST.placements.filter(p => !A(p.id)?.perFt).map(p => A(p.id)?.name).filter(Boolean), colors: BALLOON_COLORS.map(c => c[0]) } }); if (!error && data?.pieces) plan = { ...data, source: 'ai' }; }
     else { const sample = await claudeSample(); if (sample) { const r = await sample(aiPrompt(text, kp0), { modelTier: 'quick' }); const j = JSON.parse((r.text.match(/\{[\s\S]*\}/) || ['{}'])[0]); if (j.pieces?.length) plan = { ...j, source: 'ai' }; } }
   } catch (err) { console.warn('AI plan failed', err); }
-  if (!plan) plan = kp0;
+  if (!plan) { plan = kp0; if (!kp0.themeObj && !kp0.named.length) plan.message = ES() ? 'No reconocí ese tema todavía. Elige los colores abajo o escríbelos (por ejemplo: azul cielo, blanco y plateado) y Karol lo ajusta contigo.' : 'I did not recognize that theme yet. Pick the colors below or type them (for example: light blue, white and silver) and Karol will fine-tune it with you.'; }
   const kp = kp0.pieces[0];
   /* the customer's words win: a recognized theme or colors they named override whatever the AI picked */
   const forced = kp0.named.length ? kp0.named : kp0.themeObj ? kp0.themeObj.colors : null;

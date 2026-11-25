@@ -60,15 +60,19 @@ Customer request: ${JSON.stringify(text)}`;
     // render: image edit on top of the customer's real-piece layout
     const b64 = String(body.image || "").replace(/^data:image\/png;base64,/, "");
     if (b64.length < 1000 || b64.length > 12_000_000) return json({ error: "Bad image" }, 400);
-    const colors = (body.colors || []).slice(0, 3).join(", ");
-    const prompt = `Photorealistic event decor photo. Keep every existing piece (gold arches, tables, furniture), its position and size exactly as shown, and keep the wall and floor. ` +
-      `Add one organic latex balloon garland (mixed sizes 5 to 18 inch, matte and chrome finishes) in ${colors || "soft neutral"} colors, ${PLACE[body.placement] || PLACE["half-cascade"]}, about ${Math.round(+body.ft || 12)} feet long. ` +
-      `Customer idea: ${text}. Do not add text, logos, cartoon or licensed characters; use only the colors and simple shapes. Natural soft studio lighting.`;
+    const colors = (body.colors || []).map(String).slice(0, 6).join(", ");
+    const theme = String(body.theme || "").slice(0, 80);
+    const pieces = String(body.placement || "an organic garland on the main arch").slice(0, 400);
+    const prompt = `Edit this photo into a photorealistic, professionally styled party setup photo. Keep every existing decor piece (gold arches, tables, pedestals, furniture) exactly where it is, same size and shape, and keep the wall, floor, camera angle and lighting. ` +
+      `Add real latex balloon decor built by a professional balloon artist: ${pieces}. Organic style with mixed sizes (5, 11, 18 and a few 24 inch balloons), clustered tightly and attached to the structure, with matte, pearl and chrome finishes. ` +
+      `Colors: ${colors || "soft neutrals"}.${theme ? ` Theme: ${theme}, shown only through the colors and finishes.` : ""} Customer idea: ${text}. ` +
+      `Do not add text, logos, printed characters or cartoon figures. Natural soft lighting, sharp focus, realistic shadows.`;
     const form = new FormData();
-    form.append("model", "gpt-image-1");
+    form.append("model", Deno.env.get("OPENAI_IMAGE_MODEL") || "gpt-image-1");
     form.append("image", new Blob([Uint8Array.from(atob(b64), (c) => c.charCodeAt(0))], { type: "image/png" }), "stage.png");
     form.append("prompt", prompt);
     form.append("size", "1536x1024");
+    form.append("quality", "high");
     const r = await fetch("https://api.openai.com/v1/images/edits", { method: "POST", headers: { Authorization: `Bearer ${Deno.env.get("OPENAI_API_KEY")}` }, body: form });
     if (!r.ok) throw new Error(await r.text());
     const out = await r.json();

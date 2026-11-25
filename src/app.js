@@ -288,7 +288,7 @@ async function aiRender() {
   $('#aiOut').insertAdjacentHTML('beforeend', `<p class="small muted" id="rendering">✦ ${ES() ? 'Creando la foto (20 a 40 segundos)…' : 'Creating the photo (20 to 40 seconds)…'}</p>`);
   try {
     const image = await stagePNG();
-    const { data, error } = await sb.functions.invoke('ai-balloons', { body: { mode: 'render', image, text: ST.balloon.request, colors: ST.colors, placement: bLines().map(p => bLabel(bCfg(p))).join('; '), ft: bLines().reduce((s, p) => s + (bCfg(p).ft || 0), 0) } });
+    const { data, error } = await sb.functions.invoke('ai-balloons', { body: { mode: 'render', image, text: ST.balloon.request, colors: ST.colors, theme: ST.balloon.plan?.theme || '', placement: bLines().map(p => { const c = bCfg(p); return `${c.strands > 1 ? c.strands + ' strands of ' : ''}${bName(B_KINDS[c.kind], false).toLowerCase()} ${c.kind === 'column' || c.kind === 'cluster' ? '' : (c.cover === 'full' ? 'all the way around ' : c.cover === 'corner' ? 'cascading from the top corner of ' : c.cover === 'base' ? 'at both bases of ' : 'up one side and over the top of ') + 'the ' + bName(B_AROUND[c.around], false).toLowerCase()}, about ${c.ft} ft, in ${c.colors.join(', ')}${c.greenery ? ', with greenery' : ''}${c.statement ? `, ${c.statement} giant balloons` : ''}`; }).join('; '), ft: bLines().reduce((s, p) => s + (bCfg(p).ft || 0), 0) } });
     if (error || !data?.url) throw new Error(data?.error || error?.message || 'No image');
     plan.preview = data.url; saveDraft(); renderBalloon();
   } catch (err) { $('#rendering').textContent = (ES() ? 'No se pudo crear la foto: ' : 'Could not create the photo: ') + err.message; }
