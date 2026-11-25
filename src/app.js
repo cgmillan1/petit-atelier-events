@@ -524,6 +524,8 @@ function bindSite() {
     const info = t.closest('[data-info]'); if (info) showInfo(info.dataset.info);
     const cat = t.closest('[data-cat]'); if (cat) { ST.cat = cat.dataset.cat; renderGrid(); }
     const sc = t.closest('[data-scat]'); if (sc) { ST.scat = sc.dataset.scat; renderPieces(); }
+    if (t.id === 'menuBtn') { const n = $('#mainNav'), open = !n.classList.contains('open'); n.classList.toggle('open', open); t.setAttribute('aria-expanded', open); }
+    if (t.closest('#mainNav a')) { $('#mainNav').classList.remove('open'); $('#menuBtn')?.setAttribute('aria-expanded', 'false'); }
     const ins = t.closest('[data-insp]'); if (ins) useInspiration(ins.dataset.insp);
     const th = t.closest('[data-theme]'); if (th) { const T0 = THEMES.find(x => x.name === th.dataset.theme); ST.balloon.request = ES() ? `Guirnalda alrededor del arco, fiesta ${T0.es}` : `Garland around the arch for a ${T0.name} party`; document.getElementById('studio').scrollIntoView(); renderBalloon(); aiPlan(); }
     const zm = t.closest('[data-zoom]'); if (zm) openModal(`<img src="${esc(zm.dataset.zoom)}" alt="" style="width:100%;border-radius:14px">`);

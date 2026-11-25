@@ -50,7 +50,10 @@ label{display:block;font-size:14px;color:var(--muted);margin-bottom:4px}
 .logo img{width:52px;height:52px;border-radius:50%;background:#fff;box-shadow:0 0 0 2px var(--mauve)}.logo b{font-family:Forum,serif;font-size:23px;font-weight:400;line-height:1}.logo span{display:block;font-size:12px;color:var(--muted);letter-spacing:.02em}
 .nav{display:flex;gap:2px;flex-wrap:nowrap}.nav a{white-space:nowrap;padding:8px 8px;border-radius:8px;text-decoration:none;font-size:15px}.nav a:hover{background:var(--soft)}
 .lang{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}.lang button{border:0;background:none;padding:6px 12px;cursor:pointer;font-size:14px;min-height:36px}.lang button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
-@media(max-width:900px){.nav{display:none}}
+@media(min-width:901px){.menub{display:none}}
+@media(max-width:900px){.nav{display:none}.menub{order:3;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--panel);font-size:20px;cursor:pointer}
+ .nav.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--line);padding:8px 16px 14px;box-shadow:0 12px 24px -16px rgba(0,0,0,.3)}.nav.open a{padding:12px 8px;font-size:17px}}
+footer a{display:inline-block;padding:10px 0}
 /* hero */
 .hero{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(24px,4vw,56px);align-items:center}
 .hero p.lead{font-size:18px;color:var(--muted);max-width:34em}
@@ -225,7 +228,8 @@ table.t tr.click{cursor:pointer}table.t tr.click:hover td{background:var(--soft)
     <img src="img/logo.webp" alt="">
     <div><b>Petit Atelier Events</b><span>Event decorator by Karol · Eagle Mountain, UT</span></div>
   </a>
-  <nav class="nav" aria-label="Main">
+  <button class="menub" id="menuBtn" aria-label="Menu" aria-expanded="false" aria-controls="mainNav">☰</button>
+  <nav class="nav" id="mainNav" aria-label="Main">
     <a href="#collection" data-i="nav_collection">Collection</a><a href="#top">Projects</a><a href="#studio" data-i="nav_studio">Design studio</a><a href="#balloons">Balloons</a><a href="#how" data-i="nav_how">How it works</a><a href="#karol" data-i="about">Meet Karol</a><a href="#reservation" data-i="nav_res">My reservation</a>
   </nav>
   <div class="lang" role="group" aria-label="Language"><button data-lang="en" aria-pressed="true">EN</button><button data-lang="es" aria-pressed="false">ES</button></div>
