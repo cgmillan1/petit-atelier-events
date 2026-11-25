@@ -29,7 +29,7 @@ function pricing() {
   const seen = new Set();
   for (const pl of ST.placements) {
     const a = A(pl.id); if (!a) continue; const g = gidOf(pl); if (seen.has(g)) continue; seen.add(g);
-    if (a.perFt) { const ft = Math.max(4, Math.round(pl.len || 10)); items.push({ id: a.id, qty: 1, ft, price: a.price * ft, name: `${a.name} (${ft} ft)` }); continue; }
+    if (a.perFt) { const cfg = bCfg(pl), bp = bPrice(cfg); items.push({ id: a.id, qty: 1, ft: bp.ft, price: bp.total, name: bLabel(cfg), cfg: { ...cfg } }); continue; }
     const ex = items.find(i => i.id === a.id); if (ex) ex.qty++; else items.push({ id: a.id, qty: 1, price: a.price, name: a.name });
   }
   items.sort((x, y) => CATS.findIndex(k => k[0] === A(x.id).cat) - CATS.findIndex(k => k[0] === A(y.id).cat));
@@ -41,7 +41,7 @@ function pricing() {
   return { items, subtotal, discount: 0, install, care, securityDeposit, total, retainer: Math.round(total * S.depositPct / 100) };
 }
 const hasBalloons = () => ST.placements.some(p => A(p.id)?.perFt);
-const itemLabel = it => (it.qty > 1 ? it.qty + ' × ' : '') + (it.ft ? `${nm(A(it.id) || { name: it.name })} · ${it.ft} ft` : nm(A(it.id) || { name: it.name }));
+const itemLabel = it => (it.qty > 1 ? it.qty + ' × ' : '') + (it.cfg ? `${ES() ? 'Globos' : 'Balloons'}: ${bLabel(it.cfg)}` : it.ft ? `${nm(A(it.id) || { name: it.name })} · ${it.ft} ft` : nm(A(it.id) || { name: it.name }));
 
 async function refreshAvail() {
   ST.reserved = ST.date ? await DB.reserved(ST.date, ST.S.bufferDays).catch(() => ({})) : {};
@@ -58,7 +58,7 @@ function addPiece(id, x, y, s) {
   if (!ST.date && (counts()[id] || 0) >= a.qty) { toast(ES() ? `Karol tiene ${a.qty}` : `Karol has ${a.qty} of these`); return false; }
   const same = counts()[id] || 0;
   const made = makePlacements(a, x ?? Math.min(940, a.x + same * 120), y ?? a.y, s ?? 1);
-  if (a.perFt) { made[0].len = ST.balloon.ft || 10; }
+  if (a.perFt) { made[0].len = 10; }
   ST.placements.push(...made); ST.sel = made[0].uid; saveDraft();
   if (a.parts && !lget('partsTip')) { lset('partsTip', 1); toast(ES() ? 'Es un set: puedes mover cada pieza por separado.' : 'This is a set: you can move each piece on its own.'); }
   return true;
@@ -81,7 +81,8 @@ function pieceSVG(a, pl) {
 }
 function sceneSVG(placements, wall, interactive, bg, rs) {
   const list = placements.map(pl => ({ pl, a: A(pl.id) })).filter(o => o.a && (o.a.cutout || (o.a.parts && o.pl.part != null))).sort((m, n) => ((m.a.cat === 'backdrops' ? 0 : m.a.cat === 'balloons' ? 1 : 2) - (n.a.cat === 'backdrops' ? 0 : n.a.cat === 'balloons' ? 1 : 2)) || (m.pl.y - n.pl.y));
-  const body = list.map(({ pl, a }) => { const k = (pl.s || 1) * (rs || 1); return `<g class="pl${interactive && ST.sel === pl.uid ? ' sel' : ''}" data-uid="${pl.uid}" data-k="${k}" transform="translate(${pl.x} ${pl.y}) scale(${k})">${pieceSVG(a, pl)}</g>`; }).join('');
+  const body = list.filter(o => !o.a.perFt).map(({ pl, a }) => { const k = (pl.s || 1) * (rs || 1); return `<g class="pl${interactive && ST.sel === pl.uid ? ' sel' : ''}" data-uid="${pl.uid}" data-k="${k}" transform="translate(${pl.x} ${pl.y}) scale(${k})">${pieceSVG(a, pl)}</g>`; }).join('')
+    + list.filter(o => o.a.perFt).map(({ pl }) => `<g class="pl gl${interactive && ST.sel === pl.uid ? ' sel' : ''}" data-uid="${pl.uid}" data-k="1">${garlandSVG(pl)}</g>`).join('');
   const room = bg ? `<image href="${esc(bg)}" width="1000" height="620" preserveAspectRatio="xMidYMid slice"/>`
     : `<rect width="1000" height="470" fill="${esc(wall)}"/><rect width="1000" height="470" fill="url(#wallg)"/><ellipse cx="500" cy="300" rx="520" ry="300" fill="url(#spot)"/>
        <rect y="470" width="1000" height="150" fill="${esc(wall)}"/><rect y="470" width="1000" height="150" fill="#8a7468" opacity=".22"/><rect y="470" width="1000" height="150" fill="url(#floorg)"/><rect y="466" width="1000" height="6" fill="#fff" opacity=".35"/>`;
@@ -89,6 +90,7 @@ function sceneSVG(placements, wall, interactive, bg, rs) {
 }
 function renderStage() { $('#stage').innerHTML = sceneSVG(ST.placements, ST.wall, true, ST.space, ST.space ? ST.roomScale : 1); drawSel(); renderTools(); }
 function drawSel() {
+  { const p0 = ST.placements.find(p => p.uid === ST.sel); if (p0 && A(p0.id)?.perFt) { const g0 = $('#selbox'); if (g0) g0.innerHTML = ''; return; } }
   const g = $('#selbox'); if (!g) return; g.innerHTML = '';
   const el = ST.sel && $(`#stage .pl[data-uid="${ST.sel}"]`); if (!el) return;
   const b = el.getBBox(), pl = ST.placements.find(p => p.uid === ST.sel), k = +el.dataset.k;
@@ -98,9 +100,9 @@ function renderTools() {
   const pl = ST.placements.find(p => p.uid === ST.sel), el = $('#tools');
   if (!pl) { el.innerHTML = `<span class="small muted">${ES() ? 'Toca una pieza del escenario para moverla, cambiar su tamaño o quitarla. Las flechas la mueven poco a poco.' : 'Tap a piece on the stage to move, resize or remove it. Arrow keys nudge it.'}</span>`; return; }
   const a = A(pl.id); const pt = a.parts && pl.part != null ? a.parts[pl.part] : null;
-  el.innerHTML = `<b style="margin-right:auto">${esc(nm(a))}${pt ? ` <span class="small">· ${esc(pt.name)} (${ES() ? 'pieza' : 'piece'} ${pl.part + 1}/${a.parts.length})</span>` : ''} <span class="muted small">${a.perFt ? `${money(a.price)} ${T('perft')}` : pt ? `${money(a.price)} ${ES() ? 'el set' : 'for the set'}` : money(a.price)}</span></b>
-    ${a.perFt ? `<label class="small" style="margin:0" for="lenIn">${ES() ? 'Pies' : 'Feet'}</label><input id="lenIn" type="number" min="4" max="60" step="1" value="${pl.len || 10}">` : ''}
-    <button class="chip" data-t="smaller" aria-label="Smaller">−</button><button class="chip" data-t="bigger" aria-label="Bigger">+</button>
+  el.innerHTML = `<b style="margin-right:auto">${esc(nm(a))}${pt ? ` <span class="small">· ${esc(pt.name)} (${ES() ? 'pieza' : 'piece'} ${pl.part + 1}/${a.parts.length})</span>` : ''} <span class="muted small">${a.perFt ? money(bPrice(bCfg(pl)).total) : pt ? `${money(a.price)} ${ES() ? 'el set' : 'for the set'}` : money(a.price)}</span></b>
+    ${a.perFt ? `<span class="small">${esc(bLabel(bCfg(pl)))} · <a href="#balloonBox">${ES() ? 'editar abajo' : 'edit below'}</a></span>` : ''}
+    ${a.perFt ? '' : `<button class="chip" data-t="smaller" aria-label="Smaller">−</button><button class="chip" data-t="bigger" aria-label="Bigger">+</button>`}
     <button class="chip" data-t="del">${pt ? (ES() ? 'Quitar pieza' : 'Remove piece') : T('remove')}</button>${pt ? `<button class="chip" data-t="delset">${ES() ? 'Quitar set' : 'Remove set'}</button>` : ''}`;
 }
 function svgPoint(svg, e) { const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY; return pt.matrixTransform(svg.getScreenCTM().inverse()); }
@@ -109,13 +111,14 @@ function bindStage() {
   svg.addEventListener('pointerdown', e => {
     const g = e.target.closest('.pl'); if (!g) { ST.sel = null; renderStage(); return; }
     const pl = ST.placements.find(p => p.uid === g.dataset.uid); ST.sel = pl.uid;
-    const pt = svgPoint(svg, e); drag = { pl, dx: pt.x - pl.x, dy: pt.y - pl.y, g, moved: false };
+    const pt = svgPoint(svg, e); drag = { pl, dx: pt.x - pl.x, dy: pt.y - pl.y, g, moved: false, x0: pl.x, y0: pl.y, gl: !!A(pl.id)?.perFt };
+    if (drag.gl) { ST.bSel = pl.uid; renderBalloon(); if (bTarget(bCfg(pl)).found) drag = null; }
     svg.setPointerCapture(e.pointerId); $$('#stage .pl').forEach(n => n.classList.toggle('sel', n === g)); renderTools(); drawSel();
   });
   svg.addEventListener('pointermove', e => {
     if (!drag) return; const pt = svgPoint(svg, e);
     drag.pl.x = Math.round(Math.max(20, Math.min(980, pt.x - drag.dx))); drag.pl.y = Math.round(Math.max(150, Math.min(618, pt.y - drag.dy))); drag.moved = true;
-    drag.g.setAttribute('transform', `translate(${drag.pl.x} ${drag.pl.y}) scale(${drag.g.dataset.k})`); drawSel();
+    drag.g.setAttribute('transform', drag.gl ? `translate(${drag.pl.x - drag.x0} ${drag.pl.y - drag.y0})` : `translate(${drag.pl.x} ${drag.pl.y}) scale(${drag.g.dataset.k})`); if (!drag.gl) drawSel();
   });
   const end = () => { if (drag) { if (drag.moved) { saveDraft(); renderStage(); } drag = null; } };
   svg.addEventListener('pointerup', end); svg.addEventListener('pointercancel', end);
@@ -135,7 +138,6 @@ function bindStage() {
     if (t === 'delset') { const g = gidOf(pl); ST.placements = ST.placements.filter(p => gidOf(p) !== g); ST.sel = null; }
     saveDraft(); renderAll();
   });
-  $('#tools').addEventListener('change', e => { if (e.target.id === 'lenIn') { const pl = ST.placements.find(p => p.uid === ST.sel); pl.len = Math.max(4, Math.min(60, Math.round(+e.target.value || 10))); saveDraft(); renderSummary(); renderGrid(); } });
 }
 
 /* ---------- panels ---------- */
@@ -257,25 +259,14 @@ function playProject(restart) {
 }
 function useProject() {
   const p = PJP(); const ins = INSP(p.insp);
-  ST.balloon.style = p.insp; ST.colors = ins.colors.slice(0, 3); ST.balloon.request = ES() ? p.req_es : p.req; ST.balloon.plan = null;
-  ensureBalloon(ins.ft); saveDraft(); renderAll(); document.getElementById('studio').scrollIntoView();
+  ST.balloon.request = ES() ? p.req_es : p.req; ST.balloon.plan = null;
+  useInspiration(p.insp);
   toast(ES() ? 'Agregamos los globos de este look. Agrega tus piezas y Karol recrea el resto.' : 'We added this look’s balloons. Add your pieces and Karol recreates the rest.');
 }
 
 /* ---------- balloon designer: inspirations, colors, custom request, AI ---------- */
 const INSP = id => INSPIRATIONS.find(i => i.id === id);
 const swatch = c => { const x = BALLOON_COLORS.find(b => b[0] === c); return `<i class="dot" style="background:${x ? x[2] : '#ccc'}" title="${esc(colorName(c))}"></i>`; };
-function ensureBalloon(ft) {
-  let pl = ST.placements.find(p => A(p.id)?.perFt);
-  if (!pl) { const back = ST.placements.find(p => A(p.id)?.cat === 'backdrops'); addPiece('balloons', back ? back.x + 40 : 520, 575, 1); pl = ST.placements.find(p => A(p.id)?.perFt); }
-  if (pl && ft) pl.len = Math.max(4, Math.min(60, Math.round(ft)));
-  return pl;
-}
-function useInspiration(id) {
-  const ins = INSP(id); if (!ins) return;
-  ST.balloon.style = id; ST.colors = ins.colors.slice(0, 3); ensureBalloon(ins.ft); saveDraft(); renderAll();
-  document.getElementById('studio').scrollIntoView(); toast(ES() ? 'Estilo agregado a tu montaje' : 'Style added to your setup');
-}
 function renderInspirations() {
   $('#inspGrid').innerHTML = INSPIRATIONS.map(i => `<article class="card"><button class="pic photo" data-zoom="${esc(i.img)}" aria-label="${esc(i.name)} photo"><img src="${esc(i.img)}" alt="${esc(ES() ? i.es : i.name)}" loading="lazy"></button><div class="body">
     <div class="row"><h3>${esc(ES() ? i.es : i.name)}</h3><span class="badge ${i.karol ? 'ok' : ''}">${i.karol ? (ES() ? 'Trabajo de Karol' : 'Karol’s work') : (ES() ? 'Inspiración' : 'Inspiration')}</span></div>
@@ -283,58 +274,6 @@ function renderInspirations() {
     <p style="margin:6px 0 0">${i.colors.map(swatch).join('')} <span class="small muted">${i.colors.map(colorName).join(' · ')}</span></p>
     <div class="row" style="margin-top:auto;padding-top:8px"><span class="price">~${i.ft} ft · ${money(i.ft * (A('balloons')?.price || 22))}</span><button class="btn sm" data-insp="${i.id}">${ES() ? 'Usar este estilo' : 'Use this style'}</button></div></div></article>`).join('');
   $('#themeChips').innerHTML = THEMES.map(t => `<button class="chip" data-theme="${esc(t.name)}">${t.colors.map(swatch).join('')} ${esc(ES() ? t.es : t.name)}</button>`).join('');
-}
-function renderBalloon() {
-  const box = $('#balloonBox'); const has = hasBalloons(); const pl = ST.placements.find(p => A(p.id)?.perFt); const es = ES(); const plan = ST.balloon.plan;
-  box.innerHTML = `<div class="row"><h3 style="margin:0">${es ? 'Diseña tus globos' : 'Design your balloons'}</h3>${has ? `<span class="small">${pl.len || 10} ft · ${money((pl.len || 10) * A('balloons').price)}</span>` : `<button class="btn sm ghost" id="addBalloons">${es ? 'Agregar guirnalda' : 'Add a garland'}</button>`}</div>
-    <div class="opts" style="align-items:center"><span class="small muted">${es ? 'Estilo' : 'Style'}:</span>${INSPIRATIONS.map(i => `<button class="chip" data-insp="${i.id}" aria-pressed="${ST.balloon.style === i.id}">${esc(es ? i.es : i.name)}</button>`).join('')}<a class="small" href="#balloons">${es ? 'Ver fotos' : 'See photos'}</a></div>
-    <div class="opts" style="align-items:center"><span class="small muted">${T('colors')}:</span>${BALLOON_COLORS.map(([en, esn, hex]) => `<button class="sw" data-color="${en}" style="background:${hex}" aria-pressed="${ST.colors.includes(en)}" title="${es ? esn : en}" aria-label="${es ? esn : en}"></button>`).join('')}</div>
-    <p class="small" style="margin:6px 0 0">${ST.colors.length ? ST.colors.map(colorName).join(' · ') : `<span class="muted">${es ? 'Elige hasta 3 colores.' : 'Pick up to 3 colors.'}</span>`}</p>
-    <label for="bReq" style="margin-top:12px">${es ? 'Describe tu idea (tema, personaje, colores, dónde van los globos)' : 'Describe your idea (theme, character, colors, where the balloons go)'}</label>
-    <textarea id="bReq" placeholder="${es ? 'Ej.: fiesta de sirena, globos en cascada por el lado izquierdo del arco, lila y aqua' : 'e.g. mermaid party, balloons cascading down the left side of the arch, lilac and teal'}">${esc(ST.balloon.request)}</textarea>
-    <div class="row" style="margin-top:8px"><span class="small muted">${es ? 'Karol recibe tu descripción con la reserva.' : 'Karol receives your description with your request.'}</span><span class="row" style="gap:6px"><button class="btn sm" id="aiPlanBtn">✦ ${es ? 'Diseñar con IA' : 'Design it with AI'}</button>${LIVE ? `<button class="btn sm ghost" id="aiRenderBtn">${es ? 'Foto con IA' : 'AI photo preview'}</button>` : ''}</span></div>
-    <div id="aiOut" aria-live="polite">${plan ? planCard(plan) : ''}</div>`;
-}
-function planCard(plan) {
-  const es = ES();
-  return `<div class="plan"><b>✦ ${es ? 'Propuesta' : 'Suggestion'}${plan.theme ? ': ' + esc(plan.theme) : ''}</b><p style="margin:4px 0">${(plan.colors || []).map(swatch).join('')} ${esc((plan.colors || []).map(colorName).join(', '))} · ${esc(String(plan.ft || ''))} ft · ${esc(plan.placementLabel || plan.placement || '')}</p>
-    ${plan.message ? `<p class="small" style="margin:0">${esc(plan.message)}</p>` : ''}${plan.character ? `<p class="small err" style="margin:4px 0 0">${es ? 'Personajes con licencia: Karol iguala los colores y el estilo; no imprime personajes.' : 'Licensed characters: Karol matches the colors and feel; characters are not printed.'}</p>` : ''}
-    ${plan.preview ? `<img src="${esc(plan.preview)}" alt="AI preview" style="width:100%;border-radius:12px;margin-top:8px">` : ''}<p class="small muted" style="margin:6px 0 0">${plan.source === 'ai' ? (es ? 'Sugerido por IA. Karol lo confirma contigo.' : 'Suggested by AI. Karol confirms the final design with you.') : (es ? 'Sugerencia automática por tema.' : 'Automatic theme suggestion.')}</p></div>`;
-}
-const PLACEMENTS = { 'around-arch': ['around the arch', 'alrededor del arco'], 'half-cascade': ['half-arch cascade on one side', 'cascada en medio arco a un lado'], 'corner-clusters': ['clusters at the corners', 'racimos en las esquinas'], 'full-arch': ['full arch', 'arco completo'] };
-function keywordPlan(text) {
-  const t = text.toLowerCase(); const theme = THEMES.find(x => x.k.some(k => t.includes(k)));
-  const wb = w => new RegExp('(^|[^a-záéíóúñ])' + w.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '($|[^a-záéíóúñ])').test(t);
-  const named = BALLOON_COLORS.filter(([en, es]) => wb(en) || wb(es)).map(c => c[0]);
-  const colors = (named.length ? named : theme ? theme.colors : ['Blush', 'Cream', 'Chrome gold']).slice(0, 3);
-  const placement = /(hoop|aro|round|redond|around|alrededor)/.test(t) ? 'around-arch' : /(corner|esquina|cluster|racimo)/.test(t) ? 'corner-clusters' : /(full|completo|entire)/.test(t) ? 'full-arch' : 'half-cascade';
-  const m = t.match(/(\d{1,2})\s*(ft|feet|foot|pies|pie)/); const ft = m ? +m[1] : { 'around-arch': 14, 'corner-clusters': 8, 'full-arch': 18, 'half-cascade': 12 }[placement];
-  return { source: 'rules', theme: theme ? (ES() ? theme.es : theme.name) : '', colors, placement, ft, character: !!theme?.character, style: placement === 'around-arch' ? 'sage-hoop' : placement === 'full-arch' ? 'ocean-lilac' : 'blush-cascade', message: theme ? (ES() ? theme.tip_es : theme.tip) : '' };
-}
-async function claudeSample() { try { return window.claude?.use ? await window.claude.use('sample') : null; } catch { return null; } }
-async function aiPlan() {
-  const text = ($('#bReq')?.value || ST.balloon.request || '').trim(); ST.balloon.request = text;
-  if (!text) { toast(ES() ? 'Escribe tu idea primero' : 'Describe your idea first'); return; }
-  $('#aiOut').innerHTML = `<p class="small muted">✦ ${ES() ? 'Diseñando…' : 'Designing…'}</p>`;
-  const pieces = ST.placements.map(p => A(p.id)?.name).filter(Boolean);
-  let plan = null;
-  try {
-    if (LIVE) { const { data, error } = await sb.functions.invoke('ai-balloons', { body: { mode: 'plan', text, lang: ST.lang, pieces, colors: BALLOON_COLORS.map(c => c[0]), styles: INSPIRATIONS.map(i => i.id) } }); if (!error && data?.colors) plan = { ...data, source: 'ai' }; }
-    else { const sample = await claudeSample();
-      if (sample) { const r = await sample(`You are the balloon designer for Petit Atelier Events, a party decor rental in Utah. A customer described their balloon idea. Reply with JSON only, no prose: {"theme": short theme name, "colors": up to 3 names chosen ONLY from ${JSON.stringify(BALLOON_COLORS.map(c => c[0]))}, "placement": one of ["around-arch","half-cascade","corner-clusters","full-arch"], "ft": garland length in feet between 6 and 30 (simple, easy-to-build designs), "style": one of ${JSON.stringify(INSPIRATIONS.map(i => i.id))}, "character": true if they mention a licensed character or brand, "message": one friendly sentence in ${ST.lang === 'es' ? 'Spanish' : 'English'} describing the design and one easy accent idea (never promise printed licensed characters)}. Pieces already in their setup: ${JSON.stringify(pieces)}. Customer idea: ${JSON.stringify(text)}`, { modelTier: 'quick' });
-        const j = JSON.parse((r.text.match(/\{[\s\S]*\}/) || ['{}'])[0]); if (j.colors) plan = { ...j, source: 'ai' }; }
-    }
-  } catch (err) { console.warn('AI plan failed', err); }
-  if (!plan) plan = keywordPlan(text);
-  plan.colors = (plan.colors || []).filter(c => BALLOON_COLORS.some(b => b[0] === c)).slice(0, 3);
-  if (!plan.colors.length) plan.colors = keywordPlan(text).colors;
-  plan.ft = Math.max(6, Math.min(30, Math.round(+plan.ft || 12)));
-  plan.placementLabel = (PLACEMENTS[plan.placement] || [plan.placement, plan.placement])[ES() ? 1 : 0];
-  ST.colors = plan.colors; ST.balloon.style = INSP(plan.style) ? plan.style : ST.balloon.style; ST.balloon.plan = plan;
-  const pl = ensureBalloon(plan.ft);
-  const back = ST.placements.find(p => A(p.id)?.cat === 'backdrops');
-  if (pl && back) { pl.x = Math.max(80, Math.min(920, back.x + (plan.placement === 'half-cascade' ? -90 : plan.placement === 'corner-clusters' ? -160 : 0))); pl.y = 590; }
-  saveDraft(); renderAll();
 }
 /* AI photo preview (live site): sends a picture of their real-piece layout to the ai-balloons function */
 async function stagePNG() {
@@ -345,11 +284,11 @@ async function stagePNG() {
   return c.toDataURL('image/png');
 }
 async function aiRender() {
-  if (!ST.balloon.plan) await aiPlan(); const plan = ST.balloon.plan; if (!plan) return;
+  if (!bLines().length) await aiPlan(); const plan = ST.balloon.plan || (ST.balloon.plan = { theme: '', message: '' });
   $('#aiOut').insertAdjacentHTML('beforeend', `<p class="small muted" id="rendering">✦ ${ES() ? 'Creando la foto (20 a 40 segundos)…' : 'Creating the photo (20 to 40 seconds)…'}</p>`);
   try {
     const image = await stagePNG();
-    const { data, error } = await sb.functions.invoke('ai-balloons', { body: { mode: 'render', image, text: ST.balloon.request, colors: plan.colors, placement: plan.placement, ft: plan.ft } });
+    const { data, error } = await sb.functions.invoke('ai-balloons', { body: { mode: 'render', image, text: ST.balloon.request, colors: ST.colors, placement: bLines().map(p => bLabel(bCfg(p))).join('; '), ft: bLines().reduce((s, p) => s + (bCfg(p).ft || 0), 0) } });
     if (error || !data?.url) throw new Error(data?.error || error?.message || 'No image');
     plan.preview = data.url; saveDraft(); renderBalloon();
   } catch (err) { $('#rendering').textContent = (ES() ? 'No se pudo crear la foto: ' : 'Could not create the photo: ') + err.message; }
@@ -524,7 +463,7 @@ function draftBooking() {
   return { code: newCode(), created_at: new Date().toISOString(), status: 'new', lang: ST.lang,
     customer: { name: f.name, email: f.email, phone: f.phone },
     event: { date: ST.date, start: f.start, type: f.type, fulfillment: ST.fulfillment, pickupSlot: ST.fulfillment === 'install' ? '' : f.pickupSlot, returnSlot: ST.fulfillment === 'install' ? '' : ST.S.returnSlot, address: ST.fulfillment === 'install' ? f.address : '', guests: +f.guests || null, setting: f.setting, notes: f.notes },
-    items: P.items, balloonColors: hasBalloons() ? [...ST.colors] : [], balloon: hasBalloons() ? { style: ST.balloon.style, request: ST.balloon.request, plan: ST.balloon.plan ? { theme: ST.balloon.plan.theme, placement: ST.balloon.plan.placement, ft: ST.balloon.plan.ft, message: ST.balloon.plan.message, preview: ST.balloon.plan.preview || '' } : null } : null, design: { wall: ST.wall, placements: ST.placements.map(({ uid, ...r }) => r) },
+    items: P.items, balloonColors: hasBalloons() ? [...ST.colors] : [], balloon: hasBalloons() ? { style: ST.balloon.style, request: ST.balloon.request, pieces: bLines().map(p => ({ ...bCfg(p), label: bLabel(bCfg(p)), price: bPrice(bCfg(p)).total })), plan: ST.balloon.plan ? { theme: ST.balloon.plan.theme, message: ST.balloon.plan.message, character: ST.balloon.plan.character, preview: ST.balloon.plan.preview || '' } : null } : null, design: { wall: ST.wall, placements: ST.placements.map(({ uid, ...r }) => r) },
     protection: ST.protection, totals: { subtotal: P.subtotal, discount: 0, install: P.install, care: P.care, securityDeposit: P.securityDeposit, total: P.total, retainer: P.retainer },
     contract: null, prep: {}, payments: { retainer: false, balance: false, depositReturned: false }, reminders: [] };
 }
@@ -577,9 +516,8 @@ function bindSite() {
     const cat = t.closest('[data-cat]'); if (cat) { ST.cat = cat.dataset.cat; renderGrid(); }
     const sc = t.closest('[data-scat]'); if (sc) { ST.scat = sc.dataset.scat; renderPieces(); }
     const ins = t.closest('[data-insp]'); if (ins) useInspiration(ins.dataset.insp);
-    const th = t.closest('[data-theme]'); if (th) { const T0 = THEMES.find(x => x.name === th.dataset.theme); ST.balloon.request = (ES() ? 'Fiesta ' : '') + (ES() ? T0.es : T0.name + ' party'); ST.colors = T0.colors.slice(); ensureBalloon(); ST.balloon.plan = keywordPlan(ST.balloon.request); ST.balloon.plan.placementLabel = (PLACEMENTS[ST.balloon.plan.placement] || ['', ''])[ES() ? 1 : 0]; saveDraft(); renderAll(); document.getElementById('studio').scrollIntoView(); }
+    const th = t.closest('[data-theme]'); if (th) { const T0 = THEMES.find(x => x.name === th.dataset.theme); ST.balloon.request = ES() ? `Guirnalda alrededor del arco, fiesta ${T0.es}` : `Garland around the arch for a ${T0.name} party`; document.getElementById('studio').scrollIntoView(); renderBalloon(); aiPlan(); }
     const zm = t.closest('[data-zoom]'); if (zm) openModal(`<img src="${esc(zm.dataset.zoom)}" alt="" style="width:100%;border-radius:14px">`);
-    if (t.id === 'addBalloons') { ensureBalloon(ST.balloon.ft || 12); saveDraft(); renderAll(); }
     const pj = t.closest('[data-proj]'); if (pj) { PJ.id = pj.dataset.proj; PJ.step = 0; renderProjects(); playProject(true); }
     if (t.id === 'projPlay') { if (PJ.timer) { clearInterval(PJ.timer); PJ.timer = null; showStep(PJ.step); } else playProject(); }
     if (t.id === 'projNext') { clearInterval(PJ.timer); PJ.timer = null; showStep(PJ.step + 1); }
@@ -587,7 +525,6 @@ function bindSite() {
     if (t.id === 'projUse') useProject();
     if (t.id === 'aiPlanBtn') aiPlan();
     if (t.id === 'aiRenderBtn') aiRender();
-    const col = t.closest('[data-color]'); if (col) { const c = col.dataset.color; ST.colors = ST.colors.includes(c) ? ST.colors.filter(x => x !== c) : ST.colors.length >= 3 ? (toast(ES() ? 'Máximo 3 colores' : 'Up to 3 colors'), ST.colors) : [...ST.colors, c]; saveDraft(); renderBalloon(); renderSummary(); }
     const wl = t.closest('[data-wall]'); if (wl) { ST.wall = wl.dataset.wall; saveDraft(); renderWalls(); renderStage(); }
     const lk = t.closest('[data-look]'); if (lk) { loadLook(LOOKS.find(l => l.id === lk.dataset.look)); document.getElementById('studio').scrollIntoView(); }
     const hr = t.closest('[data-hero]'); if (hr) { heroLook = +hr.dataset.hero; window.heroPaused = true; renderHero(); }

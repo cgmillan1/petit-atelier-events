@@ -1,5 +1,5 @@
 // Petit Atelier · ai-balloons
-// mode "plan":   turns the customer's description into colors, length, placement and a short message (Claude API).
+// mode "plan":   turns the customer's description into balloon pieces (style, what it goes around, coverage, strands, colors, extras) plus a short message (Claude API).
 // mode "render": takes a picture of the customer's Design Studio layout (Karol's real pieces) and adds a photoreal
 //                balloon garland in the chosen colors (OpenAI image edit). Saves it to the "ai" storage bucket.
 // Deploy: supabase functions deploy ai-balloons --no-verify-jwt
@@ -36,20 +36,23 @@ Deno.serve(async (req) => {
     const text = String(body.text || "").slice(0, 600);
 
     if (mode === "plan") {
-      const colors: string[] = (body.colors || []).slice(0, 40), styles: string[] = (body.styles || []).slice(0, 10);
-      const prompt = `You are the balloon designer for Petit Atelier Events, a party decor rental in Utah. Reply with JSON only:
-{"theme": short theme name, "colors": up to 3 names chosen ONLY from ${JSON.stringify(colors)}, "placement": one of ["around-arch","half-cascade","corner-clusters","full-arch"], "ft": garland length in feet 6 to 30 (keep it simple and easy to build), "style": one of ${JSON.stringify(styles)}, "character": true if they mention a licensed character or brand, "message": one friendly sentence in ${body.lang === "es" ? "Spanish" : "English"} describing the design plus one easy accent idea. Never promise printed licensed characters; offer matching colors instead.}
-Pieces in their setup: ${JSON.stringify((body.pieces || []).slice(0, 20))}
-Customer idea: ${JSON.stringify(text)}`;
+      const colors: string[] = (body.colors || []).map(String).slice(0, 60);
+      const AROUND = ["window-arch", "half-arches", "hoop", "doorway", "table", "backdrop-top", "floor"];
+      const prompt = `You are the balloon designer for Petit Atelier Events, a party decor rental in Utah. Turn the customer's request into balloon pieces. Reply with JSON only:
+{"theme": short theme name or "", "character": true if they mention a licensed character, show, game or brand,
+ "message": one or two friendly sentences in ${body.lang === "es" ? "Spanish" : "English"} describing the design and one easy accent idea (never promise printed licensed characters; we match colors and feel),
+ "pieces": [ {"kind": one of ["classic","organic","full","column","cluster"], "around": one of ${JSON.stringify(AROUND)}, "cover": one of ["full","half","corner","base"], "strands": 1-3, "ft": length in feet or 0 to size it to the piece automatically, "count": clusters count if kind is cluster, "colors": 2 to 6 names chosen ONLY from ${JSON.stringify(colors)} that best match the theme (for a character or game use its signature colors, for example Mario Bros: Red, Royal blue, Yellow, Green, Brown, White), "chrome": bool, "greenery": bool, "confetti": bool, "statement": 0-4, "foils": 0-3 } ]}
+"main arch" or "the arch" means window-arch. "around" the arch means cover "full". Use one piece unless they ask for several. Pieces already on their stage: ${JSON.stringify((body.pieces || []).slice(0, 20))}
+Customer request: ${JSON.stringify(text)}`;
       const r = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
         headers: { "x-api-key": Deno.env.get("ANTHROPIC_API_KEY")!, "anthropic-version": "2023-06-01", "content-type": "application/json" },
-        body: JSON.stringify({ model: "claude-haiku-5-5", max_tokens: 400, messages: [{ role: "user", content: prompt }] }),
+        body: JSON.stringify({ model: "claude-haiku-5-5", max_tokens: 700, messages: [{ role: "user", content: prompt }] }),
       });
       if (!r.ok) throw new Error(await r.text());
       const out = await r.json();
       const plan = JSON.parse((out.content?.[0]?.text || "{}").match(/\{[\s\S]*\}/)?.[0] || "{}");
-      plan.colors = (plan.colors || []).filter((c: string) => colors.includes(c)).slice(0, 3);
+      plan.pieces = (Array.isArray(plan.pieces) ? plan.pieces : []).slice(0, 4).map((p: any) => ({ ...p, colors: (p.colors || []).filter((c: string) => colors.includes(c)).slice(0, 6) }));
       return json(plan);
     }
 

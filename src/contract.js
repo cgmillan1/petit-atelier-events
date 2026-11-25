@@ -35,7 +35,7 @@ function contractHTML(b, S, assets) {
   <p>Typing a name and drawing a signature below has the same effect as a handwritten signature. This agreement is governed by the laws of the State of Utah.</p>
   <h4>Exhibit A: pieces and replacement values</h4>
   <table class="ctable"><thead><tr><th>Piece</th><th class="n">Qty</th><th class="n">Rental</th><th class="n">Replacement</th></tr></thead><tbody>${rows}</tbody></table>
-  ${b.balloonColors?.length ? `<p>Balloon colors: ${esc(b.balloonColors.join(', '))}. Balloon shades can vary slightly by batch.${b.balloon?.request ? ` Customer's balloon idea: “${esc(b.balloon.request)}”. Petit Atelier confirms the final balloon design in writing before the event; licensed characters are matched by color only and are not printed.` : ''}</p>` : ''}
+  ${b.balloonColors?.length ? `<p>Balloon colors: ${esc(b.balloonColors.join(', '))}. Balloon shades can vary slightly by batch.${(b.balloon?.pieces || []).length ? ` Balloon pieces: ${esc(b.balloon.pieces.map(p => p.label + (p.strands > 1 ? `, ${p.strands} strands` : '') + ', ' + (p.colors || []).join('/')).join('; '))}. Balloon prices are estimates based on the options chosen; Petit Atelier confirms the final price in writing before the retainer is due.` : ''}${b.balloon?.request ? ` Customer's balloon idea: “${esc(b.balloon.request)}”. Petit Atelier confirms the final balloon design in writing before the event; licensed characters are matched by color only and are not printed.` : ''}</p>` : ''}
   <table class="ctable totals"><tbody>
     <tr><td>Rental subtotal</td><td class="n">${money(t.subtotal)}</td></tr>
     ${t.discount ? `<tr><td>Package savings</td><td class="n">-${money(t.discount)}</td></tr>` : ''}

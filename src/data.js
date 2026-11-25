@@ -11,7 +11,7 @@ const CONFIG = {
 /* Karol's real inventory (photos from her Services & Pricing Guide).
    cutout = background-removed photo used in the Design Studio; photo = catalog photo.
    ft = real height in feet, ar = width/height of the cutout. Prices are placeholders Karol edits in her dashboard. */
-const SEED_VERSION = 7;
+const SEED_VERSION = 8;
 const SEED_ASSETS = [
   { id: 'window-arch', cat: 'backdrops', name: 'Gold window arch', es: 'Arco ventana dorado', price: 45, qty: 1, repl: 160, ft: 7.2, ar: 0.493, cutout: 'img/window_arch.webp', x: 500, y: 472, s: 1,
     desc: 'Gold metal window-pane arch, about 7 ft tall. Beautiful on its own or with a balloon garland.', desc_es: 'Arco dorado tipo ventana de unos 2.2 m. Hermoso solo o con guirnalda de globos.' },
@@ -39,6 +39,7 @@ const SEED_ASSETS = [
 
 const SEED_SETTINGS = {
   depositPct: 30,            // % retainer to hold the date
+  balloon: { classic: 16, organic: 22, full: 30, column: 18, cluster: 35, extraColor: 15, chrome: 3, greenery: 4, confetti: 2, statement: 12, foil: 25, frame: 40, minFt: 4, includedColors: 3, maxColors: 6, strandFactor: 0.85 }, // balloon builder prices
   carePlan: 100,             // flat protection plan
   carePlanCap: 500,          // accidental damage covered up to
   securityDeposit: 150,      // refundable, if they decline the plan
@@ -83,20 +84,38 @@ const PROJECTS = [
 ];
 /* Quick theme ideas for the balloon designer (works without AI too). Characters: colors only, no licensed prints. */
 const THEMES = [
-  { k: ['mermaid', 'sirena', 'ocean', 'mar', 'under the sea'], name: 'Mermaid', es: 'Sirena', colors: ['Teal', 'Lilac', 'Chrome gold'], tip: 'Add a few clear balloons for bubbles and shells on the table.', tip_es: 'Agrega globos transparentes como burbujas y conchas en la mesa.' },
-  { k: ['safari', 'jungle', 'jungla', 'wild one', 'animal'], name: 'Safari', es: 'Safari', colors: ['Sage', 'Cream', 'Chrome gold'], tip: 'Eucalyptus or palm leaves tucked in the garland.', tip_es: 'Hojas de eucalipto o palma dentro de la guirnalda.' },
-  { k: ['boho', 'neutral', 'rustic', 'rústico'], name: 'Boho', es: 'Boho', colors: ['Cream', 'Peach', 'Terracotta'], tip: 'Pampas next to the arch.', tip_es: 'Pampas junto al arco.' },
-  { k: ['princess', 'princesa', 'royal'], name: 'Princess', es: 'Princesa', colors: ['Blush', 'Lilac', 'Chrome gold'], tip: 'A crown on the cake table.', tip_es: 'Una corona en la mesa del pastel.' },
-  { k: ['unicorn', 'unicornio', 'rainbow', 'arcoíris', 'arcoiris'], name: 'Unicorn', es: 'Unicornio', colors: ['Pastel pink', 'Lilac', 'Baby blue'], tip: 'Gold accents make pastels pop.', tip_es: 'Detalles dorados hacen resaltar los pasteles.' },
-  { k: ['baby boy', 'niño', 'its a boy', "it's a boy", 'blue'], name: 'Baby boy', es: 'Baby shower niño', colors: ['Baby blue', 'White', 'Chrome silver'], tip: '', tip_es: '' },
+  { k: ['mermaid', 'sirena', 'ocean', 'under the sea', 'bajo el mar', 'sea'], name: 'Mermaid', es: 'Sirena', colors: ['Teal', 'Lilac', 'Baby blue', 'Chrome gold'], tip: 'Add a few clear balloons for bubbles and shells on the table.', tip_es: 'Agrega globos transparentes como burbujas y conchas en la mesa.' },
+  { k: ['mario', 'mario bros', 'super mario', 'luigi', 'nintendo'], name: 'Super plumber party', es: 'Fiesta de plomeros', colors: ['Red', 'Royal blue', 'Yellow', 'Green', 'White'], character: true, tip: 'Add a few giant red and green balloons and gold "coin" accents.', tip_es: 'Agrega globos gigantes rojos y verdes y detalles dorados tipo moneda.' },
+  { k: ['sonic', 'hedgehog'], name: 'Speedy hedgehog', es: 'Erizo veloz', colors: ['Royal blue', 'Red', 'Yellow', 'White'], character: true, tip: 'Gold chrome rings look great as accents.', tip_es: 'Detalles dorados cromados como anillos.' },
+  { k: ['minecraft', 'pixel', 'blocks game'], name: 'Pixel world', es: 'Mundo pixel', colors: ['Green', 'Lime', 'Brown', 'Black'], character: true, tip: 'Square foil balloons make it feel pixelated.', tip_es: 'Globos de foil cuadrados le dan efecto pixel.' },
+  { k: ['paw patrol', 'paw', 'puppy', 'perrito', 'patrulla'], name: 'Puppy rescue', es: 'Rescate de perritos', colors: ['Red', 'Royal blue', 'Yellow', 'White'], character: true, tip: 'A paw-print foil balloon on top.', tip_es: 'Un globo de foil de huellita arriba.' },
+  { k: ['bluey', 'bingo'], name: 'Blue pup', es: 'Perrita azul', colors: ['Baby blue', 'Royal blue', 'Peach', 'Cream'], character: true, tip: 'Soft blues and peach, playful and light.', tip_es: 'Azules suaves y durazno.' },
+  { k: ['barbie', 'doll', 'muñeca'], name: 'Pink doll', es: 'Muñeca rosa', colors: ['Hot pink', 'Pastel pink', 'White', 'Chrome silver'], character: true, tip: 'Chrome silver accents make the pinks pop.', tip_es: 'Detalles plateados cromados.' },
+  { k: ['mickey', 'minnie', 'mouse', 'ratón', 'raton'], name: 'Mouse party', es: 'Fiesta ratoncito', colors: ['Red', 'Black', 'Yellow', 'White'], character: true, tip: 'Three-balloon "ears" clusters are easy and fun.', tip_es: 'Racimos de tres globos tipo orejitas.' },
+  { k: ['spiderman', 'spider-man', 'spider', 'superhero', 'super hero', 'héroe', 'heroe', 'marvel', 'avengers', 'batman'], name: 'Superhero', es: 'Superhéroe', colors: ['Red', 'Royal blue', 'Black', 'Chrome silver'], character: true, tip: 'Colors only, no licensed characters.', tip_es: 'Solo colores, sin personajes con licencia.' },
+  { k: ['frozen', 'ice', 'winter', 'invierno', 'snow', 'nieve', 'onederland'], name: 'Winter', es: 'Invierno', colors: ['Baby blue', 'White', 'Clear', 'Chrome silver'], character: true, tip: 'Clear and silver balloons look like ice.', tip_es: 'Globos transparentes y plateados parecen hielo.' },
+  { k: ['dinosaur', 'dino', 'dinosaurio', 'jurassic'], name: 'Dinosaur', es: 'Dinosaurios', colors: ['Green', 'Sage', 'Orange', 'Brown'], tip: 'Tuck in palm leaves.', tip_es: 'Agrega hojas de palma.' },
+  { k: ['construction', 'construcción', 'construccion', 'truck', 'camión', 'camion'], name: 'Construction', es: 'Construcción', colors: ['Yellow', 'Black', 'Orange'], tip: 'Cone-orange accents.', tip_es: 'Detalles naranja tipo cono.' },
+  { k: ['space', 'espacio', 'astronaut', 'astronauta', 'galaxy', 'planet', 'cohete', 'rocket'], name: 'Outer space', es: 'Espacio', colors: ['Navy', 'Black', 'Chrome silver', 'Purple'], tip: 'Add star foils.', tip_es: 'Agrega estrellas de foil.' },
+  { k: ['football', 'soccer', 'fútbol', 'futbol', 'baseball', 'béisbol', 'basketball', 'sports', 'deportes'], name: 'Sports', es: 'Deportes', colors: ['Green', 'White', 'Black'], tip: 'Swap in your team colors.', tip_es: 'Cámbialo por los colores de tu equipo.' },
+  { k: ['cars', 'race', 'racing', 'carreras'], name: 'Race day', es: 'Carreras', colors: ['Red', 'Black', 'White', 'Yellow'], character: true, tip: 'Black and white checkered clusters.', tip_es: 'Racimos a cuadros blanco y negro.' },
+  { k: ['safari', 'jungle', 'jungla', 'wild one', 'animal', 'animales'], name: 'Safari', es: 'Safari', colors: ['Sage', 'Cream', 'Brown', 'Chrome gold'], tip: 'Eucalyptus or palm leaves tucked in the garland.', tip_es: 'Hojas de eucalipto o palma dentro de la guirnalda.' },
+  { k: ['boho', 'neutral', 'rustic', 'rústico', 'rustico'], name: 'Boho', es: 'Boho', colors: ['Cream', 'Peach', 'Terracotta'], tip: 'Pampas next to the arch.', tip_es: 'Pampas junto al arco.' },
+  { k: ['princess', 'princesa', 'royal', 'castle', 'castillo'], name: 'Princess', es: 'Princesa', colors: ['Blush', 'Lilac', 'Chrome gold'], tip: 'A crown on the cake table.', tip_es: 'Una corona en la mesa del pastel.' },
+  { k: ['fairy', 'hada', 'hadas', 'garden', 'jardín', 'jardin', 'butterfly', 'mariposa', 'mariposas'], name: 'Fairy garden', es: 'Jardín de hadas', colors: ['Sage', 'Blush', 'Lilac', 'Cream'], tip: 'Greenery and a few butterflies.', tip_es: 'Follaje y unas mariposas.' },
+  { k: ['unicorn', 'unicornio', 'rainbow', 'arcoíris', 'arcoiris'], name: 'Unicorn', es: 'Unicornio', colors: ['Pastel pink', 'Lilac', 'Baby blue', 'Chrome gold'], tip: 'Gold accents make pastels pop.', tip_es: 'Detalles dorados hacen resaltar los pasteles.' },
+  { k: ['baby boy', 'niño', 'its a boy', "it's a boy"], name: 'Baby boy', es: 'Baby shower niño', colors: ['Baby blue', 'White', 'Chrome silver'], tip: '', tip_es: '' },
   { k: ['baby girl', 'niña', 'its a girl', "it's a girl"], name: 'Baby girl', es: 'Baby shower niña', colors: ['Blush', 'White', 'Chrome gold'], tip: '', tip_es: '' },
   { k: ['gender reveal', 'revelación', 'revelacion'], name: 'Gender reveal', es: 'Revelación de género', colors: ['Baby blue', 'Pastel pink', 'White'], tip: '', tip_es: '' },
   { k: ['graduation', 'graduación', 'graduacion', 'grad'], name: 'Graduation', es: 'Graduación', colors: ['Black', 'White', 'Chrome gold'], tip: 'Swap in your school colors.', tip_es: 'Cámbialo por los colores de tu escuela.' },
-  { k: ['mickey', 'minnie', 'mouse', 'ratón', 'raton'], name: 'Mouse party', es: 'Fiesta ratoncito', colors: ['Red', 'Black', 'Yellow'], character: true, tip: 'Karol matches the colors; licensed characters are not printed on balloons.', tip_es: 'Karol iguala los colores; no se imprimen personajes con licencia.' },
-  { k: ['spider', 'superhero', 'super hero', 'héroe', 'heroe', 'marvel', 'batman'], name: 'Superhero', es: 'Superhéroe', colors: ['Red', 'Navy', 'Chrome silver'], character: true, tip: 'Colors only, no licensed characters.', tip_es: 'Solo colores, sin personajes con licencia.' },
-  { k: ['frozen', 'ice', 'winter', 'invierno', 'snow'], name: 'Winter', es: 'Invierno', colors: ['Baby blue', 'White', 'Chrome silver'], character: true, tip: 'Clear and silver balloons look like ice.', tip_es: 'Globos transparentes y plateados parecen hielo.' },
-  { k: ['halloween', 'spooky'], name: 'Halloween', es: 'Halloween', colors: ['Black', 'Orange', 'Chrome gold'], tip: '', tip_es: '' },
+  { k: ['wedding', 'boda', 'bridal', 'novia', 'engagement', 'compromiso'], name: 'Wedding', es: 'Boda', colors: ['White', 'Cream', 'Chrome gold'], tip: 'Greenery makes it feel elegant.', tip_es: 'El follaje lo hace elegante.' },
+  { k: ['quinceañera', 'quinceanera', 'quince', 'xv'], name: 'Quinceañera', es: 'Quinceañera', colors: ['Blush', 'Rose gold', 'White', 'Chrome gold'], tip: 'A big number 15 foil.', tip_es: 'Un número 15 de foil grande.' },
+  { k: ['fiesta', 'mexican', 'mexicana', 'cinco de mayo', 'taco'], name: 'Fiesta', es: 'Fiesta mexicana', colors: ['Hot pink', 'Orange', 'Yellow', 'Teal'], tip: 'Papel picado next to the arch.', tip_es: 'Papel picado junto al arco.' },
+  { k: ['cowboy', 'western', 'vaquero', 'rodeo'], name: 'Western', es: 'Vaquero', colors: ['Brown', 'Cream', 'Terracotta'], tip: 'Hay bale and a cowboy hat on the table.', tip_es: 'Paca de paja y sombrero vaquero.' },
+  { k: ['halloween', 'spooky'], name: 'Halloween', es: 'Halloween', colors: ['Black', 'Orange', 'Purple'], tip: '', tip_es: '' },
   { k: ['christmas', 'navidad', 'holiday'], name: 'Christmas', es: 'Navidad', colors: ['Red', 'Eucalyptus', 'Chrome gold'], tip: '', tip_es: '' },
+  { k: ['valentine', 'san valentín', 'san valentin', 'love'], name: 'Valentine', es: 'San Valentín', colors: ['Red', 'Hot pink', 'Blush'], tip: 'Heart foils.', tip_es: 'Corazones de foil.' },
+  { k: ['4th of july', 'fourth of july', 'independence', 'usa', 'america'], name: 'Fourth of July', es: '4 de julio', colors: ['Red', 'White', 'Navy'], tip: 'Star foils.', tip_es: 'Estrellas de foil.' },
 ];
 const PACKAGES = [];
 
@@ -109,7 +128,7 @@ const I18N = {
     cta_design: 'Design my party', cta_browse: 'Browse the collection', avail_for: 'Availability for', pick_date: 'Pick your event date',
     add: 'Add', added: 'Added', remove: 'Remove', available: 'available', booked: 'Booked that date', only_left: 'left',
     studio_title: 'Design studio', studio_sub: 'Every piece here is a real photo of Karol\u2019s inventory. Tap a piece to place it, drag it where you want it, or try it on a photo of your own space. Your total updates as you go.',
-    your_setup: 'Your setup', empty_setup: 'Nothing here yet. Start from a look or tap any piece.', subtotal: 'Rental subtotal', colors: 'Balloon colors (up to 3)', length: 'Garland length (feet)', perft: 'per foot', photo_only: 'Photo only for now', real_photo: 'Real photo', about: 'Meet Karol', pickup: 'Pick up & return', install: 'Installation', get_it: 'How you get it', free: 'Free', space: 'Use a photo of my space', space_off: 'Back to the studio wall', room_scale: 'Piece size in your photo', protection: 'Protection',
+    your_setup: 'Your setup', empty_setup: 'Nothing here yet. Start from a look or tap any piece.', subtotal: 'Rental subtotal', colors: 'Balloon colors', length: 'Garland length (feet)', perft: 'per foot', photo_only: 'Photo only for now', real_photo: 'Real photo', about: 'Meet Karol', pickup: 'Pick up & return', install: 'Installation', get_it: 'How you get it', free: 'Free', space: 'Use a photo of my space', space_off: 'Back to the studio wall', room_scale: 'Piece size in your photo', protection: 'Protection',
     est_total: 'Estimated total', deposit_today: 'Retainer to hold your date', reserve: 'Reserve this setup', start_look: 'Start from a look', palette: 'Balloon palette', wall: 'Wall', clear: 'Clear all',
     made_fresh: 'Made fresh for your date', min_order: 'Minimum order', step_event: 'Your event', step_review: 'Protection', step_sign: 'Sign', step_done: 'Done',
     name: 'Full name', email: 'Email', phone: 'Phone', event_type: 'Event type', address: 'Event address (for installation)', slot: 'Pickup time', guests: 'Guests', start: 'Start time', setting: 'Setting', indoor: 'Indoor', outdoor: 'Outdoor', covered: 'Covered patio', notes: 'Notes for Karol (theme, colors, cake size)',
@@ -122,7 +141,7 @@ const I18N = {
     cta_design: 'Diseñar mi fiesta', cta_browse: 'Ver la colección', avail_for: 'Disponibilidad para', pick_date: 'Elige la fecha del evento',
     add: 'Agregar', added: 'Agregado', remove: 'Quitar', available: 'disponibles', booked: 'Reservado esa fecha', only_left: 'quedan',
     studio_title: 'Estudio de diseño', studio_sub: 'Cada pieza es una foto real del inventario de Karol. Toca una pieza para colocarla, arrástrala o pruébala en una foto de tu propio espacio. Tu total se actualiza al instante.',
-    your_setup: 'Tu montaje', empty_setup: 'Aún no hay nada. Empieza con un look o toca una pieza.', subtotal: 'Subtotal de renta', colors: 'Colores de globos (hasta 3)', length: 'Largo de la guirnalda (pies)', perft: 'por pie', photo_only: 'Por ahora solo foto', real_photo: 'Foto real', about: 'Conoce a Karol', pickup: 'Recoger y devolver', install: 'Instalación', get_it: 'Cómo lo recibes', free: 'Gratis', space: 'Usar una foto de mi espacio', space_off: 'Volver a la pared del estudio', room_scale: 'Tamaño de las piezas en tu foto', protection: 'Protección',
+    your_setup: 'Tu montaje', empty_setup: 'Aún no hay nada. Empieza con un look o toca una pieza.', subtotal: 'Subtotal de renta', colors: 'Colores de globos', length: 'Largo de la guirnalda (pies)', perft: 'por pie', photo_only: 'Por ahora solo foto', real_photo: 'Foto real', about: 'Conoce a Karol', pickup: 'Recoger y devolver', install: 'Instalación', get_it: 'Cómo lo recibes', free: 'Gratis', space: 'Usar una foto de mi espacio', space_off: 'Volver a la pared del estudio', room_scale: 'Tamaño de las piezas en tu foto', protection: 'Protección',
     est_total: 'Total estimado', deposit_today: 'Anticipo para apartar tu fecha', reserve: 'Reservar este montaje', start_look: 'Empieza con un look', palette: 'Paleta de globos', wall: 'Pared', clear: 'Borrar todo',
     made_fresh: 'Hecho a mano para tu fecha', min_order: 'Pedido mínimo', step_event: 'Tu evento', step_review: 'Protección', step_sign: 'Firma', step_done: 'Listo',
     name: 'Nombre completo', email: 'Correo', phone: 'Teléfono', event_type: 'Tipo de evento', address: 'Dirección del evento (para instalación)', slot: 'Hora para recoger', guests: 'Invitados', start: 'Hora de inicio', setting: 'Lugar', indoor: 'Interior', outdoor: 'Exterior', covered: 'Patio cubierto', notes: 'Notas para Karol (tema, colores, tamaño del pastel)',

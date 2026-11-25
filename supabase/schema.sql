@@ -57,6 +57,32 @@ language sql stable security definer set search_path = public as $$
   group by 1;
 $$;
 
+-- Balloon builder price (same formula as the website; rates live in settings.balloon so Karol can change them)
+create or replace function public.balloon_price(cfg jsonb, s jsonb)
+returns numeric language plpgsql immutable as $$
+declare
+  r jsonb := '{"classic":16,"organic":22,"full":30,"column":18,"cluster":35,"extraColor":15,"chrome":3,"greenery":4,"confetti":2,"statement":12,"foil":25,"frame":40,"minFt":4,"includedColors":3,"maxColors":6,"strandFactor":0.85}'::jsonb || coalesce(s -> 'balloon', '{}'::jsonb);
+  kind text := coalesce(cfg ->> 'kind', 'organic');
+  ft numeric; strands int; sf numeric; lf numeric; total numeric := 0; ncol int;
+begin
+  if kind not in ('classic','organic','full','column','cluster') then kind := 'organic'; end if;
+  ft := case when kind = 'cluster' then 0 else greatest((r->>'minFt')::numeric, least(60, round(coalesce((cfg->>'ft')::numeric, 10)))) end;
+  strands := case when kind in ('column','cluster') then 1 else greatest(1, least(3, coalesce((cfg->>'strands')::int, 1))) end;
+  sf := 1 + (strands - 1) * (r->>'strandFactor')::numeric;
+  if kind = 'cluster' then total := greatest(1, least(12, coalesce((cfg->>'count')::int, 3))) * (r->>'cluster')::numeric;
+  else total := round(ft * (r->>kind)::numeric * sf); end if;
+  ncol := least((r->>'maxColors')::int, jsonb_array_length(coalesce(cfg->'colors', '[]'::jsonb)));
+  total := total + greatest(0, ncol - (r->>'includedColors')::int) * (r->>'extraColor')::numeric;
+  lf := case when kind = 'cluster' then 0 else ft * sf end;
+  if coalesce((cfg->>'chrome')::boolean, false)   then total := total + round(lf * (r->>'chrome')::numeric); end if;
+  if coalesce((cfg->>'greenery')::boolean, false) then total := total + round(lf * (r->>'greenery')::numeric); end if;
+  if coalesce((cfg->>'confetti')::boolean, false) then total := total + round(lf * (r->>'confetti')::numeric); end if;
+  total := total + greatest(0, least(6, coalesce((cfg->>'statement')::int, 0))) * (r->>'statement')::numeric;
+  total := total + greatest(0, least(4, coalesce((cfg->>'foils')::int, 0))) * (r->>'foil')::numeric;
+  if cfg->>'around' = 'doorway' and kind not in ('column','cluster') then total := total + (r->>'frame')::numeric; end if;
+  return total;
+end $$;
+
 -- Creates a request. Prices, fees and availability are re-checked on the server so totals can't be tampered with.
 create or replace function public.create_booking(payload jsonb)
 returns text language plpgsql security definer set search_path = public as $$
@@ -64,7 +90,7 @@ declare
   s jsonb := coalesce((select data from public.settings where id = 1), '{}');
   d date := (payload -> 'event' ->> 'date')::date;
   it jsonb; a record; held int; items jsonb := '[]'; sub numeric := 0;
-  disc numeric; inst numeric; care numeric; secdep numeric; total numeric; v_code text;
+  disc numeric; inst numeric; care numeric; secdep numeric; total numeric; v_code text; bcfg jsonb; bp numeric;
 begin
   if d < current_date + 2 then raise exception 'Please book at least 2 days ahead'; end if;
   if coalesce(payload -> 'customer' ->> 'email', '') !~ '^\S+@\S+\.\S+$' then raise exception 'Valid email required'; end if;
@@ -77,11 +103,12 @@ begin
     select coalesce(r.qty, 0) into held from public.reserved_on(d, coalesce((s ->> 'bufferDays')::int, 1)) r where r.asset_id = a.id;
     if not coalesce((a.data ->> 'made')::boolean, false) and coalesce(held, 0) + (it ->> 'qty')::int > (a.data ->> 'qty')::int then
       raise exception '% was just booked for that date', a.data ->> 'name'; end if;
-    if coalesce((a.data ->> 'perFt')::boolean, false) then   -- balloons: price per foot, made fresh
-      items := items || jsonb_build_object('id', a.id, 'qty', 1, 'ft', greatest(4, least(60, coalesce((it ->> 'ft')::int, 10))),
-        'price', (a.data ->> 'price')::numeric * greatest(4, least(60, coalesce((it ->> 'ft')::int, 10))),
-        'name', (a.data ->> 'name') || ' (' || greatest(4, least(60, coalesce((it ->> 'ft')::int, 10))) || ' ft)');
-      sub := sub + (a.data ->> 'price')::numeric * greatest(4, least(60, coalesce((it ->> 'ft')::int, 10)));
+    if coalesce((a.data ->> 'perFt')::boolean, false) then   -- balloons: built to order, priced by the balloon builder formula
+      bcfg := coalesce(it -> 'cfg', jsonb_build_object('kind', 'organic', 'ft', coalesce((it ->> 'ft')::int, 10), 'colors', '[]'::jsonb));
+      bp := public.balloon_price(bcfg, s);
+      items := items || jsonb_build_object('id', a.id, 'qty', 1, 'ft', coalesce((bcfg ->> 'ft')::int, 0), 'price', bp, 'cfg', bcfg,
+        'name', 'Balloons: ' || coalesce(it ->> 'name', bcfg ->> 'kind'));
+      sub := sub + bp;
     else
       items := items || jsonb_build_object('id', a.id, 'qty', (it ->> 'qty')::int, 'price', (a.data ->> 'price')::numeric, 'name', a.data ->> 'name');
       sub := sub + (a.data ->> 'price')::numeric * (it ->> 'qty')::int;
