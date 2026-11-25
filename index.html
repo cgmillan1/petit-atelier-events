@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Petit Atelier Events</title>
+<meta name="description" content="Balloon arches, backdrops and party decor rentals in Eagle Mountain, Utah. Design your setup online, see live pricing and reserve your date.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Allura&family=Forum&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="icon" href="img/logo-128.png">
+<style>
+/* VOICE: Karol's own voice from her guide: warm, personal, a little romantic.
+   IDEA: her printed Services & Pricing Guide come to life: mauve paper, script titles, brush-stroke labels, real product photos.
+   PICTURE: the Design Studio stage with real cut-out photos of her pieces is the hero and the tool.
+   COLOUR: her guide's mauve paper #e6e0e2, mauve brush #d4bdc5, black PA ink, the pink balloon from her logo as accent.
+   TYPE: Allura script for section titles, Forum for headings and labels, Josefin Sans for text. LAYOUT: stage left, live total right; stacks on phones. */
+:root{color-scheme:light dark;
+  --bg:light-dark(#f4f0f1,#1c1819);--paper:light-dark(#e6e0e2,#26201f);--panel:light-dark(#fffdfd,#2a2425);--soft:light-dark(#efe8ea,#332c2d);
+  --ink:light-dark(#1f1b1c,#f4ecee);--muted:light-dark(#6d6265,#bcaeb2);--line:light-dark(#ddd2d6,#41383a);
+  --blush:#e9a6b8;--blushd:light-dark(#a8556f,#f0b3c4);--mauve:#d4bdc5;--sage:light-dark(#6f8660,#a9be98);--gold:#b8924a;--ok:light-dark(#3f7a4a,#8fcf9a);--warn:light-dark(#a3542b,#f0a070)}
+*{box-sizing:border-box;min-width:0}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{margin:0;background:var(--bg);color:var(--ink);font:300 17px/1.6 'Josefin Sans',system-ui,sans-serif;overflow-x:clip}
+b,strong{font-weight:600}
+h1,h2,h3{font-family:Forum,Georgia,serif;font-weight:400;line-height:1.08;text-wrap:balance;margin:0 0 .4em}
+h1{font-size:clamp(38px,5.2vw,58px)}h2{font-size:clamp(30px,3.4vw,44px)}h3{font-size:24px}
+.script{font-family:Allura,cursive;font-weight:400;font-size:clamp(46px,6vw,78px);line-height:1;margin:0 0 .15em}
+.brush{display:inline-block;font-family:Forum,serif;font-size:22px;padding:10px 34px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 60' preserveAspectRatio='none'%3E%3Cpath d='M8 14c40-8 120-10 200-8 30 1 60 3 86 6l-6 6 10 4-14 4 12 6-18 3 8 7c-60 6-150 8-240 6l-10-6 6-5-8-5 7-5-9-5z' fill='%23d4bdc5'/%3E%3C/svg%3E") center/100% 100% no-repeat;color:#1f1b1c}
+p{margin:0 0 1em}a{color:inherit}
+.wrap{max-width:1240px;margin:0 auto}
+.band{padding:clamp(40px,6vw,88px) max(5vw,16px)}
+.muted{color:var(--muted)}.small{font-size:14px}
+button,input,select,textarea{font:inherit;color:inherit}
+input,select,textarea{font-size:16px;width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);min-height:44px}
+textarea{min-height:84px;resize:vertical}
+label{display:block;font-size:14px;color:var(--muted);margin-bottom:4px}
+:focus-visible{outline:2px solid var(--blushd);outline-offset:2px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 22px;border-radius:999px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);font-weight:500;cursor:pointer;text-decoration:none;white-space:nowrap}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.blush{background:var(--blush);border-color:var(--blush);color:#2b2624}
+.btn.sm{min-height:36px;padding:0 14px;font-size:14px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.chip{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--panel);cursor:pointer;font-size:14px;white-space:nowrap}
+.chip[aria-pressed=true]{border-color:var(--ink);background:var(--ink);color:var(--bg)}
+/* header */
+.top{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:14px;padding:10px max(3vw,16px);flex-wrap:wrap}
+@media(min-width:901px){.top .wrap{flex-wrap:nowrap}}@media(max-width:1440px){.logo span{display:none}}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:auto}
+.logo img{width:52px;height:52px;border-radius:50%;background:#fff;box-shadow:0 0 0 2px var(--mauve)}.logo b{font-family:Forum,serif;font-size:23px;font-weight:400;line-height:1}.logo span{display:block;font-size:12px;color:var(--muted);letter-spacing:.02em}
+.nav{display:flex;gap:2px;flex-wrap:nowrap}.nav a{white-space:nowrap;padding:8px 8px;border-radius:8px;text-decoration:none;font-size:15px}.nav a:hover{background:var(--soft)}
+.lang{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}.lang button{border:0;background:none;padding:6px 12px;cursor:pointer;font-size:14px;min-height:36px}.lang button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+@media(max-width:900px){.nav{display:none}}
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(24px,4vw,56px);align-items:center}
+.hero p.lead{font-size:18px;color:var(--muted);max-width:34em}
+.hero .ctas{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}
+.datebox{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--panel);max-width:440px}
+.datebox input{width:auto;flex:1;min-width:150px}
+.stagecard{border-radius:22px;overflow:hidden;background:var(--soft);box-shadow:0 30px 60px -30px rgba(60,40,30,.35);position:relative}
+.stagecard svg{display:block;width:100%;height:auto}
+.looks{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}.looks>span{white-space:nowrap}
+@media(max-width:820px){.hero{grid-template-columns:1fr}}
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-top:22px}
+.step{padding:22px;border-top:1px solid var(--mauve)}
+.step b{font-family:Forum,serif;font-size:24px;font-weight:400;display:block;margin-bottom:6px}
+@media(max-width:820px){.steps{grid-template-columns:1fr 1fr}}@media(max-width:480px){.steps{grid-template-columns:1fr}}
+/* collection */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
+.card .pic{aspect-ratio:4/3;background:linear-gradient(180deg,#ece6e8 0 78%,#ddd3d6 78%);display:grid;place-items:center;padding:16px;cursor:pointer;border:0;width:100%}
+.card .pic{position:relative;overflow:hidden}.card .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.card .pic img.cut{inset:14px;width:calc(100% - 28px);height:calc(100% - 28px)}.card .pic img.cut,.piece img.cut{object-fit:contain;filter:drop-shadow(0 8px 10px rgba(40,25,25,.22))}
+.infopic{max-height:70vh;background:linear-gradient(180deg,#ece6e8 0 78%,#ddd3d6 78%);border-radius:16px;aspect-ratio:1;display:grid;place-items:center;overflow:hidden;position:relative}.infopic img{width:100%;height:100%;object-fit:cover}.infopic img.cut{object-fit:contain;padding:18px}.infopic img.mini{position:absolute;right:10px;bottom:10px;width:34%;height:auto;background:#fff9;border-radius:12px;padding:6px}
+.card .body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px;flex:1}
+.card h3{font-size:21px;margin:0}
+.price{font-weight:600;white-space:nowrap}
+.row{display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap}
+.badge{font-size:13px;padding:3px 10px;border-radius:999px;background:var(--soft);white-space:nowrap}
+.badge.ok{color:var(--ok)}.badge.no{color:var(--warn)}.badge.fresh{color:var(--blushd)}
+/* studio */
+.studio{display:grid;grid-template-columns:260px minmax(0,1fr) 300px;gap:18px;align-items:start;margin-top:20px}
+.pane{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px}
+.pieces{max-height:640px;overflow:auto;display:flex;flex-direction:column;gap:6px;margin-top:10px;padding-right:4px}
+.piece{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:10px;align-items:center;padding:6px;border-radius:12px;border:1px solid transparent;background:none;text-align:left;cursor:pointer;width:100%}
+.piece:hover{background:var(--soft)}.piece .th{width:52px;height:48px;border-radius:8px;background:#ece6e8;display:grid;place-items:center;overflow:hidden;padding:3px}.piece .th img{width:100%;height:100%;object-fit:cover}
+.piece small{display:block;color:var(--muted);font-size:13px}
+.piece[disabled]{opacity:.45;cursor:not-allowed}
+.stagewrap{position:relative;border-radius:20px;overflow:hidden;background:#e6e0e2;border:1px solid var(--line)}
+#stage{display:block;width:100%;height:auto;touch-action:none;user-select:none}
+#stage .pl{cursor:grab}#stage .pl.sel{cursor:grabbing}
+.tools{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:10px;border-top:1px solid var(--line);background:var(--panel);min-height:58px}
+.tools input{width:72px;min-height:36px;padding:6px 8px}
+.opts{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 0}
+.sw{width:34px;height:34px;border-radius:50%;border:2px solid var(--panel);box-shadow:0 0 0 1px var(--line);cursor:pointer;padding:0}
+.sw[aria-pressed=true]{box-shadow:0 0 0 2px var(--ink)}
+.pal{display:inline-flex;border-radius:999px;overflow:hidden;width:58px;height:22px;vertical-align:middle}.pal i{flex:1}
+.sum{position:sticky;top:86px}
+.sum ul{list-style:none;margin:8px 0;padding:0;max-height:260px;overflow:auto}
+.sum li{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px dashed var(--line);font-size:15px}
+.sum li span:last-child{white-space:nowrap}
+.tot{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px}.tot b{font-family:Forum,serif;font-size:38px;font-weight:400}
+.line{display:flex;justify-content:space-between;font-size:15px;padding:3px 0}.line span:last-child{white-space:nowrap}
+.mbar{display:none}
+@media(max-width:1100px){.studio{grid-template-columns:220px minmax(0,1fr)}.sum{grid-column:1/-1;position:static}}
+@media(max-width:720px){.studio{grid-template-columns:1fr}.pieces{max-height:none;flex-direction:row;overflow-x:auto;scroll-snap-type:x mandatory}.piece{grid-template-columns:52px;width:auto;flex:none;scroll-snap-align:start;justify-items:center;text-align:center}.piece>div:nth-child(2){max-width:90px;font-size:13px}.piece>span{display:none}
+  .studio>div:nth-child(2){order:-1}#palettes,.looks{flex-wrap:nowrap!important;overflow-x:auto;padding-bottom:4px}#palettes .chip,.looks .chip{flex:none}
+  .mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;padding:10px 16px;gap:10px;align-items:center;justify-content:space-between;background:var(--panel);border-top:1px solid var(--line)}body{padding-bottom:70px}}
+/* packages */
+.pk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:20px}
+.pk .card .pic{aspect-ratio:16/10;padding:0}.pk .card .pic svg{width:100%;height:100%}
+@media(max-width:820px){.pk{grid-template-columns:1fr}}
+/* care */
+.care{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px}
+.opt{padding:24px;border:1px solid var(--line);border-radius:18px;background:var(--panel)}
+.opt.best{border-color:var(--sage)}
+.opt b.big{font-family:Forum,serif;font-size:42px;font-weight:400;display:block}
+@media(max-width:720px){.care{grid-template-columns:1fr}}
+details{border-bottom:1px solid var(--line);padding:14px 0}summary{cursor:pointer;font-weight:500;min-height:30px}
+.ig{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:18px}
+.ig img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px}
+.sage{background:var(--paper)}
+.projwrap{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:clamp(18px,3vw,40px);margin-top:20px;align-items:start}
+@media(max-width:820px){.projwrap{grid-template-columns:1fr}}
+.projstage{position:relative;border-radius:20px;overflow:hidden;background:#e6e0e2;box-shadow:0 30px 60px -34px rgba(60,40,30,.45)}
+.projstage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.projstage img.base{position:relative}
+.projstage img.layer{opacity:0;transition:opacity .9s ease,filter .9s ease;filter:blur(6px) saturate(.6);-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+.projstage img.layer.on{opacity:1;filter:none}
+.projstage img.full{opacity:0;transition:opacity 1.2s ease}.projstage img.full.on{opacity:1}
+.projstage .tag{position:absolute;left:14px;bottom:14px;background:#fffaf8ee;color:#1f1b1c;border-radius:999px;padding:6px 14px;font-size:14px;z-index:5}
+.projsteps{margin:0;padding-left:20px;font-size:15px;color:var(--muted)}.projsteps li{padding:3px 0}.projsteps li.on{color:var(--ink)}.projsteps li.now{font-weight:600;color:var(--blushd)}
+@media(prefers-reduced-motion:reduce){.projstage img.layer,.projstage img.full{transition:none}}
+.dot{display:inline-block;width:14px;height:14px;border-radius:50%;margin-right:3px;vertical-align:-2px;box-shadow:0 0 0 1px rgba(0,0,0,.15)}
+.plan{margin-top:10px;padding:12px 14px;border-radius:14px;background:var(--soft);border:1px solid var(--mauve)}
+#bReq{min-height:70px}
+.about{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(20px,4vw,56px);align-items:center}.about img{width:100%;max-width:420px;height:auto;display:block;margin:auto}@media(max-width:720px){.about{grid-template-columns:1fr}}
+.ig img{border:6px solid #fff;box-shadow:0 10px 24px -14px rgba(40,25,25,.4)}
+footer{padding:40px max(5vw,16px);border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+/* modal */
+.modal{position:fixed;inset:0;z-index:60;background:rgba(30,22,20,.5);display:none;align-items:flex-start;justify-content:center;padding:4vh 12px;overflow:auto}
+.modal.open{display:flex}
+.sheet{background:var(--bg);border-radius:22px;width:min(760px,100%);padding:clamp(18px,3vw,32px);position:relative}
+.x{position:absolute;top:12px;right:12px;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--panel);cursor:pointer;font-size:20px}
+.prog{display:flex;gap:6px;margin:4px 48px 18px 0;flex-wrap:wrap}.prog span{flex:1;min-width:70px;font-size:13px;padding-top:8px;border-top:3px solid var(--line);color:var(--muted)}.prog span.on{border-color:var(--blush);color:var(--ink)}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.f2 .full{grid-column:1/-1}
+@media(max-width:560px){.f2{grid-template-columns:1fr}}
+.radio{display:flex;gap:10px;align-items:flex-start;padding:16px;border:1px solid var(--line);border-radius:14px;cursor:pointer;background:var(--panel);margin-bottom:10px}
+.radio input{width:20px;height:20px;min-height:0;margin-top:3px;flex:none}
+.radio:has(input:checked){border-color:var(--ink)}
+.contractbox{max-height:340px;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--panel);font-size:14.5px}
+.contract h3{font-size:22px}.contract h4{margin:14px 0 4px;font-size:15px}
+.ctable{width:100%;border-collapse:collapse;margin:8px 0;font-size:14px}.ctable td,.ctable th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:left}.n{text-align:right;white-space:nowrap}.ctable .grand td{font-weight:600}
+.signed img{max-width:260px;height:auto;background:#fff;border-radius:8px}
+.check{display:flex;gap:10px;align-items:flex-start;margin:10px 0;font-size:15px}.check input{width:20px;height:20px;min-height:0;flex:none;margin-top:3px}
+#sig{width:100%;height:150px;background:#fff;border:1px dashed var(--muted);border-radius:12px;touch-action:none;display:block}
+.toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:12px;z-index:80;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw}
+.toast.on{opacity:1}
+.err{color:var(--warn);font-size:14px;min-height:20px}
+.demo{font-size:13px;background:var(--soft);padding:8px 12px;border-radius:10px;margin-top:10px}
+/* admin */
+#admin{display:none}body.adm #site{display:none}body.adm #admin{display:block}
+.adm-top{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:12px max(4vw,16px);border-bottom:1px solid var(--line);background:var(--panel);position:sticky;top:0;z-index:20}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-right:auto}
+.tabs button{border:0;background:none;padding:10px 14px;border-radius:10px;cursor:pointer;min-height:44px}.tabs button[aria-pressed=true]{background:var(--soft);font-weight:600}
+.adm{padding:24px max(4vw,16px);max-width:1300px;margin:0 auto}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:24px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}.kpi b{font-family:Forum,serif;font-size:38px;font-weight:400;display:block;line-height:1.1}
+@media(max-width:820px){.kpis{grid-template-columns:1fr 1fr}}
+table.t{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+table.t th,table.t td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:15px}
+table.t th{font-size:13px;color:var(--muted);font-weight:500;background:var(--soft)}
+table.t tr.click{cursor:pointer}table.t tr.click:hover td{background:var(--soft)}
+.st{font-size:13px;padding:3px 10px;border-radius:999px;white-space:nowrap;background:var(--soft)}
+.st.new{background:#fde4ea;color:#8c2f47}.st.confirmed{background:#e3ecdc;color:#3e5a30}.st.ready{background:#e2ecf3;color:#2c5670}.st.delivered{background:#efe6d3;color:#6e5320}.st.returned,.st.closed{background:#eee;color:#555}.st.declined,.st.cancelled{background:#f6e0d6;color:#8a3d1c}
+.drawer{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:20px}
+@media(max-width:900px){.drawer{grid-template-columns:1fr}}
+.prep li{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line);list-style:none}.prep{padding:0;margin:0}
+.prep input{width:22px;height:22px;min-height:0}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.cal div{min-height:92px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px;font-size:13px}
+.cal .hd{min-height:0;background:none;border:0;text-align:center;color:var(--muted)}
+.cal .ev{display:block;margin-top:4px;padding:2px 6px;border-radius:6px;background:#fde4ea;color:#8c2f47;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border:0;width:100%;text-align:left;font-size:12px}
+.cal .ev.confirmed{background:#e3ecdc;color:#3e5a30}
+.cal .off{opacity:.4}
+.inv{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.inv .card .pic{aspect-ratio:16/9}
+@media(max-width:600px){table{font-size:13px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px}.stack td{display:flow-root;border:0;padding:3px 0;padding-inline-start:8em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:7.5em;margin-inline-start:-8em;white-space:normal;color:var(--muted)}.stack td:empty{display:none}}
+@media(prefers-reduced-motion:no-preference){.float{animation:float 6s ease-in-out infinite}@keyframes float{50%{transform:translateY(-4px)}}}
+@media print{.top,.mbar,footer,#site>section:not(.printme){display:none}}
+</style>
+<script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
+</head>
+<body>
+<div id="site">
+<header class="top"><div class="wrap">
+  <a class="logo" href="#top" aria-label="Petit Atelier Events home">
+    <img src="img/logo.webp" alt="">
+    <div><b>Petit Atelier Events</b><span>Event decorator by Karol · Eagle Mountain, UT</span></div>
+  </a>
+  <nav class="nav" aria-label="Main">
+    <a href="#collection" data-i="nav_collection">Collection</a><a href="#projects">Projects</a><a href="#studio" data-i="nav_studio">Design studio</a><a href="#balloons">Balloons</a><a href="#how" data-i="nav_how">How it works</a><a href="#karol" data-i="about">Meet Karol</a><a href="#reservation" data-i="nav_res">My reservation</a>
+  </nav>
+  <div class="lang" role="group" aria-label="Language"><button data-lang="en" aria-pressed="true">EN</button><button data-lang="es" aria-pressed="false">ES</button></div>
+  <a class="btn sm" href="#studio" id="cartBtn">Your setup · <span id="cartTotal">$0</span></a>
+</div></header>
+
+<section class="band" id="top"><div class="wrap hero">
+  <div>
+    <p class="script">Hello there!</p>
+    <h1 data-i="hero_title">See your party before you book it.</h1>
+    <p class="lead" data-i="hero_sub">Balloon arches, backdrops and styled props for rent in Eagle Mountain and the Wasatch Front. Design your setup, watch the price update live, and reserve your date in minutes.</p>
+    <div class="datebox"><label for="heroDate" style="margin:0" data-i="pick_date">Pick your event date</label><input type="date" id="heroDate"></div>
+    <div class="ctas"><a class="btn" href="#studio" data-i="cta_design">Design my party</a><a class="btn ghost" href="#collection" data-i="cta_browse">Browse the collection</a></div>
+    <p class="small muted" id="heroAvail"></p>
+  </div>
+  <div>
+    <div class="stagecard" id="heroStage"></div>
+    <div class="looks" id="heroLooks"></div>
+  </div>
+</div></section>
+
+<section class="band sage" id="how"><div class="wrap">
+  <p class="brush">How it works</p><h2 data-i="h_how" style="margin-top:12px">From idea to installed, without the back-and-forth</h2>
+  <p class="muted" style="max-width:46em">Every piece has a real price and real availability for your date. No "DM for a quote".</p>
+  <div class="steps">
+    <div class="step"><b>1 · Pick a date</b>The collection shows what is free that day, held one day before and after for setup.</div>
+    <div class="step"><b>2 · Design it</b>Place Karol's real pieces on the stage, or on a photo of your own space, and choose up to 3 balloon colors.</div>
+    <div class="step"><b>3 · Sign online</b>Choose damage protection, sign the rental agreement and send your request.</div>
+    <div class="step"><b>4 · Pick it up</b>Karol confirms within 48 hours and has everything built and ready for pickup in Eagle Mountain. Want it installed? Add installation.</div>
+  </div>
+</div></section>
+
+<section class="band" id="collection"><div class="wrap">
+  <p class="script" style="text-align:center">Rentals</p>
+  <div class="row"><h2 style="margin:0" data-i="h_coll">The collection</h2><span class="muted" id="collAvail"></span></div>
+  <div class="filters" id="filters"></div>
+  <div class="grid" id="grid"></div>
+</div></section>
+
+<section class="band" id="projects"><div class="wrap">
+  <p class="script" style="text-align:center">Real projects</p>
+  <div class="row"><h2 style="margin:0" id="projTitle">Watch Karol's setups come together</h2><div class="filters" id="projTabs" style="margin:0"></div></div>
+  <div class="projwrap">
+    <div class="projstage" id="projStage"></div>
+    <div class="projside">
+      <p class="small muted" style="margin:0" id="projCount"></p>
+      <h3 id="projStep" style="margin:6px 0 10px">&nbsp;</h3>
+      <ol class="projsteps" id="projSteps"></ol>
+      <div class="row" style="justify-content:flex-start;gap:8px;margin-top:14px"><button class="chip" id="projPrev" aria-label="Previous step">←</button><button class="btn sm" id="projPlay">Replay</button><button class="chip" id="projNext" aria-label="Next step">→</button></div>
+      <div class="pane" style="margin-top:18px"><b id="projCtaT">Love this look?</b><p class="small muted" style="margin:4px 0 10px" id="projCtaP">Karol can recreate it for your date, or you can design your own with her real pieces.</p>
+        <div class="row" style="justify-content:flex-start;gap:8px"><button class="btn sm blush" id="projUse">I want this look</button><a class="btn sm ghost" href="#studio" id="projOwn">Design my own</a></div></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="band sage" id="balloons"><div class="wrap">
+  <p class="script" style="text-align:center">Balloon garlands</p>
+  <div class="row"><h2 style="margin:0">Balloon inspirations</h2><span class="muted">$22 per foot · up to 3 colors · ready for pickup</span></div>
+  <p class="muted" style="max-width:52em">Pick a style, choose your colors, or describe your own idea (a mermaid party, a mouse-ears birthday, anything) and our AI designer suggests colors, length and placement around your real pieces. Karol confirms every design with you.</p>
+  <div class="grid" id="inspGrid" style="margin-top:16px"></div>
+  <p class="small muted" style="margin:22px 0 8px">Quick theme ideas:</p>
+  <div class="filters" id="themeChips" style="margin:0"></div>
+</div></section>
+
+<section class="band" id="studio"><div class="wrap">
+  <h2 data-i="studio_title">Design studio</h2>
+  <p class="muted" data-i="studio_sub" style="max-width:48em">Tap a piece to place it, drag it where you want it, and pick a balloon palette. Your total updates as you go.</p>
+  <div class="looks" id="studioLooks"></div>
+  <div class="studio">
+    <div class="pane">
+      <div class="filters" id="sFilters" style="margin:0"></div>
+      <div class="pieces" id="pieces"></div>
+    </div>
+    <div>
+      <div class="stagewrap"><svg id="stage" viewBox="0 0 1000 620" role="img" aria-label="Your party setup preview"></svg>
+        <div class="tools" id="tools"></div></div>
+      <div id="balloonBox" class="pane" style="margin-top:14px"></div>
+      <div class="opts"><span class="small muted" data-i="wall">Wall</span><span id="walls" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"></span><button class="chip" id="clearBtn" data-i="clear">Clear all</button></div>
+    </div>
+    <aside class="pane sum" id="summary" aria-live="polite"></aside>
+  </div>
+</div></section>
+
+<section class="band sage" id="karol"><div class="wrap about">
+  <img src="img/karol.webp" alt="Karol, founder of Petit Atelier Events" width="618" height="900" loading="lazy">
+  <div><p class="script">Hello there!</p><h2 data-i="about">Meet Karol</h2>
+    <p id="bio1">I'm Karol! I'm a party enthusiast from Brazil with a deep passion for decor and aesthetics. I love taking creative ideas and turning them into beautiful realities, all while infusing them with an abundance of love.</p>
+    <p id="bio2">If you're looking for a decorator who will pour their heart and soul into your event, look no further. Let's work together to bring your party vision to life. I can't wait to create something magical with you!</p>
+    <p class="small"><a href="#" class="igl" target="_blank" rel="noopener">@petitatelier_events</a> · <span class="ftPhone2"></span></p></div>
+</div></section>
+
+<section class="band" id="care"><div class="wrap">
+  <p class="brush">Peace of mind</p><h2 data-i="h_care" style="margin-top:12px">Accidents happen. Choose how you're covered.</h2>
+  <p class="muted" style="max-width:48em">Most rental companies add a 10 to 15% damage waiver to every order. Here you choose: a flat plan, or a refundable deposit and you only pay for what breaks.</p>
+  <div class="care">
+    <div class="opt best"><span class="badge ok">Most chosen</span><h3 style="margin-top:10px">Petit Care Plan</h3><b class="big" id="carePrice">$100</b><p>One flat fee. Covers accidental damage during normal use up to <span id="careCap">$500</span> in replacement value, so a knocked-over neon sign or a torn arch cover costs you nothing more.</p><p class="small muted">Not covered: loss or theft, intentional damage, tape, glitter, candles or water on the pieces.</p></div>
+    <div class="opt"><h3>Refundable security deposit</h3><b class="big" id="depPrice">$150</b><p>Paid with your balance and returned within 7 days after pickup. If something is damaged or lost, you pay its listed replacement value (shown on every piece and in your agreement).</p><p class="small muted">Normal wear is never charged. Karol photographs every piece at pickup and at return.</p></div>
+  </div>
+  <div style="margin-top:30px;max-width:820px">
+    <h3>Questions</h3>
+    <details><summary>How does pickup work?</summary><p id="faqPickup"></p></details>
+    <details><summary>Can you set it up for me?</summary><p id="faqInstall"></p></details>
+    <details><summary>When is my date actually reserved?</summary><p>After Karol confirms your request (within 48 hours) and the retainer is paid. Until then pieces are held for you.</p></details>
+    <details><summary>Will balloons fit in my car?</summary><p>Garlands and arches travel best in an SUV or van with the seats folded down. Karol tells you the size when she confirms, and she can install it for you instead.</p></details>
+    <details><summary>Do balloons work outside?</summary><p>Yes in shade and mild weather. Heat and direct sun pop and dull latex, so keep them covered when you can. Weather-related balloon damage is not refunded.</p></details>
+    <details><summary>Can I change my design later?</summary><p>Add pieces up to 7 days before your event, subject to availability. One date change is free with 14 days' notice.</p></details>
+  </div>
+</div></section>
+
+<section class="band sage" id="work"><div class="wrap">
+  <div class="row"><div><p class="script" style="margin:0">Balloon arches</p><h2 style="margin:0" data-i="h_work">Recent setups</h2><p class="muted" style="margin:6px 0 0">$22 per foot, up to 3 colors.</p></div><a class="btn ghost sm" id="igLink" href="#" target="_blank" rel="noopener">See more on Instagram @petitatelier_events</a></div>
+  <div class="ig" id="gallery"></div>
+</div></section>
+
+<section class="band" id="reservation"><div class="wrap" style="max-width:820px">
+  <h2 data-i="lookup">Find my reservation</h2>
+  <form id="lookupForm" class="f2"><div><label for="lkCode" data-i="code">Reservation code</label><input id="lkCode" placeholder="PA-XXXXX" autocomplete="off" required></div><div><label for="lkEmail" data-i="email">Email</label><input id="lkEmail" type="email" required></div><div class="full"><button class="btn" type="submit" data-i="lookup">Find my reservation</button></div></form>
+  <div id="lookupOut" style="margin-top:18px"></div>
+</div></section>
+
+<footer><div class="wrap row"><div class="row" style="justify-content:flex-start;gap:14px"><img src="img/logo.webp" alt="" width="64" height="64" style="border-radius:50%;background:#fff"><div><b style="font-family:Forum,serif;font-weight:400;font-size:22px;color:var(--ink)">Petit Atelier Events</b><br><span id="ftCity">Eagle Mountain, Utah</span> · <span id="ftPhone"></span> · <span id="ftMail"></span></div></div><div><a href="#admin">Karol's dashboard</a></div></div></footer>
+
+<div class="mbar"><div><span class="small muted">Estimated total</span><br><b id="mTotal" style="font-size:20px">$0</b></div><button class="btn blush" id="mReserve">Reserve</button></div>
+</div>
+
+<div id="admin"></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true"><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+{
+/* ===== Shared helpers. Every piece on the site is a real photo of Karol's inventory. ===== */
+function esc(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+const SVG_DEFS = `<defs>
+  <linearGradient id="wallg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#000" stop-opacity=".05"/></linearGradient>
+  <linearGradient id="floorg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".10"/><stop offset=".25" stop-color="#000" stop-opacity=".02"/><stop offset="1" stop-color="#fff" stop-opacity=".12"/></linearGradient>
+  <radialGradient id="spot" cx=".5" cy=".35" r=".6"><stop offset="0" stop-color="#fff" stop-opacity=".45"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+  <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
+</defs>`;
+/* Balloon colors Karol works with (up to 3 per garland) */
+const BALLOON_COLORS = [
+  ['White', 'Blanco', '#ffffff'], ['Cream', 'Crema', '#f4ead7'], ['Blush', 'Rosa palo', '#f3c9cf'], ['Pastel pink', 'Rosa pastel', '#f7b8c8'],
+  ['Hot pink', 'Fucsia', '#e0428a'], ['Lilac', 'Lila', '#c8b1e4'], ['Lavender', 'Lavanda', '#a993d6'], ['Baby blue', 'Azul bebé', '#b9d8ec'],
+  ['Dusty blue', 'Azul empolvado', '#8fb3c3'], ['Teal', 'Verde azulado', '#2f6b73'], ['Sage', 'Salvia', '#a9b99a'], ['Eucalyptus', 'Eucalipto', '#7d9a86'],
+  ['Peach', 'Durazno', '#f6c3a3'], ['Terracotta', 'Terracota', '#c4704f'], ['Chrome gold', 'Dorado cromado', '#c9a85c'], ['Chrome silver', 'Plateado cromado', '#c3c6cb'],
+  ['Black', 'Negro', '#1f1d1c'], ['Clear', 'Transparente', '#eef3f6'], ['Red', 'Rojo', '#c8262f'], ['Yellow', 'Amarillo', '#f3cf3a'],
+  ['Orange', 'Naranja', '#ee8a2e'], ['Navy', 'Azul marino', '#24345c'], ['Royal blue', 'Azul rey', '#1f3fb8'], ['Green', 'Verde', '#1f9a4a'],
+];
+
+/* ===== Config: paste your Supabase keys to go live. Empty = demo mode (data stays in this browser). ===== */
+const CONFIG = {
+  SUPABASE_URL: '',          // e.g. https://xxxx.supabase.co
+  SUPABASE_ANON_KEY: '',     // public anon key
+  INSTAGRAM: 'https://www.instagram.com/petitatelier_events/',
+  BUSINESS_EMAIL: 'askpetitatelier@gmail.com',
+  PHONE: '(801) 888-5391',
+  CITY: 'Eagle Mountain, Utah',
+};
+
+/* Karol's real inventory (photos from her Services & Pricing Guide).
+   cutout = background-removed photo used in the Design Studio; photo = catalog photo.
+   ft = real height in feet, ar = width/height of the cutout. Prices are placeholders Karol edits in her dashboard. */
+const SEED_VERSION = 7;
+const SEED_ASSETS = [
+  { id: 'window-arch', cat: 'backdrops', name: 'Gold window arch', es: 'Arco ventana dorado', price: 45, qty: 1, repl: 160, ft: 7.2, ar: 0.493, cutout: 'img/window_arch.webp', x: 500, y: 472, s: 1,
+    desc: 'Gold metal window-pane arch, about 7 ft tall. Beautiful on its own or with a balloon garland.', desc_es: 'Arco dorado tipo ventana de unos 2.2 m. Hermoso solo o con guirnalda de globos.' },
+  { id: 'half-arches', cat: 'backdrops', name: 'Gold open arch set (4)', es: 'Set de 4 arcos dorados abiertos', price: 85, qty: 1, repl: 280, ft: 7.2, ar: 0.767, cutout: 'img/set_arches.webp', x: 500, y: 472, s: 1,
+    parts: [{ cutout: 'img/arch_a.webp', ft: 6.34, ar: 0.501, dx: -255, name: 'Arch 1' }, { cutout: 'img/arch_b.webp', ft: 7.21, ar: 0.491, dx: -85, name: 'Arch 2' }, { cutout: 'img/arch_c.webp', ft: 7.03, ar: 0.484, dx: 85, name: 'Arch 3' }, { cutout: 'img/arch_d.webp', ft: 3.18, ar: 0.856, dx: 255, name: 'Arch 4' }],
+    desc: 'Four gold open arch frames in different heights, rented as a set. In the Design Studio you can place each arch on its own.', desc_es: 'Cuatro arcos dorados de diferentes alturas, se rentan como set. En el estudio puedes colocar cada arco por separado.' },
+  { id: 'arch-frames', cat: 'backdrops', name: 'Gold rounded arch frames (4)', es: 'Set de 4 arcos dorados redondos', price: 85, qty: 1, repl: 280, ft: 7.2, ar: 0.75, photo: 'img/arch_set_styled.jpg', x: 500, y: 472, s: 1,
+    desc: 'Four nesting rounded arch frames. Shown styled with florals (florals not included).', desc_es: 'Cuatro arcos redondos. Se muestran con flores (no incluidas).' },
+  { id: 'balloons', cat: 'balloons', name: 'Organic balloon garland', es: 'Guirnalda orgánica de globos', price: 22, perFt: true, qty: 99, repl: 0, made: true, ft: 6.6, ar: 0.918, cutout: 'img/balloon_setup.webp', photo: 'img/balloon_photo.jpg', x: 500, y: 520, s: 1,
+    desc: '$22 per foot, up to 3 colors. Built fresh for your date and ready for pickup. Photo shows one of Karol\u2019s garlands.', desc_es: '$22 por pie, hasta 3 colores. Hecha para tu fecha y lista para recoger. La foto muestra una guirnalda de Karol.' },
+  { id: 'acrylic', cat: 'furniture', name: 'Clear acrylic cylinders with crystals (5)', es: 'Cilindros de acrílico con cristales (5)', price: 75, qty: 1, repl: 300, ft: 3.3, ar: 0.93, photo: 'img/acrylic.jpg', x: 500, y: 560, s: 1,
+    desc: 'Five clear pedestals in different heights with hanging crystal strands. Perfect for cakes and desserts.', desc_es: 'Cinco pedestales transparentes con cristales colgantes. Perfectos para pastel y postres.' },
+  { id: 'round-tables', cat: 'furniture', name: 'White round side tables (3)', es: 'Mesitas redondas blancas (3)', price: 40, qty: 1, repl: 120, ft: 2.1, ar: 1.066, cutout: 'img/set_tables.webp', x: 500, y: 590, s: 1,
+    parts: [{ cutout: 'img/table.webp', ft: 2.2, ar: 0.666, dx: -110, name: 'Large table' }, { cutout: 'img/table.webp', ft: 1.9, ar: 0.666, dx: 0, dy: 8, name: 'Medium table' }, { cutout: 'img/table.webp', ft: 1.6, ar: 0.666, dx: 100, dy: 14, name: 'Small table' }],
+    desc: 'Set of three nesting tables with natural wood legs, rented as a set. Place each table anywhere in the Design Studio.', desc_es: 'Tres mesitas con patas de madera natural, se rentan como set. Coloca cada una donde quieras en el estudio.' },
+  { id: 'cane-console', cat: 'furniture', name: 'Cane console table', es: 'Consola de ratán', price: 35, qty: 1, repl: 220, ft: 2.6, ar: 1.175, cutout: 'img/cane_console.webp', x: 500, y: 565, s: 1,
+    desc: 'Rounded wood console with a cane front. Great as a dessert or gift table.', desc_es: 'Consola de madera con frente de ratán. Ideal para postres o regalos.' },
+  { id: 'cane-bench', cat: 'furniture', name: 'Cane and wood bench', es: 'Banca de madera y ratán', price: 25, qty: 1, repl: 150, ft: 1.6, ar: 1.026, cutout: 'img/cane_stool.webp', x: 760, y: 590, s: 1,
+    desc: 'Rustic wood bench with a woven cane top.', desc_es: 'Banca rústica con asiento de ratán.' },
+  { id: 'pink-nightstand', cat: 'furniture', name: 'Pink vintage nightstand', es: 'Buró vintage rosa', price: 25, qty: 1, repl: 150, ft: 2.0, ar: 1.201, cutout: 'img/pink_nightstand.webp', x: 760, y: 585, s: 1,
+    desc: 'Two-drawer vintage piece in soft pink with black handles.', desc_es: 'Buró vintage rosa de dos cajones.' },
+  { id: 'white-nightstand', cat: 'furniture', name: 'White vintage side table', es: 'Mesita vintage blanca', price: 25, qty: 1, repl: 150, ft: 2.4, ar: 0.784, cutout: 'img/white_nightstand.webp', x: 300, y: 585, s: 1,
+    desc: 'Turned legs, one drawer and a lower shelf.', desc_es: 'Patas torneadas, un cajón y repisa inferior.' },
+];
+
+const SEED_SETTINGS = {
+  depositPct: 30,            // % retainer to hold the date
+  carePlan: 100,             // flat protection plan
+  carePlanCap: 500,          // accidental damage covered up to
+  securityDeposit: 150,      // refundable, if they decline the plan
+  installFee: 120,           // optional delivery + installation + teardown
+  installArea: 'Utah County and southwest Salt Lake County',
+  lateFee: 25,               // per day
+  bufferDays: 1,             // a piece is held 1 day before and after an event
+  minOrder: 100,
+  pickupSlots: ['Day before the event, 4 to 7 pm', 'Event day, 8 to 10 am'],
+  returnSlot: 'Day after the event, by 12 pm',
+  pickupPlace: 'Eagle Mountain, UT (exact address sent after confirmation)',
+  notifyEmail: CONFIG.BUSINESS_EMAIL,
+  pin: '2468',               // demo-mode admin PIN only
+  contractVersion: 'v1 2026-11',
+};
+
+
+/* "Start from a look": combinations of real pieces (x, y on the stage, optional size) */
+const LOOKS = [
+  { id: 'golden-window', name: 'Golden window', es: 'Ventana dorada', wall: '#ece6e3', place: [['window-arch', 500, 472], ['cane-console', 500, 568], ['round-tables', 215, 592], ['pink-nightstand', 790, 592]] },
+  { id: 'garden-arches', name: 'Garden arches', es: 'Arcos de jardín', wall: '#e9ece4', place: [['half-arches', 500, 472], ['white-nightstand', 330, 594], ['cane-bench', 640, 600]] },
+  { id: 'balloon-party', name: 'Balloon party', es: 'Fiesta de globos', wall: '#e8e4ee', place: [['balloons', 520, 575, 1.1], ['window-arch', 200, 472], ['white-nightstand', 840, 595]] },
+];
+/* Balloon garland inspirations. "karol" = Karol's own work; the others are reference photos for the style. */
+const INSPIRATIONS = [
+  { id: 'ocean-lilac', img: 'img/proj/mermaid.jpg', karol: true, name: 'Ocean & lilac garland', es: 'Guirnalda océano y lila', ft: 16, colors: ['Lilac', 'Dusty blue', 'Teal', 'Chrome gold'],
+    note: 'Big organic garland around a gold hoop, with a dessert display.', note_es: 'Guirnalda orgánica grande sobre aro dorado, con mesa de postres.' },
+  { id: 'sage-garden', img: 'img/proj/neverland.jpg', karol: true, name: 'Sage arch & clusters', es: 'Arco y racimos salvia', ft: 10, colors: ['Sage', 'Eucalyptus', 'Cream'],
+    note: 'A small balloon arch over the center panel plus two clusters. Quick to build, big impact.', note_es: 'Un arco pequeño de globos sobre el panel central y dos racimos. Rápido de armar y con mucho impacto.' },
+  { id: 'primary-blocks', img: 'img/proj/blocks.jpg', karol: true, name: 'Bold primary garland', es: 'Guirnalda de colores primarios', ft: 18, colors: ['Red', 'Yellow', 'Royal blue'],
+    note: 'Color-blocked garland framing a fireplace, one color per section. (The original used 4 colors; ask Karol.)', note_es: 'Guirnalda por bloques de color enmarcando una chimenea. (La original usó 4 colores; pregúntale a Karol.)' },
+  { id: 'sage-hoop', img: 'img/insp_sage_hoop.jpg', name: 'Sage hoop wrap', es: 'Aro envuelto en salvia', ft: 14, colors: ['Sage', 'Cream', 'Chrome gold'],
+    note: 'Garland wrapped around a round arch with eucalyptus touches and gold plinths.', note_es: 'Guirnalda alrededor de un arco redondo con eucalipto y bases doradas.' },
+  { id: 'blush-cascade', img: 'img/insp_blush_cascade.jpg', name: 'Blush cascade', es: 'Cascada rosa palo', ft: 12, colors: ['Blush', 'Cream', 'White'],
+    note: 'Half-arch cascade down one side of a backdrop plus a floor cluster. Easy and elegant.', note_es: 'Cascada en medio arco por un lado del fondo, más un racimo en el piso. Fácil y elegante.' },
+];
+/* Karol's real projects, animated from sketch to finished setup (masks in img/proj) */
+const PROJECTS = [
+  { id: 'mermaid', name: "Under the sea", es: "Bajo el mar", w: 948, h: 1156, insp: 'ocean-lilac', req: "Mermaid party like Karol's under the sea setup", req_es: "Fiesta de sirena como el montaje bajo el mar de Karol", steps: [["Gold hoop", "Aro dorado"], ["Garland base: dusty blue", "Base de la guirnalda: azul empolvado"], ["Lilac and chrome gold", "Lila y dorado cromado"], ["The statement balloons", "Los globos protagonistas"], ["Climbing up the hoop", "Subiendo por el aro"], ["Teal crown on top", "Corona verde azulado arriba"], ["Right side clusters", "Racimos del lado derecho"], ["Acrylic pedestals", "Pedestales de acrílico"], ["Cake and desserts", "Pastel y postres"], ["Coral, seaweed and treasure", "Coral, algas y tesoro"]] },
+  { id: 'neverland', name: "Fairy garden & pirates", es: "Jard\u00edn de hadas y piratas", w: 1184, h: 887, insp: 'sage-garden', req: "Fairy garden and pirates party like Karol's setup", req_es: "Fiesta jardín de hadas y piratas como la de Karol", steps: [["Sage backdrop panels", "Paneles verde salvia"], ["Balloon arch on the center panel", "Arco de globos en el panel central"], ["Balloon clusters", "Racimos de globos"], ["Neon sign", "Letrero neón"], ["Barrel and acrylic pedestals", "Barril y pedestales de acrílico"], ["Greenery, pampas and florals", "Follaje, pampas y flores"], ["Cake, treats and finishing touches", "Pastel, dulces y detalles"]] },
+  { id: 'blocks', name: "Building blocks birthday", es: "Cumplea\u00f1os de bloques", w: 949, h: 1176, insp: 'primary-blocks', req: "Building blocks birthday with bold primary colors like Karol's setup", req_es: "Cumpleaños de bloques con colores primarios como el de Karol", steps: [["Yellow base, left", "Base amarilla, izquierda"], ["Red", "Rojo"], ["Green across the top", "Verde arriba"], ["Blue", "Azul"], ["Yellow base, right", "Base amarilla, derecha"], ["Neon \"Happy Birthday\"", "Neón \"Happy Birthday\""], ["Acrylic pedestals", "Pedestales de acrílico"], ["Cake and treats", "Pastel y dulces"], ["Giant building blocks", "Bloques gigantes"]] },
+];
+/* Quick theme ideas for the balloon designer (works without AI too). Characters: colors only, no licensed prints. */
+const THEMES = [
+  { k: ['mermaid', 'sirena', 'ocean', 'mar', 'under the sea'], name: 'Mermaid', es: 'Sirena', colors: ['Teal', 'Lilac', 'Chrome gold'], tip: 'Add a few clear balloons for bubbles and shells on the table.', tip_es: 'Agrega globos transparentes como burbujas y conchas en la mesa.' },
+  { k: ['safari', 'jungle', 'jungla', 'wild one', 'animal'], name: 'Safari', es: 'Safari', colors: ['Sage', 'Cream', 'Chrome gold'], tip: 'Eucalyptus or palm leaves tucked in the garland.', tip_es: 'Hojas de eucalipto o palma dentro de la guirnalda.' },
+  { k: ['boho', 'neutral', 'rustic', 'rústico'], name: 'Boho', es: 'Boho', colors: ['Cream', 'Peach', 'Terracotta'], tip: 'Pampas next to the arch.', tip_es: 'Pampas junto al arco.' },
+  { k: ['princess', 'princesa', 'royal'], name: 'Princess', es: 'Princesa', colors: ['Blush', 'Lilac', 'Chrome gold'], tip: 'A crown on the cake table.', tip_es: 'Una corona en la mesa del pastel.' },
+  { k: ['unicorn', 'unicornio', 'rainbow', 'arcoíris', 'arcoiris'], name: 'Unicorn', es: 'Unicornio', colors: ['Pastel pink', 'Lilac', 'Baby blue'], tip: 'Gold accents make pastels pop.', tip_es: 'Detalles dorados hacen resaltar los pasteles.' },
+  { k: ['baby boy', 'niño', 'its a boy', "it's a boy", 'blue'], name: 'Baby boy', es: 'Baby shower niño', colors: ['Baby blue', 'White', 'Chrome silver'], tip: '', tip_es: '' },
+  { k: ['baby girl', 'niña', 'its a girl', "it's a girl"], name: 'Baby girl', es: 'Baby shower niña', colors: ['Blush', 'White', 'Chrome gold'], tip: '', tip_es: '' },
+  { k: ['gender reveal', 'revelación', 'revelacion'], name: 'Gender reveal', es: 'Revelación de género', colors: ['Baby blue', 'Pastel pink', 'White'], tip: '', tip_es: '' },
+  { k: ['graduation', 'graduación', 'graduacion', 'grad'], name: 'Graduation', es: 'Graduación', colors: ['Black', 'White', 'Chrome gold'], tip: 'Swap in your school colors.', tip_es: 'Cámbialo por los colores de tu escuela.' },
+  { k: ['mickey', 'minnie', 'mouse', 'ratón', 'raton'], name: 'Mouse party', es: 'Fiesta ratoncito', colors: ['Red', 'Black', 'Yellow'], character: true, tip: 'Karol matches the colors; licensed characters are not printed on balloons.', tip_es: 'Karol iguala los colores; no se imprimen personajes con licencia.' },
+  { k: ['spider', 'superhero', 'super hero', 'héroe', 'heroe', 'marvel', 'batman'], name: 'Superhero', es: 'Superhéroe', colors: ['Red', 'Navy', 'Chrome silver'], character: true, tip: 'Colors only, no licensed characters.', tip_es: 'Solo colores, sin personajes con licencia.' },
+  { k: ['frozen', 'ice', 'winter', 'invierno', 'snow'], name: 'Winter', es: 'Invierno', colors: ['Baby blue', 'White', 'Chrome silver'], character: true, tip: 'Clear and silver balloons look like ice.', tip_es: 'Globos transparentes y plateados parecen hielo.' },
+  { k: ['halloween', 'spooky'], name: 'Halloween', es: 'Halloween', colors: ['Black', 'Orange', 'Chrome gold'], tip: '', tip_es: '' },
+  { k: ['christmas', 'navidad', 'holiday'], name: 'Christmas', es: 'Navidad', colors: ['Red', 'Eucalyptus', 'Chrome gold'], tip: '', tip_es: '' },
+];
+const PACKAGES = [];
+
+/* ===== i18n (customer side) ===== */
+const I18N = {
+  en: {
+    h_how: 'From idea to installed, without the back-and-forth', h_coll: 'The collection', h_pk: 'Packages', h_care: 'Accidents happen. Choose how you\u2019re covered.', h_work: 'Recent setups',
+    nav_collection: 'Collection', nav_studio: 'Design studio', nav_packages: 'Packages', nav_how: 'How it works', nav_res: 'My reservation',
+    hero_title: 'See your party before you book it.', hero_sub: 'Balloon garlands, backdrops and styled props for rent in Eagle Mountain, Utah. Design your setup with the real pieces, watch the price update live, reserve your date, and pick it up ready to go.',
+    cta_design: 'Design my party', cta_browse: 'Browse the collection', avail_for: 'Availability for', pick_date: 'Pick your event date',
+    add: 'Add', added: 'Added', remove: 'Remove', available: 'available', booked: 'Booked that date', only_left: 'left',
+    studio_title: 'Design studio', studio_sub: 'Every piece here is a real photo of Karol\u2019s inventory. Tap a piece to place it, drag it where you want it, or try it on a photo of your own space. Your total updates as you go.',
+    your_setup: 'Your setup', empty_setup: 'Nothing here yet. Start from a look or tap any piece.', subtotal: 'Rental subtotal', colors: 'Balloon colors (up to 3)', length: 'Garland length (feet)', perft: 'per foot', photo_only: 'Photo only for now', real_photo: 'Real photo', about: 'Meet Karol', pickup: 'Pick up & return', install: 'Installation', get_it: 'How you get it', free: 'Free', space: 'Use a photo of my space', space_off: 'Back to the studio wall', room_scale: 'Piece size in your photo', protection: 'Protection',
+    est_total: 'Estimated total', deposit_today: 'Retainer to hold your date', reserve: 'Reserve this setup', start_look: 'Start from a look', palette: 'Balloon palette', wall: 'Wall', clear: 'Clear all',
+    made_fresh: 'Made fresh for your date', min_order: 'Minimum order', step_event: 'Your event', step_review: 'Protection', step_sign: 'Sign', step_done: 'Done',
+    name: 'Full name', email: 'Email', phone: 'Phone', event_type: 'Event type', address: 'Event address (for installation)', slot: 'Pickup time', guests: 'Guests', start: 'Start time', setting: 'Setting', indoor: 'Indoor', outdoor: 'Outdoor', covered: 'Covered patio', notes: 'Notes for Karol (theme, colors, cake size)',
+    next: 'Continue', back: 'Back', sign_submit: 'Sign and send request', confirm_title: 'Request received', lookup: 'Find my reservation', code: 'Reservation code',
+  },
+  es: {
+    h_how: 'De la idea al montaje, sin tanto ir y venir', h_coll: 'La colección', h_pk: 'Paquetes', h_care: 'Los accidentes pasan. Elige tu protección.', h_work: 'Montajes recientes',
+    nav_collection: 'Colección', nav_studio: 'Estudio de diseño', nav_packages: 'Paquetes', nav_how: 'Cómo funciona', nav_res: 'Mi reservación',
+    hero_title: 'Ve tu fiesta antes de reservarla.', hero_sub: 'Guirnaldas de globos, fondos y props decorativos en renta en Eagle Mountain, Utah. Diseña tu montaje con las piezas reales, mira el precio en vivo, reserva tu fecha y recógelo listo.',
+    cta_design: 'Diseñar mi fiesta', cta_browse: 'Ver la colección', avail_for: 'Disponibilidad para', pick_date: 'Elige la fecha del evento',
+    add: 'Agregar', added: 'Agregado', remove: 'Quitar', available: 'disponibles', booked: 'Reservado esa fecha', only_left: 'quedan',
+    studio_title: 'Estudio de diseño', studio_sub: 'Cada pieza es una foto real del inventario de Karol. Toca una pieza para colocarla, arrástrala o pruébala en una foto de tu propio espacio. Tu total se actualiza al instante.',
+    your_setup: 'Tu montaje', empty_setup: 'Aún no hay nada. Empieza con un look o toca una pieza.', subtotal: 'Subtotal de renta', colors: 'Colores de globos (hasta 3)', length: 'Largo de la guirnalda (pies)', perft: 'por pie', photo_only: 'Por ahora solo foto', real_photo: 'Foto real', about: 'Conoce a Karol', pickup: 'Recoger y devolver', install: 'Instalación', get_it: 'Cómo lo recibes', free: 'Gratis', space: 'Usar una foto de mi espacio', space_off: 'Volver a la pared del estudio', room_scale: 'Tamaño de las piezas en tu foto', protection: 'Protección',
+    est_total: 'Total estimado', deposit_today: 'Anticipo para apartar tu fecha', reserve: 'Reservar este montaje', start_look: 'Empieza con un look', palette: 'Paleta de globos', wall: 'Pared', clear: 'Borrar todo',
+    made_fresh: 'Hecho a mano para tu fecha', min_order: 'Pedido mínimo', step_event: 'Tu evento', step_review: 'Protección', step_sign: 'Firma', step_done: 'Listo',
+    name: 'Nombre completo', email: 'Correo', phone: 'Teléfono', event_type: 'Tipo de evento', address: 'Dirección del evento (para instalación)', slot: 'Hora para recoger', guests: 'Invitados', start: 'Hora de inicio', setting: 'Lugar', indoor: 'Interior', outdoor: 'Exterior', covered: 'Patio cubierto', notes: 'Notas para Karol (tema, colores, tamaño del pastel)',
+    next: 'Continuar', back: 'Atrás', sign_submit: 'Firmar y enviar solicitud', confirm_title: 'Solicitud recibida', lookup: 'Buscar mi reservación', code: 'Código de reservación',
+  },
+};
+
+/* ===== Storage layer: localStorage demo, or Supabase when CONFIG is filled ===== */
+const LIVE = !!(CONFIG.SUPABASE_URL && CONFIG.SUPABASE_ANON_KEY);
+let sb = null;
+const LS = {
+  get(k, d) { try { const v = localStorage.getItem('pa3_' + k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem('pa3_' + k, JSON.stringify(v)); return true; } catch { return false; } },
+};
+const MEM = {}; // fallback when storage is blocked
+function lget(k, d) { const v = LS.get(k, undefined); return v !== undefined ? v : (k in MEM ? MEM[k] : d); }
+function lset(k, v) { MEM[k] = v; LS.set(k, v); }
+
+const DB = {
+  async init() {
+    if (LIVE) {
+      const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm');
+      sb = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+    } else {
+      const seed = SEED_ASSETS.map(a => ({ ...a, active: true, photo: a.photo || '' }));
+      if (!lget('assets')) lset('assets', seed);
+      else if (lget('seedv') !== SEED_VERSION) {
+        /* demo data cached by an older version of the site: refresh Karol's pieces (images, sets), keep anything added in the admin */
+        const old = lget('assets', []), ids = new Set(seed.map(a => a.id));
+        lset('assets', [...seed.map(a => { const o = old.find(x => x.id === a.id); return o ? { ...a, price: o.price, qty: o.qty, active: o.active } : a; }), ...old.filter(a => !ids.has(a.id))]);
+        const d = lget('draft'); if (d) { d.placements = []; lset('draft', d); }
+      }
+      lset('seedv', SEED_VERSION);
+      if (!lget('settings')) lset('settings', SEED_SETTINGS);
+      if (!lget('bookings')) lset('bookings', demoBookings());
+    }
+  },
+  async assets() {
+    if (LIVE) { const { data, error } = await sb.from('assets').select('*').order('sort'); if (error) throw error; return data.map(fromRow); }
+    return lget('assets', []);
+  },
+  async saveAsset(a) {
+    if (LIVE) { const { error } = await sb.from('assets').upsert(toRow(a)); if (error) throw error; return; }
+    const all = lget('assets', []); const i = all.findIndex(x => x.id === a.id); if (i >= 0) all[i] = a; else all.push(a); lset('assets', all);
+  },
+  async deleteAsset(id) {
+    if (LIVE) { const { error } = await sb.from('assets').delete().eq('id', id); if (error) throw error; return; }
+    lset('assets', lget('assets', []).filter(a => a.id !== id));
+  },
+  async settings() {
+    if (LIVE) { const { data } = await sb.from('settings').select('data').eq('id', 1).maybeSingle(); return { ...SEED_SETTINGS, ...(data?.data || {}) }; }
+    return { ...SEED_SETTINGS, ...lget('settings', {}) };
+  },
+  async saveSettings(s) {
+    if (LIVE) { const { error } = await sb.from('settings').upsert({ id: 1, data: s }); if (error) throw error; return; }
+    lset('settings', s);
+  },
+  /* reserved quantity per asset for bookings overlapping date +/- buffer */
+  async reserved(date, buffer) {
+    if (!date) return {};
+    if (LIVE) { const { data, error } = await sb.rpc('reserved_on', { d: date, buf: buffer }); if (error) throw error; const m = {}; (data || []).forEach(r => m[r.asset_id] = r.qty); return m; }
+    const m = {}; const t = dnum(date);
+    for (const b of lget('bookings', [])) {
+      if (['declined', 'cancelled'].includes(b.status)) continue;
+      if (Math.abs(dnum(b.event.date) - t) > buffer) continue;
+      for (const it of b.items) m[it.id] = (m[it.id] || 0) + it.qty;
+    }
+    return m;
+  },
+  async createBooking(b) {
+    if (LIVE) { const { data, error } = await sb.rpc('create_booking', { payload: b }); if (error) throw error; return data; }
+    const all = lget('bookings', []); all.unshift(b); lset('bookings', all); return b.code;
+  },
+  async lookup(code, email) {
+    if (LIVE) { const { data, error } = await sb.rpc('lookup_booking', { c: code, e: email }); if (error) throw error; return data; }
+    return lget('bookings', []).find(b => b.code.toUpperCase() === code.trim().toUpperCase() && b.customer.email.toLowerCase() === email.trim().toLowerCase()) || null;
+  },
+  async bookings() {
+    if (LIVE) { const { data, error } = await sb.from('bookings').select('data').order('created_at', { ascending: false }); if (error) throw error; return data.map(r => r.data); }
+    return lget('bookings', []);
+  },
+  async updateBooking(b) {
+    if (LIVE) { const { error } = await sb.from('bookings').update({ data: b, status: b.status, event_date: b.event.date }).eq('code', b.code); if (error) throw error; return; }
+    const all = lget('bookings', []); const i = all.findIndex(x => x.code === b.code); if (i >= 0) all[i] = b; lset('bookings', all);
+  },
+  async uploadPhoto(file) {
+    if (LIVE) { const path = `assets/${Date.now()}-${file.name.replace(/[^a-z0-9.]/gi, '_')}`; const { error } = await sb.storage.from('photos').upload(path, file, { upsert: true }); if (error) throw error; return sb.storage.from('photos').getPublicUrl(path).data.publicUrl; }
+    return await shrink(file, 700);
+  },
+  /* transparent PNG of a real piece for the Studio */
+  async uploadCutout(blob) {
+    if (LIVE) { const path = `cutouts/${Date.now()}.png`; const { error } = await sb.storage.from('photos').upload(path, blob, { upsert: true, contentType: 'image/png' }); if (error) throw error; return sb.storage.from('photos').getPublicUrl(path).data.publicUrl; }
+    return await new Promise((ok, no) => { const r = new FileReader(); r.onload = () => ok(r.result); r.onerror = no; r.readAsDataURL(blob); });
+  },
+  /* email: Supabase edge function in live mode; demo returns a mailto link to open */
+  async email(to, subject, text, kind, code) {
+    if (LIVE) {
+      if (kind === 'request_received') return { sent: true }; // sent together with new_request by the server
+      const body = kind === 'new_request' ? { kind: 'new_booking', code } : { kind, code, subject, text };
+      const { error } = await sb.functions.invoke('send-email', { body }); if (error) throw error; return { sent: true };
+    }
+    return { sent: false, mailto: `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}` };
+  },
+  auth: {
+    async session() { if (LIVE) { const { data } = await sb.auth.getSession(); return !!data.session; } try { return sessionStorage.getItem('pa_admin') === '1'; } catch { return MEM.admin === 1; } },
+    async signIn(email, pw) {
+      if (LIVE) { const { error } = await sb.auth.signInWithPassword({ email, password: pw }); if (error) throw error; return true; }
+      const s = await DB.settings(); if (pw !== s.pin) throw new Error('Wrong PIN'); try { sessionStorage.setItem('pa_admin', '1'); } catch { MEM.admin = 1; } return true;
+    },
+    async signOut() { if (LIVE) await sb.auth.signOut(); try { sessionStorage.removeItem('pa_admin'); } catch { MEM.admin = 0; } },
+  },
+};
+function fromRow(r) { return { ...r.data, id: r.id, active: r.active, photo: r.photo || '' }; }
+function toRow(a) { const { id, active, photo, ...rest } = a; return { id, active, photo, data: rest, sort: ['backdrops', 'balloons', 'signs', 'furniture', 'table', 'props'].indexOf(a.cat) }; }
+
+function dnum(s) { const [y, m, d] = s.split('-').map(Number); return Date.UTC(y, m - 1, d) / 864e5; }
+function todayISO(offset = 0) { const d = new Date(); d.setDate(d.getDate() + offset); return d.toISOString().slice(0, 10); }
+function newCode() { const c = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s = 'PA-'; for (let i = 0; i < 5; i++) s += c[Math.floor(Math.random() * c.length)]; return s; }
+async function shrink(file, max) {
+  const url = URL.createObjectURL(file); const img = new Image(); img.src = url; await img.decode();
+  const k = Math.min(1, max / Math.max(img.width, img.height)); const c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+  c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url); return c.toDataURL('image/jpeg', .82);
+}
+
+/* Sample requests so the admin panel has something to show in demo mode */
+function demoBookings() {
+  const A0 = id => SEED_ASSETS.find(a => a.id === id);
+  const mk = (code, days, status, name, email, type, lookId, extra = {}) => {
+    const look = LOOKS.find(l => l.id === lookId);
+    const items = []; look.place.forEach(([id]) => { const a = A0(id), ft = a.perFt ? 10 : undefined, price = a.perFt ? a.price * 10 : a.price; const ex = items.find(i => i.id === id && !a.perFt); if (ex) ex.qty++; else items.push({ id, qty: 1, ft, price, name: a.name + (ft ? ` (${ft} ft)` : '') }); });
+    const sub = items.reduce((s, i) => s + i.price * i.qty, 0);
+    const install = days === 16 ? 120 : 0, care = 100; const total = sub + install + care;
+    return { code, sample: true, created_at: new Date(Date.now() - (5 + days * 2) * 36e5).toISOString(), status,
+      customer: { name, email, phone: '(801) 555-01' + String(10 + days).slice(-2) }, lang: 'en',
+      event: { date: todayISO(days), start: '15:00', type, fulfillment: install ? 'install' : 'pickup', pickupSlot: SEED_SETTINGS.pickupSlots[0], returnSlot: SEED_SETTINGS.returnSlot, address: install ? '123 Sample St, Eagle Mountain, UT' : '', guests: 30, setting: 'indoor', notes: 'Sample request for the demo.' },
+      items, balloonColors: items.some(i => i.ft) ? ['Lilac', 'Dusty blue', 'Chrome gold'] : [],
+      design: { wall: look.wall, placements: look.place.map(([id, x, y, s]) => ({ id, x, y, s: s || 1, len: A0(id).perFt ? 10 : undefined })) }, protection: 'care',
+      totals: { subtotal: sub, install, care, securityDeposit: 0, total, retainer: Math.round(total * .3) },
+      contract: { name, signed_at: new Date().toISOString(), version: SEED_SETTINGS.contractVersion, signature: '' },
+      prep: {}, payments: { retainer: status !== 'new', balance: false, depositReturned: false }, reminders: [], ...extra };
+  };
+  return [
+    mk('PA-DEMO1', 3, 'confirmed', 'Sample: Ana Ruiz', 'ana@example.com', 'Birthday', 'golden-window', { prep: { 'window-arch': true } }),
+    mk('PA-DEMO2', 9, 'new', 'Sample: Jessica Hale', 'jess@example.com', 'Baby shower', 'balloon-party'),
+    mk('PA-DEMO3', 16, 'new', 'Sample: Mariela Soto', 'mariela@example.com', 'Bridal shower', 'garden-arches'),
+  ];
+}
+
+/* Background removal runs in the browser (free, the photo never leaves the device). Falls back to the photo as is. */
+async function removeBg(file) {
+  const mod = await import('https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/+esm');
+  return await mod.removeBackground(file, { output: { format: 'image/png' } });
+}
+/* Crop to the visible piece and keep its width/height ratio, so it stands on the floor at real size */
+async function trimAlpha(blob, max) {
+  const url = URL.createObjectURL(blob); const img = new Image(); img.src = url; await img.decode();
+  const c = document.createElement('canvas'); c.width = img.width; c.height = img.height; const x = c.getContext('2d'); x.drawImage(img, 0, 0);
+  const d = x.getImageData(0, 0, c.width, c.height).data; let t = c.height, l = c.width, r = 0, b = 0;
+  for (let y = 0; y < c.height; y += 2) for (let xx = 0; xx < c.width; xx += 2) { if (d[(y * c.width + xx) * 4 + 3] > 16) { if (y < t) t = y; if (y > b) b = y; if (xx < l) l = xx; if (xx > r) r = xx; } }
+  URL.revokeObjectURL(url); if (r <= l || b <= t) { t = 0; l = 0; r = c.width - 1; b = c.height - 1; }
+  const w = r - l + 1, h = b - t + 1, k = Math.min(1, max / Math.max(w, h));
+  const o = document.createElement('canvas'); o.width = Math.round(w * k); o.height = Math.round(h * k); o.getContext('2d').drawImage(c, l, t, w, h, 0, 0, o.width, o.height);
+  return { blob: await new Promise(res => o.toBlob(res, 'image/png')), ar: w / h };
+}
+
+/* ===== Rental agreement generated from the booking ===== */
+function money(n) { return '$' + (Math.round(n * 100) / 100).toLocaleString('en-US', { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 }); }
+function fmtDate(iso, lang) { if (!iso) return ''; const [y, m, d] = iso.split('-').map(Number); return new Date(y, m - 1, d).toLocaleDateString(lang === 'es' ? 'es-US' : 'en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }); }
+
+function contractHTML(b, S, assets) {
+  const t = b.totals; const care = b.protection === 'care';
+  const rows = b.items.map(it => { const a = assets.find(x => x.id === it.id) || {}; return `<tr><td>${esc(it.name)}</td><td class="n">${it.qty}</td><td class="n">${money(it.price)}</td><td class="n">${a.made ? 'Made to order' : money(a.repl || 0)}</td></tr>`; }).join('');
+  return `<div class="contract">
+  <h3>Petit Atelier Events: Decor Rental Agreement</h3>
+  <p class="muted">Agreement ${esc(S.contractVersion)} · Reservation ${esc(b.code)}</p>
+  <p>This agreement is between <b>Petit Atelier Events</b> (Eagle Mountain, Utah, "Petit Atelier") and <b>${esc(b.customer.name || 'the Client')}</b> ("Client") for the decor rental for an event on <b>${esc(fmtDate(b.event.date))}</b>.</p>
+  <h4>1. Reservation and payment</h4>
+  <p>Submitting this form is a request. The date is held once Petit Atelier confirms availability and receives the non-refundable retainer of ${S.depositPct}% (${money(t.retainer)}), which is applied to the total of ${money(t.total)}. The remaining balance is due 7 days before the event. Requests not confirmed within 48 hours release their hold.</p>
+  <h4>2. Pickup, return and installation</h4>
+  ${b.event.fulfillment === 'install'
+    ? `<p><b>Client added installation (${money(S.installFee)}).</b> Petit Atelier delivers, sets up and takes down the decor at ${esc(b.event.address)}, arriving before the event start time and returning for teardown at a time agreed in advance. Client gives clear access, a flat surface and permission from the venue or HOA where needed. Installed pieces should not be moved by guests.</p>`
+    : `<p><b>Client picks up and returns the decor.</b> Pickup: ${esc(b.event.pickupSlot || S.pickupSlots[0])} at ${esc(S.pickupPlace)}. Return: ${esc(b.event.returnSlot || S.returnSlot)}, at the same place. Balloon pieces are built and ready at pickup. Client brings a vehicle large enough for the order (an SUV or van for garlands and arches) and is responsible for loading, transport, setup and the pieces' care until they are returned. Client and Petit Atelier check the pieces together at pickup and at return.</p>`}
+  <p>Pieces returned late are charged ${money(S.lateFee)} per day. Installation can be added for ${money(S.installFee)} up to 7 days before the event, subject to Petit Atelier's schedule.</p>
+  <h4>3. Care of the decor</h4>
+  <p>No tape, nails, glitter, paint, confetti cannons or open flame on or near any piece. Keep fabric backdrops away from food, drinks, sprinklers and rain. Take outdoor pieces down if wind or rain could damage the decor or harm guests.</p>
+  <h4>4. Damage, loss and protection</h4>
+  ${care
+    ? `<p><b>Client chose the Petit Care Plan (${money(S.carePlan)}, non-refundable).</b> It covers accidental damage during normal use up to ${money(S.carePlanCap)} in combined replacement value. It does not cover loss or theft, intentional damage, damage from the misuse described in section 3, or pieces left outdoors against Petit Atelier's advice. Damage the plan does not cover is billed at the replacement value in Exhibit A.</p>`
+    : `<p><b>Client declined the Care Plan.</b> A refundable security deposit of ${money(S.securityDeposit)} is due with the balance and is returned within 7 days after pickup and inspection. Client is responsible for the full replacement value in Exhibit A for any piece that is damaged, stained beyond normal cleaning, lost or stolen. Charges above the deposit are due within 14 days of the invoice.</p>`}
+  <p>Petit Atelier inspects and photographs every piece when it leaves and when it comes back. Normal wear (light scuffs, a loose sequin) is never charged.</p>
+  <h4>5. Balloons</h4>
+  <p>Balloons are made of natural latex and are made fresh for each event. Heat, direct sun and cold cause oxidation and popping, which is not a defect and is not refunded. Balloons and their pieces are a choking hazard: keep away from children under 8. Tell Petit Atelier about any latex allergy before the event.</p>
+  <h4>6. Changes and cancellations</h4>
+  <p>Pieces can be added up to 7 days before the event, subject to availability. One date change is free with 14 or more days' notice, subject to availability. Cancellation 30 or more days before the event turns the retainer into a credit usable within 12 months. Cancellation within 30 days forfeits the retainer; within 7 days the full balance is due. If Petit Atelier must cancel, all payments are refunded in full.</p>
+  <h4>7. Liability</h4>
+  <p>Client is responsible for guests' conduct around the decor and, when picking up, for setting the pieces up safely. Petit Atelier is not responsible for injury or damage caused by transport, setup by Client, misuse of the decor or moving installed pieces. Petit Atelier's liability is limited to the amount paid under this agreement.</p>
+  <h4>8. Photos</h4>
+  <p>Petit Atelier may share photos of the setup (not of guests) on its website and Instagram unless Client opts out below.</p>
+  <h4>9. Electronic signature</h4>
+  <p>Typing a name and drawing a signature below has the same effect as a handwritten signature. This agreement is governed by the laws of the State of Utah.</p>
+  <h4>Exhibit A: pieces and replacement values</h4>
+  <table class="ctable"><thead><tr><th>Piece</th><th class="n">Qty</th><th class="n">Rental</th><th class="n">Replacement</th></tr></thead><tbody>${rows}</tbody></table>
+  ${b.balloonColors?.length ? `<p>Balloon colors: ${esc(b.balloonColors.join(', '))}. Balloon shades can vary slightly by batch.${b.balloon?.request ? ` Customer's balloon idea: “${esc(b.balloon.request)}”. Petit Atelier confirms the final balloon design in writing before the event; licensed characters are matched by color only and are not printed.` : ''}</p>` : ''}
+  <table class="ctable totals"><tbody>
+    <tr><td>Rental subtotal</td><td class="n">${money(t.subtotal)}</td></tr>
+    ${t.discount ? `<tr><td>Package savings</td><td class="n">-${money(t.discount)}</td></tr>` : ''}
+    <tr><td>${b.event.fulfillment === 'install' ? 'Installation (delivery, setup, teardown)' : 'Pickup and return by Client'}</td><td class="n">${t.install ? money(t.install) : 'Free'}</td></tr>
+    <tr><td>${care ? 'Petit Care Plan' : 'Security deposit (refundable, not in total)'}</td><td class="n">${care ? money(t.care) : money(t.securityDeposit)}</td></tr>
+    <tr class="grand"><td>Total</td><td class="n">${money(t.total)}</td></tr>
+    <tr><td>Retainer to hold the date (${S.depositPct}%)</td><td class="n">${money(t.retainer)}</td></tr>
+  </tbody></table>
+  ${b.contract?.signed_at ? `<div class="signed"><div>${/^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(b.contract.signature || '') ? `<img src="${b.contract.signature}" alt="Signature">` : ''}<p><b>${esc(b.contract.name)}</b><br>Signed electronically ${esc(new Date(b.contract.signed_at).toLocaleString('en-US'))}${b.contract.photoOptOut ? '<br>Opted out of setup photos' : ''}</p></div></div>` : ''}
+  </div>`;
+}
+
+/* ===== Customer site ===== */
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const CATS = [['all', 'All', 'Todo'], ['backdrops', 'Backdrops', 'Fondos'], ['balloons', 'Balloons', 'Globos'], ['furniture', 'Furniture', 'Muebles'], ['props', 'Props', 'Props']];
+const WALLS = ['#ece6e3', '#f4f0ea', '#e9ece4', '#e8e4ee', '#e4ebee', '#d9d2cc', '#cfc7c9'];
+const FT = 48; // stage units per real foot; the wall/floor line is at y = 470
+const ST = {
+  lang: lget('lang', 'en'), date: lget('date', ''), wall: WALLS[0], placements: [], sel: null, colors: [], balloon: { style: '', request: '', plan: null },
+  cat: 'all', scat: 'all', reserved: {}, assets: [], S: SEED_SETTINGS, fulfillment: 'pickup', protection: 'care', space: null, roomScale: 1,
+};
+Object.assign(ST, lget('draft', {}));
+let uidN = Date.now();
+const T = k => (I18N[ST.lang] || I18N.en)[k] || I18N.en[k] || k;
+const ES = () => ST.lang === 'es';
+const nm = a => (ES() && a.es) ? a.es : a.name;
+const ds = a => (ES() && a.desc_es) ? a.desc_es : a.desc;
+const A = id => ST.assets.find(a => a.id === id);
+const colorName = c => { const x = BALLOON_COLORS.find(b => b[0] === c); return x ? (ES() ? x[1] : x[0]) : c; };
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('on'), 2600); }
+function saveDraft() { lset('draft', { wall: ST.wall, placements: ST.placements, colors: ST.colors, balloon: ST.balloon, fulfillment: ST.fulfillment, protection: ST.protection }); }
+const canPlace = a => !!(a.cutout || a.parts);
+const gidOf = p => p.gid || p.uid;
+
+/* ---------- quantities, availability, pricing ---------- */
+function counts() { const m = {}, seen = new Set(); ST.placements.forEach(p => { const g = gidOf(p); if (seen.has(g)) return; seen.add(g); m[p.id] = (m[p.id] || 0) + 1; }); return m; }
+function availLeft(id) { const a = A(id); if (!a) return 0; return Math.max(0, a.qty - (ST.reserved[id] || 0)); }
+function canAdd(id) { return (counts()[id] || 0) < availLeft(id); }
+function pricing() {
+  const S = ST.S; const items = [];
+  const seen = new Set();
+  for (const pl of ST.placements) {
+    const a = A(pl.id); if (!a) continue; const g = gidOf(pl); if (seen.has(g)) continue; seen.add(g);
+    if (a.perFt) { const ft = Math.max(4, Math.round(pl.len || 10)); items.push({ id: a.id, qty: 1, ft, price: a.price * ft, name: `${a.name} (${ft} ft)` }); continue; }
+    const ex = items.find(i => i.id === a.id); if (ex) ex.qty++; else items.push({ id: a.id, qty: 1, price: a.price, name: a.name });
+  }
+  items.sort((x, y) => CATS.findIndex(k => k[0] === A(x.id).cat) - CATS.findIndex(k => k[0] === A(y.id).cat));
+  const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0);
+  const install = items.length && ST.fulfillment === 'install' ? S.installFee : 0;
+  const care = items.length && ST.protection === 'care' ? S.carePlan : 0;
+  const securityDeposit = items.length && ST.protection !== 'care' ? S.securityDeposit : 0;
+  const total = subtotal + install + care;
+  return { items, subtotal, discount: 0, install, care, securityDeposit, total, retainer: Math.round(total * S.depositPct / 100) };
+}
+const hasBalloons = () => ST.placements.some(p => A(p.id)?.perFt);
+const itemLabel = it => (it.qty > 1 ? it.qty + ' × ' : '') + (it.ft ? `${nm(A(it.id) || { name: it.name })} · ${it.ft} ft` : nm(A(it.id) || { name: it.name }));
+
+async function refreshAvail() {
+  ST.reserved = ST.date ? await DB.reserved(ST.date, ST.S.bufferDays).catch(() => ({})) : {};
+  const msg = ST.date ? `${T('avail_for')} ${fmtDate(ST.date, ST.lang)}` : '';
+  $('#collAvail').textContent = msg; $('#heroAvail').textContent = ST.date ? msg + '. ' + (ES() ? 'La colección y el estudio ya muestran lo que está libre.' : 'The collection and studio now show what is free.') : '';
+  renderAll();
+}
+
+/* ---------- placements ---------- */
+function addPiece(id, x, y, s) {
+  const a = A(id); if (!a) return false;
+  if (!canPlace(a)) { toast(ES() ? 'Esta pieza aún no tiene foto recortada para el estudio.' : 'This piece has no cut-out photo for the studio yet.'); return false; }
+  if (ST.date && !canAdd(id)) { toast(availLeft(id) ? (ES() ? `Solo ${availLeft(id)} disponible(s) en tu fecha` : `Only ${availLeft(id)} available on your date`) : `${nm(a)}: ${T('booked')}`); return false; }
+  if (!ST.date && (counts()[id] || 0) >= a.qty) { toast(ES() ? `Karol tiene ${a.qty}` : `Karol has ${a.qty} of these`); return false; }
+  const same = counts()[id] || 0;
+  const made = makePlacements(a, x ?? Math.min(940, a.x + same * 120), y ?? a.y, s ?? 1);
+  if (a.perFt) { made[0].len = ST.balloon.ft || 10; }
+  ST.placements.push(...made); ST.sel = made[0].uid; saveDraft();
+  if (a.parts && !lget('partsTip')) { lset('partsTip', 1); toast(ES() ? 'Es un set: puedes mover cada pieza por separado.' : 'This is a set: you can move each piece on its own.'); }
+  return true;
+}
+/* sets (arches, tables) become one placement per piece, sharing a group id; the rental is the whole set */
+function makePlacements(a, x, y, s) {
+  const gid = 'g' + (uidN++);
+  if (!a.parts) return [{ uid: 'u' + (uidN++), gid, id: a.id, x, y, s }];
+  return a.parts.map((pt, i) => ({ uid: 'u' + (uidN++), gid, id: a.id, part: i, x: Math.max(40, Math.min(960, x + (pt.dx || 0) * s)), y: y + (pt.dy || 0), s }));
+}
+function removeOne(id) { const last = [...ST.placements].reverse().find(p => p.id === id); if (last) { const g = gidOf(last); ST.placements = ST.placements.filter(p => gidOf(p) !== g); } saveDraft(); }
+function lookPlacements(look) { return look.place.flatMap(([id, x, y, s]) => { const a = A(id); if (!a || !canPlace(a)) return []; const m = makePlacements(a, x, y, s || 1); if (a.perFt) m[0].len = 10; return m; }); }
+function loadLook(look) { ST.placements = lookPlacements(look); ST.wall = look.wall; ST.sel = null; saveDraft(); renderAll(); }
+
+/* ---------- scene rendering (real photo cut-outs only) ---------- */
+function pieceSVG(a, pl) {
+  const pt = a.parts && pl && pl.part != null ? a.parts[pl.part] : null; const src = pt ? pt.cutout : a.cutout;
+  const h = ((pt || a).ft || 4) * FT, w = h * ((pt || a).ar || 1);
+  return `<ellipse cx="0" cy="-2" rx="${(w * .46).toFixed(1)}" ry="${Math.max(5, w * .05).toFixed(1)}" fill="#2b2220" opacity=".28" filter="url(#soft)"/><image href="${esc(src)}" x="${(-w / 2).toFixed(1)}" y="${(-h).toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" preserveAspectRatio="xMidYMax meet"/>`;
+}
+function sceneSVG(placements, wall, interactive, bg, rs) {
+  const list = placements.map(pl => ({ pl, a: A(pl.id) })).filter(o => o.a && (o.a.cutout || (o.a.parts && o.pl.part != null))).sort((m, n) => ((m.a.cat === 'backdrops' ? 0 : m.a.cat === 'balloons' ? 1 : 2) - (n.a.cat === 'backdrops' ? 0 : n.a.cat === 'balloons' ? 1 : 2)) || (m.pl.y - n.pl.y));
+  const body = list.map(({ pl, a }) => { const k = (pl.s || 1) * (rs || 1); return `<g class="pl${interactive && ST.sel === pl.uid ? ' sel' : ''}" data-uid="${pl.uid}" data-k="${k}" transform="translate(${pl.x} ${pl.y}) scale(${k})">${pieceSVG(a, pl)}</g>`; }).join('');
+  const room = bg ? `<image href="${esc(bg)}" width="1000" height="620" preserveAspectRatio="xMidYMid slice"/>`
+    : `<rect width="1000" height="470" fill="${esc(wall)}"/><rect width="1000" height="470" fill="url(#wallg)"/><ellipse cx="500" cy="300" rx="520" ry="300" fill="url(#spot)"/>
+       <rect y="470" width="1000" height="150" fill="${esc(wall)}"/><rect y="470" width="1000" height="150" fill="#8a7468" opacity=".22"/><rect y="470" width="1000" height="150" fill="url(#floorg)"/><rect y="466" width="1000" height="6" fill="#fff" opacity=".35"/>`;
+  return `${SVG_DEFS}${room}${body}${interactive && !list.length ? `<text x="500" y="250" text-anchor="middle" font-family="Forum,serif" font-size="30" fill="#8d8084">${esc(T('empty_setup'))}</text>` : ''}<g id="selbox"></g>`;
+}
+function renderStage() { $('#stage').innerHTML = sceneSVG(ST.placements, ST.wall, true, ST.space, ST.space ? ST.roomScale : 1); drawSel(); renderTools(); }
+function drawSel() {
+  const g = $('#selbox'); if (!g) return; g.innerHTML = '';
+  const el = ST.sel && $(`#stage .pl[data-uid="${ST.sel}"]`); if (!el) return;
+  const b = el.getBBox(), pl = ST.placements.find(p => p.uid === ST.sel), k = +el.dataset.k;
+  g.innerHTML = `<rect x="${pl.x + b.x * k - 6}" y="${pl.y + b.y * k - 6}" width="${b.width * k + 12}" height="${b.height * k + 12}" fill="none" stroke="#a8556f" stroke-width="2" stroke-dasharray="7 6" rx="8" pointer-events="none"/>`;
+}
+function renderTools() {
+  const pl = ST.placements.find(p => p.uid === ST.sel), el = $('#tools');
+  if (!pl) { el.innerHTML = `<span class="small muted">${ES() ? 'Toca una pieza del escenario para moverla, cambiar su tamaño o quitarla. Las flechas la mueven poco a poco.' : 'Tap a piece on the stage to move, resize or remove it. Arrow keys nudge it.'}</span>`; return; }
+  const a = A(pl.id); const pt = a.parts && pl.part != null ? a.parts[pl.part] : null;
+  el.innerHTML = `<b style="margin-right:auto">${esc(nm(a))}${pt ? ` <span class="small">· ${esc(pt.name)} (${ES() ? 'pieza' : 'piece'} ${pl.part + 1}/${a.parts.length})</span>` : ''} <span class="muted small">${a.perFt ? `${money(a.price)} ${T('perft')}` : pt ? `${money(a.price)} ${ES() ? 'el set' : 'for the set'}` : money(a.price)}</span></b>
+    ${a.perFt ? `<label class="small" style="margin:0" for="lenIn">${ES() ? 'Pies' : 'Feet'}</label><input id="lenIn" type="number" min="4" max="60" step="1" value="${pl.len || 10}">` : ''}
+    <button class="chip" data-t="smaller" aria-label="Smaller">−</button><button class="chip" data-t="bigger" aria-label="Bigger">+</button>
+    <button class="chip" data-t="del">${pt ? (ES() ? 'Quitar pieza' : 'Remove piece') : T('remove')}</button>${pt ? `<button class="chip" data-t="delset">${ES() ? 'Quitar set' : 'Remove set'}</button>` : ''}`;
+}
+function svgPoint(svg, e) { const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY; return pt.matrixTransform(svg.getScreenCTM().inverse()); }
+function bindStage() {
+  const svg = $('#stage'); let drag = null;
+  svg.addEventListener('pointerdown', e => {
+    const g = e.target.closest('.pl'); if (!g) { ST.sel = null; renderStage(); return; }
+    const pl = ST.placements.find(p => p.uid === g.dataset.uid); ST.sel = pl.uid;
+    const pt = svgPoint(svg, e); drag = { pl, dx: pt.x - pl.x, dy: pt.y - pl.y, g, moved: false };
+    svg.setPointerCapture(e.pointerId); $$('#stage .pl').forEach(n => n.classList.toggle('sel', n === g)); renderTools(); drawSel();
+  });
+  svg.addEventListener('pointermove', e => {
+    if (!drag) return; const pt = svgPoint(svg, e);
+    drag.pl.x = Math.round(Math.max(20, Math.min(980, pt.x - drag.dx))); drag.pl.y = Math.round(Math.max(150, Math.min(618, pt.y - drag.dy))); drag.moved = true;
+    drag.g.setAttribute('transform', `translate(${drag.pl.x} ${drag.pl.y}) scale(${drag.g.dataset.k})`); drawSel();
+  });
+  const end = () => { if (drag) { if (drag.moved) { saveDraft(); renderStage(); } drag = null; } };
+  svg.addEventListener('pointerup', end); svg.addEventListener('pointercancel', end);
+  svg.setAttribute('tabindex', '0');
+  svg.addEventListener('keydown', e => {
+    const pl = ST.placements.find(p => p.uid === ST.sel); if (!pl) return;
+    const d = e.shiftKey ? 20 : 6; const mv = { ArrowLeft: [-d, 0], ArrowRight: [d, 0], ArrowUp: [0, -d], ArrowDown: [0, d] }[e.key];
+    if (mv) { pl.x += mv[0]; pl.y += mv[1]; e.preventDefault(); saveDraft(); renderStage(); }
+    if (e.key === 'Delete' || e.key === 'Backspace') { ST.placements = ST.placements.filter(p => p !== pl); ST.sel = null; e.preventDefault(); saveDraft(); renderAll(); }
+  });
+  $('#tools').addEventListener('click', e => {
+    const b = e.target.closest('[data-t]'); if (!b) return; const pl = ST.placements.find(p => p.uid === ST.sel); if (!pl) return;
+    const t = b.dataset.t;
+    if (t === 'smaller') pl.s = Math.max(.4, +(pl.s - .1).toFixed(2));
+    if (t === 'bigger') pl.s = Math.min(2, +(pl.s + .1).toFixed(2));
+    if (t === 'del') { ST.placements = ST.placements.filter(p => p !== pl); ST.sel = null; if (pl.part != null && ST.placements.some(p => gidOf(p) === gidOf(pl))) toast(ES() ? 'El set sigue rentado mientras quede una pieza en el escenario.' : 'The set stays in your rental while any of its pieces is on the stage.'); }
+    if (t === 'delset') { const g = gidOf(pl); ST.placements = ST.placements.filter(p => gidOf(p) !== g); ST.sel = null; }
+    saveDraft(); renderAll();
+  });
+  $('#tools').addEventListener('change', e => { if (e.target.id === 'lenIn') { const pl = ST.placements.find(p => p.uid === ST.sel); pl.len = Math.max(4, Math.min(60, Math.round(+e.target.value || 10))); saveDraft(); renderSummary(); renderGrid(); } });
+}
+
+/* ---------- panels ---------- */
+function availBadge(a) {
+  if (a.made) return `<span class="badge fresh">${T('made_fresh')}</span>`;
+  const left = availLeft(a.id), used = counts()[a.id] || 0;
+  if (!ST.date) return `<span class="badge">${a.qty} ${ES() ? 'en inventario' : 'in stock'}</span>`;
+  if (left <= 0) return `<span class="badge no">${T('booked')}</span>`;
+  return `<span class="badge ok">${left - used > 0 ? `${left - used} ${T('available')}` : (ES() ? 'Ya en tu montaje' : 'In your setup')}</span>`;
+}
+function catChips(active, attr) { const used = new Set(ST.assets.filter(a => a.active !== false).map(a => a.cat)); return CATS.filter(([k]) => k === 'all' || used.has(k)).map(([k, en, es]) => `<button class="chip" ${attr}="${k}" aria-pressed="${active === k}">${ES() ? es : en}</button>`).join(''); }
+function pic(a) { return a.photo ? `<img src="${esc(a.photo)}" alt="${esc(nm(a))}" loading="lazy">` : a.cutout ? `<img src="${esc(a.cutout)}" alt="${esc(nm(a))}" loading="lazy" class="cut">` : `<span class="muted small">${ES() ? 'Foto pronto' : 'Photo coming soon'}</span>`; }
+function thumb(a) { const src = a.cutout || a.photo; return src ? `<img src="${esc(src)}" alt="" class="${a.cutout ? 'cut' : ''}">` : ''; }
+function priceTag(a) { return a.perFt ? `${money(a.price)} <span class="small muted">${T('perft')}</span>` : money(a.price); }
+function renderGrid() {
+  $('#filters').innerHTML = catChips(ST.cat, 'data-cat');
+  const list = ST.assets.filter(a => a.active !== false && (ST.cat === 'all' || a.cat === ST.cat)); const c = counts();
+  $('#grid').innerHTML = list.map(a => {
+    const dis = !canPlace(a) || (ST.date ? (c[a.id] || 0) >= availLeft(a.id) : (c[a.id] || 0) >= a.qty);
+    return `<article class="card"><button class="pic${a.photo ? ' photo' : ''}" data-info="${a.id}" aria-label="${esc(nm(a))} details">${pic(a)}</button><div class="body">
+    <h3>${esc(nm(a))}</h3><p class="small muted" style="margin:0">${esc(ds(a))}</p>
+    <div class="row" style="margin-top:auto;padding-top:8px"><span class="price">${priceTag(a)}</span>${availBadge(a)}</div>
+    <div class="row">${c[a.id] ? `<span class="small">${c[a.id]} ${ES() ? 'en tu montaje' : 'in your setup'}</span><button class="btn ghost sm" data-rm="${a.id}">${T('remove')}</button>` : `<span class="small muted">${canPlace(a) ? '' : T('photo_only')}</span>`}<button class="btn sm" data-add="${a.id}" ${dis ? 'disabled' : ''}>${canPlace(a) ? T('add') : (ES() ? 'Pídela en notas' : 'Ask in notes')}</button></div>
+    </div></article>`;
+  }).join('') || `<p class="muted">Nothing in this category yet.</p>`;
+}
+function renderPieces() {
+  $('#sFilters').innerHTML = catChips(ST.scat, 'data-scat');
+  const list = ST.assets.filter(a => a.active !== false && canPlace(a) && (ST.scat === 'all' || a.cat === ST.scat)); const c = counts();
+  $('#pieces').innerHTML = list.map(a => { const dis = ST.date ? (c[a.id] || 0) >= availLeft(a.id) : (c[a.id] || 0) >= a.qty;
+    return `<button class="piece" data-place="${a.id}" ${dis ? 'disabled' : ''} title="${esc(nm(a))}"><div class="th">${thumb(a)}</div><div>${esc(nm(a))}<small>${a.perFt ? money(a.price) + ' ' + T('perft') : money(a.price)}${ST.date && !a.made && availLeft(a.id) <= 0 ? ' · ' + T('booked') : ''}</small></div><span>${c[a.id] ? '×' + c[a.id] : '+'}</span></button>`; }).join('');
+}
+/* ---------- Karol's real projects: sketch to finished setup, step by step ---------- */
+const PJ = { id: PROJECTS[0].id, step: 0, timer: null, seen: false };
+function renderProjects() {
+  const es = ES(), p = PROJECTS.find(x => x.id === PJ.id);
+  $('#projTabs').innerHTML = PROJECTS.map(x => `<button class="chip" data-proj="${x.id}" aria-pressed="${x.id === PJ.id}">${esc(es ? x.es : x.name)}</button>`).join('');
+  $('#projTitle').textContent = es ? 'Mira cómo se arman los montajes de Karol' : 'Watch Karol’s setups come together';
+  $('#projStage').style.aspectRatio = `${p.w} / ${p.h}`;
+  $('#projStage').innerHTML = `<img class="base" src="img/proj/${p.id}_sketch.jpg" alt="${esc(p.name)} setup plan" width="${p.w}" height="${p.h}">`
+    + p.steps.map((s, i) => `<img class="layer" data-k="${i + 1}" src="img/proj/${p.id}.jpg" alt="" style="-webkit-mask-image:url(img/proj/${p.id}_m${i + 1}.png);mask-image:url(img/proj/${p.id}_m${i + 1}.png)">`).join('')
+    + `<img class="full" src="img/proj/${p.id}.jpg" alt="${esc(es ? p.es : p.name)} by Petit Atelier Events"><span class="tag">${es ? 'Proyecto real de Karol' : 'A real Petit Atelier setup'}</span>`;
+  $('#projSteps').innerHTML = p.steps.map((s, i) => `<li data-k="${i + 1}">${esc(es ? s[1] : s[0])}</li>`).join('') + `<li data-k="${p.steps.length + 1}">${es ? '¡Listo para la fiesta!' : 'Ready to party!'}</li>`;
+  $('#projCtaT').textContent = es ? '¿Te encanta este look?' : 'Love this look?';
+  $('#projCtaP').textContent = es ? 'Karol lo puede recrear para tu fecha, o diseña el tuyo con sus piezas reales.' : 'Karol can recreate it for your date, or you can design your own with her real pieces.';
+  $('#projUse').textContent = es ? 'Quiero este look' : 'I want this look'; $('#projOwn').textContent = es ? 'Diseñar el mío' : 'Design my own';
+  showStep(PJ.step);
+}
+function showStep(k) {
+  const p = PROJECTS.find(x => x.id === PJ.id), n = p.steps.length + 1; PJ.step = Math.max(0, Math.min(n, k)); const es = ES();
+  $$('#projStage .layer').forEach(l => l.classList.toggle('on', +l.dataset.k <= PJ.step));
+  $('#projStage .full')?.classList.toggle('on', PJ.step >= n);
+  $$('#projSteps li').forEach(li => { li.classList.toggle('on', +li.dataset.k <= PJ.step); li.classList.toggle('now', +li.dataset.k === PJ.step); });
+  $('#projCount').textContent = PJ.step ? `${es ? 'Paso' : 'Step'} ${PJ.step} ${es ? 'de' : 'of'} ${n}` : (es ? 'El plan' : 'The plan');
+  $('#projStep').textContent = PJ.step === 0 ? (es ? 'Todo empieza con un boceto' : 'It starts with a sketch') : PJ.step >= n ? (es ? '¡Listo para la fiesta!' : 'Ready to party!') : (es ? p.steps[PJ.step - 1][1] : p.steps[PJ.step - 1][0]);
+  $('#projPlay').textContent = PJ.timer ? (es ? 'Pausa' : 'Pause') : PJ.step >= n ? (es ? 'Repetir' : 'Replay') : (es ? 'Reproducir' : 'Play');
+}
+function playProject(restart) {
+  clearInterval(PJ.timer); PJ.timer = null;
+  const p = PROJECTS.find(x => x.id === PJ.id), n = p.steps.length + 1;
+  if (restart || PJ.step >= n) showStep(0);
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { showStep(n); return; }
+  PJ.timer = setInterval(() => { if (PJ.step >= n) { clearInterval(PJ.timer); PJ.timer = null; showStep(n); return; } showStep(PJ.step + 1); }, 1300);
+  showStep(PJ.step);
+}
+function useProject() {
+  const p = PROJECTS.find(x => x.id === PJ.id); const ins = INSP(p.insp);
+  ST.balloon.style = p.insp; ST.colors = ins.colors.slice(0, 3); ST.balloon.request = ES() ? p.req_es : p.req; ST.balloon.plan = null;
+  ensureBalloon(ins.ft); saveDraft(); renderAll(); document.getElementById('studio').scrollIntoView();
+  toast(ES() ? 'Agregamos los globos de este look. Agrega tus piezas y Karol lo recrea.' : 'We added this look’s balloons. Add your pieces and Karol recreates the rest.');
+}
+
+/* ---------- balloon designer: inspirations, colors, custom request, AI ---------- */
+const INSP = id => INSPIRATIONS.find(i => i.id === id);
+const swatch = c => { const x = BALLOON_COLORS.find(b => b[0] === c); return `<i class="dot" style="background:${x ? x[2] : '#ccc'}" title="${esc(colorName(c))}"></i>`; };
+function ensureBalloon(ft) {
+  let pl = ST.placements.find(p => A(p.id)?.perFt);
+  if (!pl) { const back = ST.placements.find(p => A(p.id)?.cat === 'backdrops'); addPiece('balloons', back ? back.x + 40 : 520, 575, 1); pl = ST.placements.find(p => A(p.id)?.perFt); }
+  if (pl && ft) pl.len = Math.max(4, Math.min(60, Math.round(ft)));
+  return pl;
+}
+function useInspiration(id) {
+  const ins = INSP(id); if (!ins) return;
+  ST.balloon.style = id; ST.colors = ins.colors.slice(0, 3); ensureBalloon(ins.ft); saveDraft(); renderAll();
+  document.getElementById('studio').scrollIntoView(); toast(ES() ? 'Estilo agregado a tu montaje' : 'Style added to your setup');
+}
+function renderInspirations() {
+  $('#inspGrid').innerHTML = INSPIRATIONS.map(i => `<article class="card"><button class="pic photo" data-zoom="${esc(i.img)}" aria-label="${esc(i.name)} photo"><img src="${esc(i.img)}" alt="${esc(ES() ? i.es : i.name)}" loading="lazy"></button><div class="body">
+    <div class="row"><h3>${esc(ES() ? i.es : i.name)}</h3><span class="badge ${i.karol ? 'ok' : ''}">${i.karol ? (ES() ? 'Trabajo de Karol' : 'Karol’s work') : (ES() ? 'Inspiración' : 'Inspiration')}</span></div>
+    <p class="small muted" style="margin:0">${esc(ES() ? i.note_es : i.note)}</p>
+    <p style="margin:6px 0 0">${i.colors.map(swatch).join('')} <span class="small muted">${i.colors.map(colorName).join(' · ')}</span></p>
+    <div class="row" style="margin-top:auto;padding-top:8px"><span class="price">~${i.ft} ft · ${money(i.ft * (A('balloons')?.price || 22))}</span><button class="btn sm" data-insp="${i.id}">${ES() ? 'Usar este estilo' : 'Use this style'}</button></div></div></article>`).join('');
+  $('#themeChips').innerHTML = THEMES.map(t => `<button class="chip" data-theme="${esc(t.name)}">${t.colors.map(swatch).join('')} ${esc(ES() ? t.es : t.name)}</button>`).join('');
+}
+function renderBalloon() {
+  const box = $('#balloonBox'); const has = hasBalloons(); const pl = ST.placements.find(p => A(p.id)?.perFt); const es = ES(); const plan = ST.balloon.plan;
+  box.innerHTML = `<div class="row"><h3 style="margin:0">${es ? 'Diseña tus globos' : 'Design your balloons'}</h3>${has ? `<span class="small">${pl.len || 10} ft · ${money((pl.len || 10) * A('balloons').price)}</span>` : `<button class="btn sm ghost" id="addBalloons">${es ? 'Agregar guirnalda' : 'Add a garland'}</button>`}</div>
+    <div class="opts" style="align-items:center"><span class="small muted">${es ? 'Estilo' : 'Style'}:</span>${INSPIRATIONS.map(i => `<button class="chip" data-insp="${i.id}" aria-pressed="${ST.balloon.style === i.id}">${esc(es ? i.es : i.name)}</button>`).join('')}<a class="small" href="#balloons">${es ? 'Ver fotos' : 'See photos'}</a></div>
+    <div class="opts" style="align-items:center"><span class="small muted">${T('colors')}:</span>${BALLOON_COLORS.map(([en, esn, hex]) => `<button class="sw" data-color="${en}" style="background:${hex}" aria-pressed="${ST.colors.includes(en)}" title="${es ? esn : en}" aria-label="${es ? esn : en}"></button>`).join('')}</div>
+    <p class="small" style="margin:6px 0 0">${ST.colors.length ? ST.colors.map(colorName).join(' · ') : `<span class="muted">${es ? 'Elige hasta 3 colores.' : 'Pick up to 3 colors.'}</span>`}</p>
+    <label for="bReq" style="margin-top:12px">${es ? 'Describe tu idea (tema, personaje, colores, dónde van los globos)' : 'Describe your idea (theme, character, colors, where the balloons go)'}</label>
+    <textarea id="bReq" placeholder="${es ? 'Ej.: fiesta de sirena, globos en cascada por el lado izquierdo del arco, lila y aqua' : 'e.g. mermaid party, balloons cascading down the left side of the arch, lilac and teal'}">${esc(ST.balloon.request)}</textarea>
+    <div class="row" style="margin-top:8px"><span class="small muted">${es ? 'Karol recibe tu descripción con la reserva.' : 'Karol receives your description with your request.'}</span><span class="row" style="gap:6px"><button class="btn sm" id="aiPlanBtn">✦ ${es ? 'Diseñar con IA' : 'Design it with AI'}</button>${LIVE ? `<button class="btn sm ghost" id="aiRenderBtn">${es ? 'Foto con IA' : 'AI photo preview'}</button>` : ''}</span></div>
+    <div id="aiOut" aria-live="polite">${plan ? planCard(plan) : ''}</div>`;
+}
+function planCard(plan) {
+  const es = ES();
+  return `<div class="plan"><b>✦ ${es ? 'Propuesta' : 'Suggestion'}${plan.theme ? ': ' + esc(plan.theme) : ''}</b><p style="margin:4px 0">${(plan.colors || []).map(swatch).join('')} ${esc((plan.colors || []).map(colorName).join(', '))} · ${esc(String(plan.ft || ''))} ft · ${esc(plan.placementLabel || plan.placement || '')}</p>
+    ${plan.message ? `<p class="small" style="margin:0">${esc(plan.message)}</p>` : ''}${plan.character ? `<p class="small err" style="margin:4px 0 0">${es ? 'Personajes con licencia: Karol iguala los colores y el estilo; no imprime personajes.' : 'Licensed characters: Karol matches the colors and feel; characters are not printed.'}</p>` : ''}
+    ${plan.preview ? `<img src="${esc(plan.preview)}" alt="AI preview" style="width:100%;border-radius:12px;margin-top:8px">` : ''}<p class="small muted" style="margin:6px 0 0">${plan.source === 'ai' ? (es ? 'Sugerido por IA. Karol lo confirma contigo.' : 'Suggested by AI. Karol confirms the final design with you.') : (es ? 'Sugerencia automática por tema.' : 'Automatic theme suggestion.')}</p></div>`;
+}
+const PLACEMENTS = { 'around-arch': ['around the arch', 'alrededor del arco'], 'half-cascade': ['half-arch cascade on one side', 'cascada en medio arco a un lado'], 'corner-clusters': ['clusters at the corners', 'racimos en las esquinas'], 'full-arch': ['full arch', 'arco completo'] };
+function keywordPlan(text) {
+  const t = text.toLowerCase(); const theme = THEMES.find(x => x.k.some(k => t.includes(k)));
+  const wb = w => new RegExp('(^|[^a-záéíóúñ])' + w.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '($|[^a-záéíóúñ])').test(t);
+  const named = BALLOON_COLORS.filter(([en, es]) => wb(en) || wb(es)).map(c => c[0]);
+  const colors = (named.length ? named : theme ? theme.colors : ['Blush', 'Cream', 'Chrome gold']).slice(0, 3);
+  const placement = /(hoop|aro|round|redond|around|alrededor)/.test(t) ? 'around-arch' : /(corner|esquina|cluster|racimo)/.test(t) ? 'corner-clusters' : /(full|completo|entire)/.test(t) ? 'full-arch' : 'half-cascade';
+  const m = t.match(/(\d{1,2})\s*(ft|feet|foot|pies|pie)/); const ft = m ? +m[1] : { 'around-arch': 14, 'corner-clusters': 8, 'full-arch': 18, 'half-cascade': 12 }[placement];
+  return { source: 'rules', theme: theme ? (ES() ? theme.es : theme.name) : '', colors, placement, ft, character: !!theme?.character, style: placement === 'around-arch' ? 'sage-hoop' : placement === 'full-arch' ? 'ocean-lilac' : 'blush-cascade', message: theme ? (ES() ? theme.tip_es : theme.tip) : '' };
+}
+async function claudeSample() { try { return window.claude?.use ? await window.claude.use('sample') : null; } catch { return null; } }
+async function aiPlan() {
+  const text = ($('#bReq')?.value || ST.balloon.request || '').trim(); ST.balloon.request = text;
+  if (!text) { toast(ES() ? 'Escribe tu idea primero' : 'Describe your idea first'); return; }
+  $('#aiOut').innerHTML = `<p class="small muted">✦ ${ES() ? 'Diseñando…' : 'Designing…'}</p>`;
+  const pieces = ST.placements.map(p => A(p.id)?.name).filter(Boolean);
+  let plan = null;
+  try {
+    if (LIVE) { const { data, error } = await sb.functions.invoke('ai-balloons', { body: { mode: 'plan', text, lang: ST.lang, pieces, colors: BALLOON_COLORS.map(c => c[0]), styles: INSPIRATIONS.map(i => i.id) } }); if (!error && data?.colors) plan = { ...data, source: 'ai' }; }
+    else { const sample = await claudeSample();
+      if (sample) { const r = await sample(`You are the balloon designer for Petit Atelier Events, a party decor rental in Utah. A customer described their balloon idea. Reply with JSON only, no prose: {"theme": short theme name, "colors": up to 3 names chosen ONLY from ${JSON.stringify(BALLOON_COLORS.map(c => c[0]))}, "placement": one of ["around-arch","half-cascade","corner-clusters","full-arch"], "ft": garland length in feet between 6 and 30 (simple, easy-to-build designs), "style": one of ${JSON.stringify(INSPIRATIONS.map(i => i.id))}, "character": true if they mention a licensed character or brand, "message": one friendly sentence in ${ST.lang === 'es' ? 'Spanish' : 'English'} describing the design and one easy accent idea (never promise printed licensed characters)}. Pieces already in their setup: ${JSON.stringify(pieces)}. Customer idea: ${JSON.stringify(text)}`, { modelTier: 'quick' });
+        const j = JSON.parse((r.text.match(/\{[\s\S]*\}/) || ['{}'])[0]); if (j.colors) plan = { ...j, source: 'ai' }; }
+    }
+  } catch (err) { console.warn('AI plan failed', err); }
+  if (!plan) plan = keywordPlan(text);
+  plan.colors = (plan.colors || []).filter(c => BALLOON_COLORS.some(b => b[0] === c)).slice(0, 3);
+  if (!plan.colors.length) plan.colors = keywordPlan(text).colors;
+  plan.ft = Math.max(6, Math.min(30, Math.round(+plan.ft || 12)));
+  plan.placementLabel = (PLACEMENTS[plan.placement] || [plan.placement, plan.placement])[ES() ? 1 : 0];
+  ST.colors = plan.colors; ST.balloon.style = INSP(plan.style) ? plan.style : ST.balloon.style; ST.balloon.plan = plan;
+  const pl = ensureBalloon(plan.ft);
+  const back = ST.placements.find(p => A(p.id)?.cat === 'backdrops');
+  if (pl && back) { pl.x = Math.max(80, Math.min(920, back.x + (plan.placement === 'half-cascade' ? -90 : plan.placement === 'corner-clusters' ? -160 : 0))); pl.y = 590; }
+  saveDraft(); renderAll();
+}
+/* AI photo preview (live site): sends a picture of their real-piece layout to the ai-balloons function */
+async function stagePNG() {
+  const svg = $('#stage').cloneNode(true); svg.querySelector('#selbox')?.remove(); svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg'); svg.setAttribute('width', 1536); svg.setAttribute('height', 952);
+  for (const im of svg.querySelectorAll('image')) { const href = im.getAttribute('href'); if (href.startsWith('data:')) continue; const blob = await (await fetch(href)).blob(); im.setAttribute('href', await new Promise(r => { const f = new FileReader(); f.onload = () => r(f.result); f.readAsDataURL(blob); })); }
+  const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(svg)], { type: 'image/svg+xml' }));
+  const img = new Image(); img.src = url; await img.decode(); const c = document.createElement('canvas'); c.width = 1536; c.height = 952; c.getContext('2d').drawImage(img, 0, 0, 1536, 952); URL.revokeObjectURL(url);
+  return c.toDataURL('image/png');
+}
+async function aiRender() {
+  if (!ST.balloon.plan) await aiPlan(); const plan = ST.balloon.plan; if (!plan) return;
+  $('#aiOut').insertAdjacentHTML('beforeend', `<p class="small muted" id="rendering">✦ ${ES() ? 'Creando la foto (20 a 40 segundos)…' : 'Creating the photo (20 to 40 seconds)…'}</p>`);
+  try {
+    const image = await stagePNG();
+    const { data, error } = await sb.functions.invoke('ai-balloons', { body: { mode: 'render', image, text: ST.balloon.request, colors: plan.colors, placement: plan.placement, ft: plan.ft } });
+    if (error || !data?.url) throw new Error(data?.error || error?.message || 'No image');
+    plan.preview = data.url; saveDraft(); renderBalloon();
+  } catch (err) { $('#rendering').textContent = (ES() ? 'No se pudo crear la foto: ' : 'Could not create the photo: ') + err.message; }
+}
+function renderSummary() {
+  const P = pricing(), S = ST.S; const es = ES();
+  $('#summary').innerHTML = `<h3>${T('your_setup')}</h3>
+    ${P.items.length ? `<ul>${P.items.map(it => `<li><span>${esc(itemLabel(it))}</span><span>${money(it.price * it.qty)}</span></li>`).join('')}</ul>` : `<p class="small muted">${T('empty_setup')}</p>`}
+    ${hasBalloons() ? `<p class="small" style="margin:0">${T('colors')}: ${ST.colors.length ? esc(ST.colors.map(colorName).join(', ')) : `<span class="err">${es ? 'elige en el estudio' : 'pick them in the studio'}</span>`}</p>` : ''}
+    <label for="sDate" style="margin-top:10px">${T('pick_date')}</label><input type="date" id="sDate" value="${esc(ST.date)}" min="${todayISO(2)}">
+    <fieldset style="border:0;padding:0;margin:12px 0 0"><legend class="small muted" style="margin-bottom:4px">${T('get_it')}</legend>
+      <label class="radio" style="padding:10px;margin-bottom:6px"><input type="radio" name="sFul" value="pickup" ${ST.fulfillment !== 'install' ? 'checked' : ''}><span><b>${T('pickup')}</b> · ${T('free')}<br><span class="small muted">${esc(S.pickupPlace)}</span></span></label>
+      <label class="radio" style="padding:10px;margin-bottom:0"><input type="radio" name="sFul" value="install" ${ST.fulfillment === 'install' ? 'checked' : ''}><span><b>${T('install')}</b> · ${money(S.installFee)}<br><span class="small muted">${es ? 'Entrega, montaje y desmontaje' : 'Delivery, setup and teardown'} · ${esc(S.installArea)}</span></span></label></fieldset>
+    ${ST.fulfillment !== 'install' && hasBalloons() ? `<p class="small muted" style="margin:6px 0 0">${es ? 'Las guirnaldas viajan mejor en SUV o van con los asientos abajo.' : 'Balloon garlands travel best in an SUV or van with the seats folded down.'}</p>` : ''}
+    <div style="margin-top:12px">
+      <div class="line"><span>${T('subtotal')}</span><span>${money(P.subtotal)}</span></div>
+      <div class="line"><span>${ST.fulfillment === 'install' ? T('install') : T('pickup')}</span><span>${P.install ? money(P.install) : T('free')}</span></div>
+      <div class="line"><span>${ST.protection === 'care' ? 'Petit Care Plan' : (es ? 'Depósito reembolsable (aparte)' : 'Refundable deposit (separate)')}</span><span>${money(ST.protection === 'care' ? P.care : P.securityDeposit)}</span></div>
+    </div>
+    <div class="tot"><span>${T('est_total')}</span><b>${money(P.total)}</b></div>
+    <p class="small muted" style="margin:2px 0 12px">${T('deposit_today')}: <b>${money(P.retainer)}</b> (${S.depositPct}%)</p>
+    ${P.items.length && P.subtotal < S.minOrder ? `<p class="err">${T('min_order')}: ${money(S.minOrder)}</p>` : ''}
+    <button class="btn blush" style="width:100%" id="reserveBtn" ${canReserve(P) ? '' : 'disabled'}>${T('reserve')}</button>
+    ${!ST.date && P.items.length ? `<p class="small muted" style="margin-top:8px">${es ? 'Elige tu fecha para confirmar disponibilidad.' : 'Pick your date to confirm availability.'}</p>` : ''}
+    ${LIVE ? '' : `<p class="demo">${es ? 'Modo demo: las solicitudes se guardan en este navegador.' : 'Demo mode: requests are saved in this browser until Supabase is connected.'}</p>`}`;
+  $('#cartTotal').textContent = money(P.total); $('#mTotal').textContent = money(P.total);
+  $('#mReserve').disabled = !canReserve(P);
+}
+function canReserve(P) { return P.items.length && P.subtotal >= ST.S.minOrder && overbooked().length === 0 && (!hasBalloons() || ST.colors.length > 0); }
+function overbooked() { if (!ST.date) return []; const c = counts(); return Object.keys(c).filter(id => !A(id)?.made && c[id] > availLeft(id)); }
+function renderWalls() {
+  $('#walls').innerHTML = (ST.space ? '' : WALLS.map(w => `<button class="sw" data-wall="${w}" style="background:${w}" aria-label="Wall color ${w}" aria-pressed="${ST.wall === w}"></button>`).join(''))
+    + (ST.space ? `<label class="small muted" for="roomScale" style="margin:0 6px 0 0">${T('room_scale')}</label><input type="range" id="roomScale" min="0.3" max="2" step="0.05" value="${ST.roomScale}" style="width:160px;min-height:0;padding:0">` : '')
+    + `<label class="chip" for="spaceFile" style="margin:0;color:inherit">${ST.space ? T('space') + ' ↺' : T('space')}</label><input type="file" id="spaceFile" accept="image/*" hidden>`
+    + (ST.space ? `<button class="chip" id="spaceOff">${T('space_off')}</button>` : '');
+}
+function renderLooks() {
+  $('#studioLooks').innerHTML = `<span class="small muted" style="align-self:center">${T('start_look')}:</span>` + LOOKS.map(l => `<button class="chip" data-look="${l.id}">${esc(ES() ? l.es : l.name)}</button>`).join('');
+}
+let heroLook = 0;
+function renderHero() {
+  const l = LOOKS[heroLook]; const pl = lookPlacements(l);
+  const tot = pl.reduce((s, p) => { const a = A(p.id); return s + (a.perFt ? a.price * 10 : a.price); }, 0);
+  $('#heroStage').innerHTML = `<svg viewBox="0 0 1000 620" role="img" aria-label="${esc(l.name)} setup">${sceneSVG(pl, l.wall, false)}
+    <g transform="translate(24 24)"><rect width="260" height="68" rx="14" fill="#fffaf8" opacity=".94"/><text x="16" y="28" font-family="Josefin Sans,sans-serif" font-size="16" fill="#6f6460">${esc(ES() ? l.es : l.name)}</text><text x="16" y="56" font-family="Forum,serif" font-size="26" fill="#2b2624">${money(tot)} ${ES() ? 'en piezas reales' : 'in real pieces'}</text></g></svg>`;
+  $('#heroLooks').innerHTML = LOOKS.map((x, i) => `<button class="chip" data-hero="${i}" aria-pressed="${i === heroLook}">${esc(ES() ? x.es : x.name)}</button>`).join('') + `<button class="chip" data-look="${l.id}" style="border-color:var(--blushd)">${ES() ? 'Editar este look' : 'Edit this look'} →</button>`;
+}
+function renderStatic() {
+  const S = ST.S; $('#carePrice').textContent = money(S.carePlan); $('#careCap').textContent = money(S.carePlanCap); $('#depPrice').textContent = money(S.securityDeposit);
+  $('#faqPickup').textContent = ES() ? `Todo está listo en ${S.pickupPlace}. Horarios: ${S.pickupSlots.join(' o ')}. Devolución: ${S.returnSlot}. Revisas las piezas con Karol al recoger y al devolver. Devoluciones tarde: ${money(S.lateFee)} por día.` : `Everything is ready at ${S.pickupPlace}. Pickup times: ${S.pickupSlots.join(' or ')}. Return: ${S.returnSlot}. You check the pieces with Karol at pickup and at return. Late returns are ${money(S.lateFee)} per day.`;
+  $('#faqInstall').textContent = ES() ? `Sí. La instalación cuesta ${money(S.installFee)} e incluye entrega, montaje y desmontaje en ${S.installArea}. Elígela al reservar.` : `Yes. Installation is ${money(S.installFee)} and covers delivery, setup and teardown in ${S.installArea}. Choose it when you reserve.`;
+  $('#ftMail').textContent = CONFIG.BUSINESS_EMAIL; $('#ftPhone').textContent = CONFIG.PHONE; $('#igLink').href = CONFIG.INSTAGRAM;
+  const gal = [...(S.gallery || []), 'img/proj/mermaid.jpg', 'img/proj/neverland.jpg', 'img/proj/blocks.jpg', 'img/arch_set_styled.jpg', 'img/acrylic.jpg'];
+  $('#gallery').innerHTML = gal.map(g => `<img src="${esc(g)}" alt="Petit Atelier setup" loading="lazy">`).join('');
+  $$('.igl').forEach(a => a.href = CONFIG.INSTAGRAM); $$('.ftPhone2').forEach(x => x.textContent = CONFIG.PHONE);
+  $('#bio1').textContent = ES() ? '¡Soy Karol! Soy brasileña, amo las fiestas y tengo una gran pasión por la decoración y la estética. Me encanta tomar ideas creativas y convertirlas en realidades hermosas, siempre con muchísimo amor.' : 'I\u2019m Karol! I\u2019m a party enthusiast from Brazil with a deep passion for decor and aesthetics. I love taking creative ideas and turning them into beautiful realities, all while infusing them with an abundance of love.';
+  $('#bio2').textContent = ES() ? 'Si buscas una decoradora que ponga el corazón en tu evento, aquí estoy. Trabajemos juntos para hacer realidad la fiesta que imaginas. ¡Me muero por crear algo mágico contigo!' : 'If you\u2019re looking for a decorator who will pour their heart and soul into your event, look no further. Let\u2019s work together to bring your party vision to life. I can\u2019t wait to create something magical with you!';
+  $$('[data-i]').forEach(el => el.textContent = T(el.dataset.i));
+  $$('.lang button').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === ST.lang)); document.documentElement.lang = ST.lang;
+}
+function renderAll() { renderStatic(); renderHero(); renderGrid(); renderPieces(); renderWalls(); renderLooks(); renderInspirations(); renderBalloon(); renderStage(); renderSummary(); if (!PJ.rendered || PJ.lang !== ST.lang) { PJ.rendered = 1; PJ.lang = ST.lang; renderProjects(); } }
+
+/* ---------- detail modal ---------- */
+function openModal(html) { $('#sheet').onclick = null; $('#sheet').onchange = null; $('#sheet').innerHTML = `<button class="x" data-close aria-label="Close">×</button>` + html; $('#modal').classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeModal() { $('#modal').classList.remove('open'); document.body.style.overflow = ''; }
+function showInfo(id) {
+  const a = A(id); if (!a) return;
+  openModal(`<div class="drawer"><div class="infopic">${a.photo ? `<img src="${esc(a.photo)}" alt="${esc(nm(a))}">` : a.cutout ? `<img class="cut" src="${esc(a.cutout)}" alt="${esc(nm(a))}">` : ''}${a.photo && a.cutout ? `<img class="cut mini" src="${esc(a.cutout)}" alt="">` : ''}</div><div>
+    <h2>${esc(nm(a))}</h2><p class="muted">${esc(ds(a))}</p><p class="price" style="font-size:26px">${a.perFt ? `${money(a.price)} <span class="small muted">${T('perft')}</span>` : `${money(a.price)} <span class="small muted">${ES() ? 'por evento' : 'per event'}</span>`}</p>
+    <p class="small muted">${ES() ? 'Altura real aprox.' : 'Real height about'} ${a.ft} ft</p>
+    <p>${availBadge(a)}</p><p class="small muted">${a.made ? (ST.lang === 'es' ? 'Se hace nuevo para tu fecha; no hay valor de reposición.' : 'Made new for your date, so there is no replacement value.') : `${ST.lang === 'es' ? 'Valor de reposición' : 'Replacement value'}: ${money(a.repl)}`}</p>
+    ${canPlace(a) ? `<button class="btn" data-add="${a.id}" data-close>${T('add')}</button>` : `<p class="small">${T('photo_only')}. ${ES() ? 'Agrégala en las notas de tu reservación.' : 'Mention it in the notes when you reserve.'}</p>`}</div></div>`);
+}
+
+/* ---------- checkout ---------- */
+const CK = { step: 0, form: {} };
+function openCheckout() { CK.step = 0; CK.form = lget('ckform', {}); renderCheckout(); }
+function stepsBar() { return `<div class="prog">${[T('step_event'), T('step_review'), T('step_sign'), T('step_done')].map((s, i) => `<span class="${i <= CK.step ? 'on' : ''}">${s}</span>`).join('')}</div>`; }
+function renderCheckout() {
+  const S = ST.S, P = pricing(), f = CK.form, es = ST.lang === 'es';
+  if (CK.step === 0) {
+    openModal(`${stepsBar()}<h2>${T('step_event')}</h2><form id="ck0" class="f2" novalidate>
+      <div><label for="cName">${T('name')}</label><input id="cName" autocomplete="name" required value="${esc(f.name || '')}"></div>
+      <div><label for="cEmail">${T('email')}</label><input id="cEmail" type="email" autocomplete="email" required value="${esc(f.email || '')}"></div>
+      <div><label for="cPhone">${T('phone')}</label><input id="cPhone" type="tel" autocomplete="tel" required value="${esc(f.phone || '')}"></div>
+      <div><label for="cType">${T('event_type')}</label><select id="cType">${['Birthday', 'Baby shower', 'Bridal shower', 'Quinceañera', 'Wedding', 'Gender reveal', 'Graduation', 'Corporate', 'Other'].map(t => `<option ${f.type === t ? 'selected' : ''}>${t}</option>`).join('')}</select></div>
+      <div><label for="cDate">${T('pick_date')}</label><input id="cDate" type="date" required min="${todayISO(2)}" value="${esc(ST.date)}"></div>
+      <div><label for="cStart">${T('start')}</label><input id="cStart" type="time" required value="${esc(f.start || '15:00')}"></div>
+      <div class="full"><label>${T('get_it')}</label><div class="f2">
+        <label class="radio" style="margin:0"><input type="radio" name="cFul" value="pickup" ${ST.fulfillment !== 'install' ? 'checked' : ''}><span><b>${T('pickup')}</b> · ${T('free')}<br><span class="small muted">${esc(S.pickupPlace)}. ${es ? 'Devolución' : 'Return'}: ${esc(S.returnSlot)}.</span></span></label>
+        <label class="radio" style="margin:0"><input type="radio" name="cFul" value="install" ${ST.fulfillment === 'install' ? 'checked' : ''}><span><b>${T('install')}</b> · ${money(S.installFee)}<br><span class="small muted">${es ? 'Llevamos, montamos y recogemos' : 'We deliver, set up and take down'} · ${esc(S.installArea)}</span></span></label></div></div>
+      <div id="slotBox"><label for="cSlot">${T('slot')}</label><select id="cSlot">${S.pickupSlots.map(x => `<option ${f.pickupSlot === x ? 'selected' : ''}>${esc(x)}</option>`).join('')}</select></div>
+      <div class="full" id="addrBox"><label for="cAddr">${T('address')}</label><input id="cAddr" autocomplete="street-address" value="${esc(f.address || '')}"></div>
+      <div><label for="cGuests">${T('guests')}</label><input id="cGuests" type="number" min="1" value="${esc(f.guests || '')}"></div>
+      <div class="full"><label>${T('setting')}</label><div class="filters" style="margin:0">${[['indoor', T('indoor')], ['covered', T('covered')], ['outdoor', T('outdoor')]].map(([v, l]) => `<label class="chip" style="margin:0;color:inherit"><input type="radio" name="cSet" value="${v}" ${(f.setting || 'indoor') === v ? 'checked' : ''} style="width:auto;min-height:0"> ${l}</label>`).join('')}</div></div>
+      ${hasBalloons() ? `<p class="full small">${T('colors')}: <b>${esc(ST.colors.map(colorName).join(', '))}</b>${ST.balloon.style ? ` · ${esc(ES() ? INSP(ST.balloon.style)?.es : INSP(ST.balloon.style)?.name)}` : ''}${ST.balloon.request ? `<br>${ES() ? 'Tu idea' : 'Your idea'}: “${esc(ST.balloon.request)}”` : ''}</p>` : ''}
+      <div class="full"><label for="cNotes">${T('notes')}</label><textarea id="cNotes">${esc(f.notes || '')}</textarea></div>
+      <p class="err full" id="ckErr"></p>
+      <div class="full row"><span class="muted">${T('est_total')}: <b>${money(P.total)}</b></span><button class="btn" type="submit">${T('next')}</button></div></form>`);
+    const syncFul = () => { const v = $$('[name=cFul]').find(r => r.checked)?.value; $('#addrBox').style.display = v === 'install' ? '' : 'none'; $('#slotBox').style.display = v === 'install' ? 'none' : ''; };
+    $$('[name=cFul]').forEach(r => r.addEventListener('change', syncFul)); syncFul();
+    $('#ck0').addEventListener('submit', async e => {
+      e.preventDefault();
+      const v = { name: $('#cName').value.trim(), email: $('#cEmail').value.trim(), phone: $('#cPhone').value.trim(), type: $('#cType').value, start: $('#cStart').value, address: $('#cAddr').value.trim(), guests: $('#cGuests').value, setting: $$('[name=cSet]').find(r => r.checked)?.value, notes: $('#cNotes').value.trim() };
+      const date = $('#cDate').value, ful = $$('[name=cFul]').find(r => r.checked)?.value || 'pickup'; v.pickupSlot = $('#cSlot').value;
+      const miss = [!v.name && T('name'), !/^\S+@\S+\.\S+$/.test(v.email) && T('email'), v.phone.replace(/\D/g, '').length < 10 && T('phone'), !date && T('pick_date'), ful === 'install' && !v.address && T('address')].filter(Boolean);
+      if (miss.length) { $('#ckErr').textContent = (es ? 'Revisa: ' : 'Please check: ') + miss.join(', '); return; }
+      if (date < todayISO(2)) { $('#ckErr').textContent = es ? 'Reservamos con al menos 2 días de anticipación.' : 'Please book at least 2 days ahead.'; return; }
+      CK.form = v; lset('ckform', v); ST.fulfillment = ful;
+      if (date !== ST.date) { ST.date = date; lset('date', date); await refreshAvail(); }
+      const over = overbooked(); if (over.length) { $('#ckErr').textContent = (es ? 'No disponible esa fecha: ' : 'Not available that date: ') + over.map(id => nm(A(id))).join(', '); return; }
+      saveDraft(); renderSummary(); CK.step = 1; renderCheckout();
+    });
+  }
+  if (CK.step === 1) {
+    openModal(`${stepsBar()}<h2>${es ? 'Protección contra daños' : 'Damage protection'}</h2>
+      <label class="radio"><input type="radio" name="prot" value="care" ${ST.protection === 'care' ? 'checked' : ''}><div><b>Petit Care Plan · ${money(S.carePlan)}</b><br><span class="small muted">${es ? `Cubre daños accidentales hasta ${money(S.carePlanCap)}. No reembolsable.` : `Covers accidental damage up to ${money(S.carePlanCap)} in replacement value. Non-refundable. No surprise bills for normal accidents.`}</span></div></label>
+      <label class="radio"><input type="radio" name="prot" value="deposit" ${ST.protection !== 'care' ? 'checked' : ''}><div><b>${es ? 'Depósito de seguridad reembolsable' : 'Refundable security deposit'} · ${money(S.securityDeposit)}</b><br><span class="small muted">${es ? 'Se devuelve 7 días después. Pagas el valor de reposición de lo que se dañe o pierda.' : 'Returned within 7 days after pickup. You pay the listed replacement value of anything damaged or lost.'}</span></div></label>
+      <div id="ck1sum"></div>
+      <div class="row" style="margin-top:16px"><button class="btn ghost" data-back>${T('back')}</button><button class="btn" id="ck1next">${T('next')}</button></div>`);
+    const sum = () => { const P = pricing(); $('#ck1sum').innerHTML = `<div class="pane" style="margin-top:8px">${P.items.map(it => `<div class="line"><span>${esc(itemLabel(it))}</span><span>${money(it.price * it.qty)}</span></div>`).join('')}<div class="line"><span>${ST.fulfillment === 'install' ? T('install') : T('pickup')}</span><span>${P.install ? money(P.install) : T('free')}</span></div>
+      <div class="line"><span>${ST.protection === 'care' ? 'Petit Care Plan' : (es ? 'Depósito reembolsable (se paga con el saldo, no incluido)' : 'Refundable deposit (paid with balance, not in total)')}</span><span>${money(ST.protection === 'care' ? P.care : P.securityDeposit)}</span></div>
+      <div class="tot"><span>Total</span><b>${money(P.total)}</b></div><div class="line"><span>${T('deposit_today')}</span><b>${money(P.retainer)}</b></div></div>`; };
+    sum(); $$('[name=prot]').forEach(r => r.addEventListener('change', () => { ST.protection = r.value; saveDraft(); sum(); renderSummary(); }));
+    $('#ck1next').onclick = () => { CK.step = 2; renderCheckout(); };
+  }
+  if (CK.step === 2) {
+    const b = draftBooking();
+    openModal(`${stepsBar()}<h2>${es ? 'Revisa y firma' : 'Review and sign'}</h2>
+      <div class="contractbox">${contractHTML(b, S, ST.assets)}</div>
+      <label class="check"><input type="checkbox" id="ag1"> <span>${es ? 'Leí y acepto el contrato de renta, incluyendo la sección de daños.' : 'I have read and agree to the rental agreement, including section 4 on damage and loss.'}</span></label>
+      <label class="check"><input type="checkbox" id="ag2"> <span>${es ? 'Entiendo que el clima puede dañar los globos y que eso no es reembolsable.' : 'I understand heat, sun and wind can pop balloons and that weather damage is not refunded.'}</span></label>
+      <label class="check"><input type="checkbox" id="ag3"> <span class="muted">${es ? 'No compartir fotos de mi montaje (opcional).' : 'Please do not share photos of my setup (optional).'}</span></label>
+      <div class="f2" style="margin-top:8px"><div><label for="sgName">${es ? 'Escribe tu nombre completo' : 'Type your full name'}</label><input id="sgName" value="${esc(CK.form.name || '')}"></div><div></div>
+      <div class="full"><div class="row"><label style="margin:0">${es ? 'Firma aquí' : 'Sign here'}</label><button class="chip" id="sgClear" type="button">${es ? 'Borrar' : 'Clear'}</button></div><canvas id="sig" aria-label="Signature pad"></canvas></div></div>
+      <p class="err" id="sgErr"></p>
+      <div class="row"><button class="btn ghost" data-back>${T('back')}</button><button class="btn blush" id="sgSubmit">${T('sign_submit')}</button></div>`);
+    const pad = sigPad($('#sig')); $('#sgClear').onclick = pad.clear;
+    $('#sgSubmit').onclick = async () => {
+      const nmv = $('#sgName').value.trim();
+      if (!$('#ag1').checked || !$('#ag2').checked) { $('#sgErr').textContent = es ? 'Marca las dos casillas para continuar.' : 'Please check both boxes to continue.'; return; }
+      if (nmv.length < 3) { $('#sgErr').textContent = es ? 'Escribe tu nombre completo.' : 'Please type your full name.'; return; }
+      if (pad.empty()) { $('#sgErr').textContent = es ? 'Dibuja tu firma.' : 'Please draw your signature.'; return; }
+      const btn = $('#sgSubmit'); btn.disabled = true; btn.textContent = '…';
+      const bk = draftBooking(); bk.contract = { name: nmv, signature: pad.data(), signed_at: new Date().toISOString(), version: S.contractVersion, photoOptOut: $('#ag3').checked, ua: navigator.userAgent.slice(0, 120) };
+      try {
+        await refreshAvail(); const over = overbooked(); if (over.length) throw new Error((es ? 'Alguien acaba de reservar: ' : 'Just booked by someone else: ') + over.map(id => nm(A(id))).join(', '));
+        bk.code = await DB.createBooking(bk) || bk.code; CK.booking = bk;
+        const mails = [];
+        mails.push(DB.email(S.notifyEmail, `New request ${bk.code}: ${bk.event.type} on ${bk.event.date}`, adminMail(bk), 'new_request', bk.code));
+        mails.push(DB.email(bk.customer.email, `We received your request ${bk.code} · Petit Atelier Events`, customerMail(bk), 'request_received', bk.code));
+        CK.mail = await Promise.all(mails).catch(() => null);
+        CK.step = 3; renderCheckout();
+      } catch (err) { $('#sgErr').textContent = err.message || String(err); btn.disabled = false; btn.textContent = T('sign_submit'); }
+    };
+  }
+  if (CK.step === 3) {
+    const b = CK.booking; const notify = CK.mail && CK.mail[0] && !CK.mail[0].sent ? CK.mail[0].mailto : '';
+    openModal(`${stepsBar()}<h2>${T('confirm_title')}</h2>
+      <p>${es ? 'Tu código' : 'Your reservation code'}: <b style="font-size:26px;font-family:Forum,serif">${esc(b.code)}</b></p>
+      <p>${es ? `Karol revisará tu solicitud y te confirmará en 48 horas. Después pagarás el anticipo de ${money(b.totals.retainer)} para apartar la fecha.` : `Karol will review your request and confirm within 48 hours. Then you'll pay the ${money(b.totals.retainer)} retainer to lock in ${fmtDate(b.event.date)}. ${b.event.fulfillment === 'install' ? 'Installation is included.' : `Pickup: ${b.event.pickupSlot}. Return: ${ST.S.returnSlot}.`}`}</p>
+      <ul class="small"><li>${es ? 'Saldo 7 días antes del evento.' : 'Balance due 7 days before your event.'}</li><li>${es ? 'Recordatorios por correo antes del evento.' : 'Email reminders 7 days and 1 day before.'}</li><li>${es ? 'Busca tu reservación con el código y tu correo.' : 'Look up your reservation anytime with your code and email.'}</li></ul>
+      ${notify ? `<p class="demo">Demo mode: emails are not sent yet. <a href="${esc(notify)}">Open the notice to Karol in your email app</a> (${esc(ST.S.notifyEmail)}).</p>` : ''}
+      <div class="row" style="margin-top:16px"><button class="btn ghost" id="icsBtn">${es ? 'Agregar al calendario' : 'Add to calendar'}</button><button class="btn" data-close>${es ? 'Listo' : 'Done'}</button></div>`);
+    $('#icsBtn').onclick = () => downloadICS(b);
+    ST.placements = []; ST.colors = []; ST.balloon = { style: '', request: '', plan: null }; ST.sel = null; saveDraft(); refreshAvail();
+  }
+}
+function draftBooking() {
+  const P = pricing(), f = CK.form;
+  return { code: newCode(), created_at: new Date().toISOString(), status: 'new', lang: ST.lang,
+    customer: { name: f.name, email: f.email, phone: f.phone },
+    event: { date: ST.date, start: f.start, type: f.type, fulfillment: ST.fulfillment, pickupSlot: ST.fulfillment === 'install' ? '' : f.pickupSlot, returnSlot: ST.fulfillment === 'install' ? '' : ST.S.returnSlot, address: ST.fulfillment === 'install' ? f.address : '', guests: +f.guests || null, setting: f.setting, notes: f.notes },
+    items: P.items, balloonColors: hasBalloons() ? [...ST.colors] : [], balloon: hasBalloons() ? { style: ST.balloon.style, request: ST.balloon.request, plan: ST.balloon.plan ? { theme: ST.balloon.plan.theme, placement: ST.balloon.plan.placement, ft: ST.balloon.plan.ft, message: ST.balloon.plan.message, preview: ST.balloon.plan.preview || '' } : null } : null, design: { wall: ST.wall, placements: ST.placements.map(({ uid, ...r }) => r) },
+    protection: ST.protection, totals: { subtotal: P.subtotal, discount: 0, install: P.install, care: P.care, securityDeposit: P.securityDeposit, total: P.total, retainer: P.retainer },
+    contract: null, prep: {}, payments: { retainer: false, balance: false, depositReturned: false }, reminders: [] };
+}
+function adminMail(b) { return `New decor request ${b.code}\n\n${b.customer.name} · ${b.customer.email} · ${b.customer.phone}\n${b.event.type} on ${fmtDate(b.event.date)} at ${b.event.start}\n${b.event.fulfillment === 'install' ? 'INSTALLATION at ' + b.event.address : 'Pickup: ' + b.event.pickupSlot}\n\n${b.items.map(i => `${i.qty} x ${i.name}  ${money(i.price * i.qty)}`).join('\n')}${b.balloonColors?.length ? '\nBalloon colors: ' + b.balloonColors.join(', ') : ''}${b.balloon?.style ? '\nBalloon style: ' + b.balloon.style : ''}${b.balloon?.request ? '\nBalloon idea: ' + b.balloon.request : ''}\n\nTotal ${money(b.totals.total)} · Retainer ${money(b.totals.retainer)} · ${b.protection === 'care' ? 'Care Plan' : 'Security deposit'}\nNotes: ${b.event.notes || 'none'}\n\nOpen your dashboard to confirm.`; }
+function customerMail(b) { return `Hi ${b.customer.name.split(' ')[0]},\n\nThank you for designing your party with Petit Atelier Events! Your request ${b.code} for ${fmtDate(b.event.date)} is in. Karol will confirm within 48 hours and send how to pay the ${money(b.totals.retainer)} retainer.\n${b.event.fulfillment === 'install' ? 'Installation at ' + b.event.address : 'Pickup: ' + b.event.pickupSlot + '. Return: ' + b.event.returnSlot}\n\n${b.items.map(i => `${i.qty} x ${i.name}`).join('\n')}${b.balloonColors?.length ? '\nBalloon colors: ' + b.balloonColors.join(', ') : ''}\nEstimated total: ${money(b.totals.total)}\n\nYour signed rental agreement is saved with your reservation. Look it up anytime with your code and this email.\n\nKarol · Petit Atelier Events`; }
+function downloadICS(b) {
+  const d = b.event.date.replace(/-/g, ''); const ics = `BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Petit Atelier//EN\r\nBEGIN:VEVENT\r\nUID:${b.code}@petitatelier\r\nDTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').slice(0, 15)}Z\r\nDTSTART;VALUE=DATE:${d}\r\nSUMMARY:${b.event.type} decor by Petit Atelier (${b.code})\r\nLOCATION:${(b.event.address || 'Petit Atelier pickup, Eagle Mountain UT').replace(/[,;]/g, ' ')}\r\nDESCRIPTION:${b.event.fulfillment === 'install' ? 'Installation before ' + b.event.start : 'Pickup ' + b.event.pickupSlot + '. Return ' + b.event.returnSlot}. Balance due 7 days before.\r\nEND:VEVENT\r\nEND:VCALENDAR`;
+  try { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })); a.download = b.code + '.ics'; a.click(); toast('Calendar file downloaded'); } catch { toast('Your browser blocked the download'); }
+}
+function sigPad(c) {
+  const ctx = c.getContext('2d'); let drawing = false, has = false;
+  const fit = () => { const r = c.getBoundingClientRect(); c.width = r.width * 2; c.height = r.height * 2; ctx.scale(2, 2); ctx.lineWidth = 2.2; ctx.lineCap = 'round'; ctx.strokeStyle = '#1d1a19'; };
+  fit();
+  const pos = e => { const r = c.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  c.addEventListener('pointerdown', e => { drawing = true; c.setPointerCapture(e.pointerId); ctx.beginPath(); ctx.moveTo(...pos(e)); });
+  c.addEventListener('pointermove', e => { if (!drawing) return; ctx.lineTo(...pos(e)); ctx.stroke(); has = true; });
+  c.addEventListener('pointerup', () => drawing = false);
+  return { clear: () => { ctx.clearRect(0, 0, c.width, c.height); has = false; }, empty: () => !has, data: () => c.toDataURL('image/png') };
+}
+
+/* ---------- reservation lookup ---------- */
+const STATUS = { new: ['Request received', 'Solicitud recibida'], confirmed: ['Confirmed', 'Confirmada'], ready: ['Ready for pickup', 'Lista para recoger'], delivered: ['Picked up', 'Recogida'], returned: ['Returned', 'Devuelta'], closed: ['Complete', 'Completa'], declined: ['Not available', 'No disponible'], cancelled: ['Cancelled', 'Cancelada'] };
+function statusLabel(s) { return (STATUS[s] || [s, s])[ST.lang === 'es' ? 1 : 0]; }
+async function lookup(e) {
+  e.preventDefault(); const out = $('#lookupOut'); out.innerHTML = '<p class="muted">…</p>';
+  try {
+    const b = await DB.lookup($('#lkCode').value, $('#lkEmail').value);
+    if (!b) { out.innerHTML = `<p class="err">${ST.lang === 'es' ? 'No encontramos esa reservación. Revisa el código y el correo.' : 'We could not find that reservation. Check the code and email.'}</p>`; return; }
+    const flow = ['new', 'confirmed', 'ready', 'delivered', 'returned'];
+    out.innerHTML = `<div class="pane"><div class="row"><h3 style="margin:0">${esc(b.code)} · ${esc(fmtDate(b.event.date, ST.lang))}</h3><span class="st ${esc(b.status)}">${esc(statusLabel(b.status))}</span></div>
+      <div class="prog" style="margin:14px 0">${flow.map(s => `<span class="${flow.indexOf(s) <= flow.indexOf(b.status) ? 'on' : ''}">${esc(statusLabel(s))}</span>`).join('')}</div>
+      <div class="drawer"><div><svg viewBox="0 0 1000 620" style="width:100%;border-radius:14px">${sceneSVG((b.design?.placements || []).map((p, i) => ({ ...p, uid: 'l' + i })), b.design?.wall || WALLS[0], false)}</svg></div>
+      <div>${b.items.map(i => `<div class="line"><span>${esc(itemLabel(i))}</span><span>${money(i.price * i.qty)}</span></div>`).join('')}
+      <div class="tot"><span>Total</span><b>${money(b.totals.total)}</b></div>
+      <div class="line"><span>Retainer ${money(b.totals.retainer)}</span><span>${b.payments?.retainer ? '✓ paid' : 'due on confirmation'}</span></div>
+      <div class="line"><span>Balance ${money(b.totals.total - b.totals.retainer)}</span><span>${b.payments?.balance ? '✓ paid' : 'due 7 days before'}</span></div>
+      <button class="btn ghost sm" style="margin-top:10px" id="viewContract">${ST.lang === 'es' ? 'Ver contrato firmado' : 'View signed agreement'}</button></div></div></div>`;
+    $('#viewContract').onclick = () => openModal(contractHTML(b, ST.S, ST.assets));
+  } catch (err) { out.innerHTML = `<p class="err">${esc(err.message)}</p>`; }
+}
+
+/* ---------- events ---------- */
+function bindSite() {
+  document.addEventListener('click', e => {
+    const t = e.target;
+    const add = t.closest('[data-add]'); if (add) { if (addPiece(add.dataset.add)) { toast(`${nm(A(add.dataset.add))} ${ST.lang === 'es' ? 'agregado a tu montaje' : 'added to your setup'}`); renderAll(); } }
+    const rm = t.closest('[data-rm]'); if (rm) { removeOne(rm.dataset.rm); renderAll(); }
+    const pl = t.closest('[data-place]'); if (pl) { if (addPiece(pl.dataset.place)) renderAll(); }
+    const info = t.closest('[data-info]'); if (info) showInfo(info.dataset.info);
+    const cat = t.closest('[data-cat]'); if (cat) { ST.cat = cat.dataset.cat; renderGrid(); }
+    const sc = t.closest('[data-scat]'); if (sc) { ST.scat = sc.dataset.scat; renderPieces(); }
+    const ins = t.closest('[data-insp]'); if (ins) useInspiration(ins.dataset.insp);
+    const th = t.closest('[data-theme]'); if (th) { const T0 = THEMES.find(x => x.name === th.dataset.theme); ST.balloon.request = (ES() ? 'Fiesta ' : '') + (ES() ? T0.es : T0.name + ' party'); ST.colors = T0.colors.slice(); ensureBalloon(); ST.balloon.plan = keywordPlan(ST.balloon.request); ST.balloon.plan.placementLabel = (PLACEMENTS[ST.balloon.plan.placement] || ['', ''])[ES() ? 1 : 0]; saveDraft(); renderAll(); document.getElementById('studio').scrollIntoView(); }
+    const zm = t.closest('[data-zoom]'); if (zm) openModal(`<img src="${esc(zm.dataset.zoom)}" alt="" style="width:100%;border-radius:14px">`);
+    if (t.id === 'addBalloons') { ensureBalloon(ST.balloon.ft || 12); saveDraft(); renderAll(); }
+    const pj = t.closest('[data-proj]'); if (pj) { PJ.id = pj.dataset.proj; PJ.step = 0; renderProjects(); playProject(true); }
+    if (t.id === 'projPlay') { if (PJ.timer) { clearInterval(PJ.timer); PJ.timer = null; showStep(PJ.step); } else playProject(); }
+    if (t.id === 'projNext') { clearInterval(PJ.timer); PJ.timer = null; showStep(PJ.step + 1); }
+    if (t.id === 'projPrev') { clearInterval(PJ.timer); PJ.timer = null; showStep(PJ.step - 1); }
+    if (t.id === 'projUse') useProject();
+    if (t.id === 'aiPlanBtn') aiPlan();
+    if (t.id === 'aiRenderBtn') aiRender();
+    const col = t.closest('[data-color]'); if (col) { const c = col.dataset.color; ST.colors = ST.colors.includes(c) ? ST.colors.filter(x => x !== c) : ST.colors.length >= 3 ? (toast(ES() ? 'Máximo 3 colores' : 'Up to 3 colors'), ST.colors) : [...ST.colors, c]; saveDraft(); renderBalloon(); renderSummary(); }
+    const wl = t.closest('[data-wall]'); if (wl) { ST.wall = wl.dataset.wall; saveDraft(); renderWalls(); renderStage(); }
+    const lk = t.closest('[data-look]'); if (lk) { loadLook(LOOKS.find(l => l.id === lk.dataset.look)); document.getElementById('studio').scrollIntoView(); }
+    const hr = t.closest('[data-hero]'); if (hr) { heroLook = +hr.dataset.hero; window.heroPaused = true; renderHero(); }
+    if (t.closest('[data-close]') || t.id === 'modal') closeModal();
+    if (t.closest('[data-back]')) { CK.step--; renderCheckout(); }
+    if (t.id === 'reserveBtn' || t.id === 'mReserve') openCheckout();
+    if (t.id === 'spaceOff') { ST.space = null; renderWalls(); renderStage(); }
+    if (t.id === 'clearBtn') { ST.placements = []; ST.sel = null; saveDraft(); renderAll(); }
+    const lg = t.closest('[data-lang]'); if (lg) { ST.lang = lg.dataset.lang; lset('lang', ST.lang); refreshAvail(); }
+  });
+  document.addEventListener('change', async e => {
+    if (e.target.id === 'heroDate' || e.target.id === 'sDate') { ST.date = e.target.value; lset('date', ST.date); $('#heroDate').value = ST.date; await refreshAvail(); }
+    if (e.target.id === 'spaceFile' && e.target.files[0]) { try { ST.space = await shrink(e.target.files[0], 1600); ST.roomScale = 1; renderWalls(); renderStage(); toast(ST.lang === 'es' ? 'Tu foto se queda solo en este dispositivo.' : 'Your photo stays on this device only.'); } catch { toast('Could not read that photo'); } }
+    if (e.target.name === 'sFul') { ST.fulfillment = e.target.value; saveDraft(); renderSummary(); }
+  });
+  document.addEventListener('input', e => { if (e.target.id === 'roomScale') { ST.roomScale = +e.target.value; renderStage(); } if (e.target.id === 'bReq') { ST.balloon.request = e.target.value.slice(0, 600); saveDraft(); } });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  $('#lookupForm').addEventListener('submit', lookup);
+  try { const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting) && !PJ.seen) { PJ.seen = true; playProject(true); } }, { threshold: .35 }); io.observe($('#projects')); } catch { }
+  bindStage();
+}
+
+/* ===== Karol's dashboard (#admin) ===== */
+const AD = { tab: 'overview', bookings: [], filter: 'open', month: null, open: null };
+const FLOW = ['new', 'confirmed', 'ready', 'delivered', 'returned', 'closed'];
+const ST_EN = { new: 'New request', confirmed: 'Confirmed', ready: 'Ready for pickup', delivered: 'Picked up', returned: 'Returned', closed: 'Closed', declined: 'Declined', cancelled: 'Cancelled' };
+const isInst = b => b.event.fulfillment === 'install';
+const stLabel = b => isInst(b) ? ({ ready: 'Ready to install', delivered: 'Installed', returned: 'Taken down' }[b.status] || ST_EN[b.status]) : ST_EN[b.status];
+const howGet = b => isInst(b) ? `Installation · ${b.event.address || ''}` : `Pickup · ${b.event.pickupSlot || ''}`;
+const daysTo = iso => dnum(iso) - dnum(todayISO());
+
+async function showAdmin() {
+  document.body.classList.add('adm'); window.scrollTo(0, 0);
+  if (!(await DB.auth.session())) return adminLogin();
+  ST.S = await DB.settings(); ST.assets = await DB.assets(); AD.bookings = await DB.bookings().catch(() => []);
+  renderAdmin();
+}
+function hideAdmin() { document.body.classList.remove('adm'); }
+function adminLogin() {
+  $('#admin').innerHTML = `<div class="adm" style="max-width:420px;margin-top:10vh"><h2>Karol's dashboard</h2>
+    <form id="lgForm">${LIVE ? `<label for="lgEmail">Email</label><input id="lgEmail" type="email" autocomplete="username" required>` : ''}
+    <label for="lgPw" style="margin-top:10px">${LIVE ? 'Password' : 'Demo PIN'}</label><input id="lgPw" type="password" autocomplete="current-password" required>
+    <p class="err" id="lgErr"></p><div class="row"><a href="#top">← Back to site</a><button class="btn">Sign in</button></div></form>
+    ${LIVE ? '' : `<p class="demo">Demo mode. The PIN is 2468 until Karol changes it in Settings. Once Supabase is connected, Karol signs in with her email and password instead.</p>`}</div>`;
+  $('#lgForm').onsubmit = async e => { e.preventDefault(); try { await DB.auth.signIn(LIVE ? $('#lgEmail').value : '', $('#lgPw').value); showAdmin(); } catch (err) { $('#lgErr').textContent = err.message; } };
+}
+function renderAdmin() {
+  const tabs = [['overview', 'Overview'], ['requests', 'Requests'], ['calendar', 'Calendar'], ['inventory', 'Inventory'], ['settings', 'Settings']];
+  const nNew = AD.bookings.filter(b => b.status === 'new').length;
+  $('#admin').innerHTML = `<div class="adm-top"><b style="font-family:'Cormorant Garamond',serif;font-size:22px;margin-right:12px">Petit Atelier · Dashboard</b>
+    <nav class="tabs">${tabs.map(([k, l]) => `<button data-tab="${k}" aria-pressed="${AD.tab === k}">${l}${k === 'requests' && nNew ? ` <span class="st new">${nNew}</span>` : ''}</button>`).join('')}</nav>
+    <a class="btn ghost sm" href="#top">View site</a><button class="btn ghost sm" id="logout">Sign out</button></div><div class="adm" id="admBody"></div>`;
+  ({ overview: admOverview, requests: admRequests, calendar: admCalendar, inventory: admInventory, settings: admSettings })[AD.tab]();
+}
+const live = b => !['declined', 'cancelled'].includes(b.status);
+
+function admOverview() {
+  const L = AD.bookings.filter(live); const up = L.filter(b => daysTo(b.event.date) >= 0 && b.status !== 'closed').sort((a, b) => a.event.date.localeCompare(b.event.date));
+  const m = todayISO().slice(0, 7); const monthRev = L.filter(b => b.event.date.startsWith(m)).reduce((s, b) => s + b.totals.total, 0);
+  const owed = L.filter(b => b.status !== 'new' && !b.payments.balance).reduce((s, b) => s + b.totals.total - (b.payments.retainer ? b.totals.retainer : 0), 0);
+  const next7 = up.filter(b => daysTo(b.event.date) <= 7);
+  const todo = [];
+  AD.bookings.filter(b => b.status === 'new').forEach(b => todo.push([b, `Confirm or decline the request (${Math.max(0, Math.round((Date.now() - new Date(b.created_at)) / 36e5))} h old)`]));
+  up.forEach(b => { const d = daysTo(b.event.date);
+    if (b.status === 'confirmed' && !b.payments.retainer) todo.push([b, 'Retainer not marked paid']);
+    if (d <= 8 && d >= 6 && !hasRem(b, 'week')) todo.push([b, 'Send the 7-day reminder (balance due)']);
+    if (d <= 1 && !hasRem(b, 'day')) todo.push([b, 'Send the day-before reminder']);
+    if (d <= 3 && b.items.some(i => !b.prep?.[i.id])) todo.push([b, `Build and prep: ${b.items.filter(i => !b.prep?.[i.id]).length} pieces not ready for ${isInst(b) ? 'installation' : 'pickup'}`]);
+    if (d <= 2 && b.status === 'confirmed' && b.items.every(i => b.prep?.[i.id])) todo.push([b, `All prepped: mark it ${isInst(b) ? 'ready to install' : 'ready for pickup'}`]); });
+  AD.bookings.filter(b => b.status === 'delivered' && daysTo(b.event.date) < 0).forEach(b => todo.push([b, isInst(b) ? 'Take down and check the pieces' : `Due back: ${b.event.returnSlot || ST.S.returnSlot}`]));
+  AD.bookings.filter(b => b.status === 'returned' && b.protection !== 'care' && !b.payments.depositReturned).forEach(b => todo.push([b, 'Inspect pieces and return the security deposit']));
+  $('#admBody').innerHTML = `${LIVE ? '' : '<p class="demo" style="margin-bottom:16px">Demo mode: data lives in this browser. Requests marked "Sample" are examples.</p>'}
+    <div class="kpis"><div class="kpi"><span class="muted small">New requests</span><b>${AD.bookings.filter(b => b.status === 'new').length}</b></div>
+    <div class="kpi"><span class="muted small">Events in the next 7 days</span><b>${next7.length}</b></div>
+    <div class="kpi"><span class="muted small">Booked this month</span><b>${money(monthRev)}</b></div>
+    <div class="kpi"><span class="muted small">Still to collect</span><b>${money(owed)}</b></div></div>
+    <div class="drawer"><div><h3>To do</h3>${todo.length ? `<table class="t stack"><thead><tr><th>Event</th><th>What</th><th></th></tr></thead><tbody>${todo.map(([b, w]) => `<tr><td>${esc(fmtShort(b.event.date))}<br><span class="small muted">${esc(b.customer.name)}</span></td><td>${esc(w)}</td><td><button class="btn sm ghost" data-open="${esc(b.code)}">Open</button></td></tr>`).join('')}</tbody></table>` : '<p class="muted">All caught up.</p>'}</div>
+    <div><h3>Coming up</h3>${up.slice(0, 8).map(b => `<button class="pane row" style="width:100%;margin-bottom:8px;cursor:pointer;text-align:left" data-open="${esc(b.code)}"><span><b>${esc(fmtShort(b.event.date))}</b> · ${esc(b.event.type)}<br><span class="small muted">${esc(b.customer.name)} · ${b.items.reduce((s, i) => s + i.qty, 0)} pieces · ${isInst(b) ? 'Installation' : 'Pickup ' + esc((b.event.pickupSlot || '').split(',')[0])}</span></span><span class="st ${esc(b.status)}">${esc(stLabel(b))}</span></button>`).join('') || '<p class="muted">No upcoming events.</p>'}</div></div>`;
+}
+const hasRem = (b, k) => (b.reminders || []).some(r => r.kind === k);
+const fmtShort = iso => { const [y, m, d] = iso.split('-').map(Number); return new Date(y, m - 1, d).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }); };
+
+function admRequests() {
+  const F = { open: b => live(b) && b.status !== 'closed', new: b => b.status === 'new', past: b => b.status === 'closed' || daysTo(b.event.date) < -2, all: () => true };
+  const rows = AD.bookings.filter(F[AD.filter]).sort((a, b) => a.event.date.localeCompare(b.event.date));
+  $('#admBody').innerHTML = `<div class="filters" style="margin-top:0">${[['open', 'Open'], ['new', 'New'], ['past', 'Past'], ['all', 'All']].map(([k, l]) => `<button class="chip" data-af="${k}" aria-pressed="${AD.filter === k}">${l}</button>`).join('')}</div>
+    <table class="t stack"><thead><tr><th>Event date</th><th>Client</th><th>Event</th><th>Total</th><th>Paid</th><th>Status</th></tr></thead><tbody>
+    ${rows.map(b => `<tr class="click" data-open="${esc(b.code)}"><td><b>${esc(fmtShort(b.event.date))}</b><br><span class="small muted">${esc(b.code)}${b.sample ? ' · Sample' : ''}</span></td><td>${esc(b.customer.name)}<br><span class="small muted">${esc(b.customer.phone)}</span></td><td>${esc(b.event.type)}<br><span class="small muted">${b.items.reduce((s, i) => s + i.qty, 0)} pieces</span></td><td class="n">${money(b.totals.total)}</td><td>${b.payments.balance ? 'Paid in full' : b.payments.retainer ? 'Retainer' : 'Nothing yet'}</td><td><span class="st ${esc(b.status)}">${esc(stLabel(b))}</span></td></tr>`).join('') || '<tr><td colspan="6" class="muted">No requests here.</td></tr>'}
+    </tbody></table>`;
+}
+function openBooking(code) {
+  const b = AD.bookings.find(x => x.code === code); if (!b) return; AD.open = code; const S = ST.S; const d = daysTo(b.event.date);
+  const nextSt = { new: 'confirmed', confirmed: 'ready', ready: 'delivered', delivered: 'returned', returned: 'closed' }[b.status];
+  const verb = { confirmed: 'Confirm request', ready: isInst(b) ? 'Mark ready to install' : 'Mark ready for pickup', delivered: isInst(b) ? 'Mark installed' : 'Mark picked up', returned: isInst(b) ? 'Mark taken down' : 'Mark returned', closed: 'Close out' }[nextSt];
+  openModal(`<div class="row" style="margin-right:48px"><h2 style="margin:0">${esc(b.event.type)} · ${esc(fmtShort(b.event.date))}</h2><span class="st ${esc(b.status)}">${esc(stLabel(b))}</span></div>
+    <p class="muted">${esc(b.code)} · ${d >= 0 ? `in ${d} day${d === 1 ? '' : 's'}` : `${-d} days ago`} · start ${esc(b.event.start || '')}</p>
+    <div class="drawer"><div>
+      <svg viewBox="0 0 1000 620" style="width:100%;border-radius:14px">${sceneSVG((b.design?.placements || []).map((p, i) => ({ ...p, uid: 'a' + i })), b.design?.wall || WALLS[0], false)}</svg>
+      ${b.balloonColors?.length ? `<div class="plan"><b>Balloons:</b> ${esc(b.balloonColors.join(', '))}${b.balloon?.style ? ` · style: ${esc(b.balloon.style)}` : ''}${b.balloon?.plan ? ` · ${esc(String(b.balloon.plan.ft || ''))} ft ${esc(b.balloon.plan.placement || '')}` : ''}${b.balloon?.request ? `<br>Idea: “${esc(b.balloon.request)}”` : ''}${/^https:\/\//.test(b.balloon?.plan?.preview || '') ? `<br><img src="${esc(b.balloon.plan.preview)}" alt="AI preview" style="width:100%;border-radius:10px;margin-top:6px">` : ''}</div>` : ''}
+      <h3 style="margin-top:10px">${isInst(b) ? 'Prep checklist' : 'Ready-for-pickup checklist'}</h3><ul class="prep">${b.items.map(i => `<li><input type="checkbox" data-prep="${esc(i.id)}" ${b.prep?.[i.id] ? 'checked' : ''} aria-label="${esc(i.name)} ready"><span style="flex:1">${i.qty > 1 ? i.qty + ' × ' : ''}${esc(i.name)}</span><span class="small muted">${money(i.price * i.qty)}</span></li>`).join('')}</ul>
+    </div><div>
+      <div class="pane"><b>${esc(b.customer.name)}</b><br><a href="mailto:${esc(b.customer.email)}">${esc(b.customer.email)}</a><br><a href="tel:${esc(b.customer.phone)}">${esc(b.customer.phone)}</a>
+        <p class="small" style="margin:8px 0 0"><b>${esc(howGet(b))}</b>${isInst(b) ? '' : `<br>Return: ${esc(b.event.returnSlot || S.returnSlot)}`}<br>${esc(b.event.setting || '')} · ${esc(b.event.guests || '?')} guests</p>${b.event.notes ? `<p class="small muted" style="margin:6px 0 0">“${esc(b.event.notes)}”</p>` : ''}</div>
+      <div class="pane" style="margin-top:10px">
+        <div class="line"><span>Total</span><b>${money(b.totals.total)}</b></div>
+        <label class="check"><input type="checkbox" data-pay="retainer" ${b.payments.retainer ? 'checked' : ''}> Retainer ${money(b.totals.retainer)} received</label>
+        <label class="check"><input type="checkbox" data-pay="balance" ${b.payments.balance ? 'checked' : ''}> Balance ${money(b.totals.total - b.totals.retainer)} received</label>
+        ${b.protection === 'care' ? `<p class="small muted" style="margin:0">Care Plan ${money(b.totals.care)} (covers up to ${money(S.carePlanCap)})</p>` : `<label class="check"><input type="checkbox" data-pay="depositReturned" ${b.payments.depositReturned ? 'checked' : ''}> Security deposit ${money(b.totals.securityDeposit)} returned</label>`}
+      </div>
+      <div class="pane" style="margin-top:10px"><b>Email ${esc(b.customer.name.split(' ')[0])}</b>
+        <div class="filters" style="margin:8px 0 0">${[['confirm', 'Confirmation + retainer'], ['week', '7-day reminder'], ['day', isInst(b) ? 'Day-before reminder' : 'Ready for pickup'], ['thanks', 'Thank you + review']].map(([k, l]) => `<button class="chip" data-mail="${k}">${hasRem(b, k) ? '✓ ' : ''}${l}</button>`).join('')}</div>
+        ${(b.reminders || []).length ? `<p class="small muted" style="margin:8px 0 0">${b.reminders.map(r => `${esc(r.kind)} ${esc(new Date(r.at).toLocaleDateString())}`).join(' · ')}</p>` : ''}</div>
+      <div class="filters" style="margin-top:12px">${nextSt ? `<button class="btn" data-st="${nextSt}">${verb}</button>` : ''}${b.status === 'new' ? '<button class="btn ghost" data-st="declined">Decline</button>' : ''}${live(b) && b.status !== 'closed' && b.status !== 'new' ? '<button class="btn ghost sm" data-st="cancelled">Cancel booking</button>' : ''}<button class="btn ghost sm" id="vContract">Signed agreement</button></div>
+    </div></div>`);
+  $('#sheet').onchange = async e => {
+    const t = e.target;
+    if (t.dataset.prep) { b.prep = { ...(b.prep || {}), [t.dataset.prep]: t.checked }; }
+    if (t.dataset.pay) { b.payments[t.dataset.pay] = t.checked; }
+    await DB.updateBooking(b); renderAdmin();
+  };
+  $('#sheet').onclick = async e => {
+    const t = e.target;
+    if (t.dataset.st) { b.status = t.dataset.st; await DB.updateBooking(b); renderAdmin(); openBooking(code); if (t.dataset.st === 'confirmed') toast('Confirmed. Send the confirmation email next.'); }
+    if (t.dataset.mail) { const [subj, body] = mailTemplate(t.dataset.mail, b); composeMail(b, t.dataset.mail, subj, body); }
+    if (t.id === 'vContract') openModal(`<button class="btn ghost sm" data-open="${esc(b.code)}" style="margin-bottom:10px">← Back</button>` + contractHTML(b, S, ST.assets));
+  };
+}
+function mailTemplate(kind, b) {
+  const first = b.customer.name.replace(/^Sample:\s*/, '').split(' ')[0], when = fmtDate(b.event.date), bal = money(b.totals.total - b.totals.retainer);
+  const list = b.items.map(i => `  ${i.qty} x ${i.name}`).join('\n');
+  return {
+    confirm: [`Your date is held! ${b.code} · Petit Atelier Events`, `Hi ${first},\n\nGreat news: your decor for ${when} is available and confirmed.\n\nTo lock it in, please send the ${money(b.totals.retainer)} retainer within 48 hours (Venmo, Zelle or cash). The balance of ${bal} is due 7 days before your event.\n\n${isInst(b) ? `Installation at ${b.event.address} is included.` : `Pickup: ${b.event.pickupSlot} at ${ST.S.pickupPlace} (I'll send the exact address). Return: ${b.event.returnSlot || ST.S.returnSlot}.`}\n\n${list}\n\nThank you for choosing Petit Atelier!\nKarol`],
+    week: [`One week to go · ${b.code}`, `Hi ${first},\n\nYour event is one week away (${when})! A few quick things:\n\n- Balance due now: ${b.payments.balance ? 'already paid, thank you!' : bal}\n${isInst(b) ? `- I'll arrive before ${b.event.start} to install. Please make sure the area is clear and I have access.` : `- Pickup: ${b.event.pickupSlot} at ${ST.S.pickupPlace}. Please bring an SUV or van for balloon pieces.\n- Return: ${b.event.returnSlot || ST.S.returnSlot}.`}\n- Any last changes to colors or pieces? Reply to this email today.\n${b.protection !== 'care' ? `- Refundable security deposit of ${money(b.totals.securityDeposit)} is due with the balance.\n` : ''}\nKarol · Petit Atelier Events`],
+    day: [`See you tomorrow! · ${b.code}`, isInst(b) ? `Hi ${first},\n\nTomorrow is the day! I'll arrive ahead of ${b.event.start} at ${b.event.address} to set up.\n\nPlease keep candles, tape, glitter and drinks away from the backdrops and balloons, and don't move installed pieces. I'll come back for teardown at the time we agreed.\n\nHave the best time!\nKarol` : `Hi ${first},\n\nYour decor is built and ready! Pickup: ${b.event.pickupSlot} at ${ST.S.pickupPlace}.\n\n- Bring an SUV or van with the seats folded down for balloon pieces.\n- We'll check every piece together before you leave.\n- Keep candles, tape, glitter and drinks away from backdrops and balloons.\n- Return: ${b.event.returnSlot || ST.S.returnSlot}. Late returns are ${money(ST.S.lateFee)} per day.\n\nHave the best time!\nKarol`],
+    thanks: [`Thank you from Petit Atelier`, `Hi ${first},\n\nThank you for letting me be part of your celebration! I hope everyone loved it.\n\nIf you have a minute, a review or tagging @petitatelier_events on Instagram helps my small business so much. Photos of your setup would make my day!\n${b.protection !== 'care' ? `\nYour ${money(b.totals.securityDeposit)} security deposit ${b.payments.depositReturned ? 'has been returned.' : 'will be returned within 7 days after inspection.'}\n` : ''}\nWith love,\nKarol`],
+  }[kind];
+}
+function composeMail(b, kind, subj, body) {
+  openModal(`<button class="btn ghost sm" data-open="${esc(b.code)}" style="margin-bottom:10px">← Back</button><h3>Email to ${esc(b.customer.email)}</h3>
+    <label for="mSubj">Subject</label><input id="mSubj" value="${esc(subj)}"><label for="mBody" style="margin-top:10px">Message</label><textarea id="mBody" style="min-height:260px">${esc(body)}</textarea>
+    <p class="err" id="mErr"></p><div class="row"><span class="small muted">${LIVE ? 'Sends from your Petit Atelier email address.' : 'Demo mode: opens your email app with this message ready.'}</span><button class="btn" id="mSend">${LIVE ? 'Send email' : 'Open in email app'}</button></div><div id="mOut"></div>`);
+  $('#mSend').onclick = async () => {
+    try {
+      const r = await DB.email(b.customer.email, $('#mSubj').value, $('#mBody').value, kind, b.code);
+      b.reminders = [...(b.reminders || []), { kind, at: new Date().toISOString(), via: r.sent ? 'email' : 'manual' }]; await DB.updateBooking(b);
+      if (r.sent) { toast('Email sent'); openBooking(b.code); }
+      else { $('#mOut').innerHTML = `<p class="demo"><a href="${esc(r.mailto)}">Open this message in your email app</a>. If nothing opens, copy the text above and send it to ${esc(b.customer.email)}. Logged as sent.</p>`; }
+    } catch (err) { $('#mErr').textContent = err.message; }
+  };
+}
+
+function admCalendar() {
+  const base = AD.month || todayISO().slice(0, 7); const [y, m] = base.split('-').map(Number);
+  const first = new Date(y, m - 1, 1), start = new Date(first); start.setDate(1 - first.getDay());
+  const cells = []; for (let i = 0; i < 42; i++) { const d = new Date(start); d.setDate(start.getDate() + i); cells.push(d); }
+  const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const shift = k => { const d = new Date(y, m - 1 + k, 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`; };
+  $('#admBody').innerHTML = `<div class="row" style="margin-bottom:12px"><button class="btn ghost sm" data-mon="${shift(-1)}">←</button><h3 style="margin:0">${first.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</h3><button class="btn ghost sm" data-mon="${shift(1)}">→</button></div>
+    <div class="scroll"><div class="cal" style="min-width:640px">${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => `<div class="hd">${d}</div>`).join('')}
+    ${cells.map(d => { const k = iso(d); const evs = AD.bookings.filter(b => live(b) && b.event.date === k);
+      return `<div class="${d.getMonth() !== m - 1 ? 'off' : ''}"${k === todayISO() ? ' style="border-color:var(--blushd)"' : ''}>${d.getDate()}${evs.map(b => `<button class="ev ${b.status === 'new' ? '' : 'confirmed'}" data-open="${esc(b.code)}">${esc(b.event.type)} · ${esc(b.customer.name.replace('Sample: ', ''))}</button>`).join('')}</div>`; }).join('')}</div></div>
+    <p class="small muted" style="margin-top:10px">Pink: waiting for your confirmation. Green: confirmed or later. Pieces are blocked ${ST.S.bufferDays} day before and after each event.</p>`;
+}
+
+function admInventory() {
+  $('#admBody').innerHTML = `<div class="row" style="margin-bottom:14px"><p class="muted" style="margin:0">Pieces marked "Catalog only" have a photo but no cut-out yet, so customers can't place them in the Design Studio: open one and upload a straight-on photo. Prices, quantities and photos update the website right away. Replacement value is what a client pays for a lost or damaged piece without the Care Plan.</p><button class="btn" id="newAsset">Add a piece</button></div>
+    <div class="inv">${ST.assets.map(a => `<article class="card"><div class="pic" style="cursor:default">${a.photo ? `<img src="${esc(a.photo)}" alt="">` : a.cutout ? `<img class="cut" src="${esc(a.cutout)}" alt="">` : '<span class="small muted">No photo yet</span>'}</div><div class="body">
+      <div class="row"><h3>${esc(a.name)}</h3>${a.active === false ? '<span class="badge no">Hidden</span>' : ''}${a.cutout ? '<span class="badge ok">In the Studio</span>' : '<span class="badge">Catalog only</span>'}</div>
+      <div class="line"><span>Rental</span><b>${money(a.price)}${a.perFt ? ' per ft' : ''}</b></div><div class="line"><span>Owned</span><span>${a.qty}</span></div><div class="line"><span>Replacement</span><span>${a.made ? 'Made to order' : money(a.repl)}</span></div>
+      <button class="btn ghost sm" data-edit="${esc(a.id)}" style="margin-top:8px">Edit</button></div></article>`).join('')}</div>`;
+}
+function editAsset(id, draft) {
+  const isNew = draft ? !ST.assets.some(x => x.id === draft.id) : !id;
+  const a = draft ? draft : id ? { ...ST.assets.find(x => x.id === id) } : { id: 'p' + Date.now().toString(36), cat: 'furniture', name: '', es: '', price: 25, qty: 1, repl: 100, ft: 3, ar: 1, x: 500, y: 580, s: 1, desc: '', desc_es: '', active: true, photo: '', cutout: '' };
+  openModal(`<h2>${isNew ? 'New piece' : 'Edit piece'}</h2><form id="aForm" class="f2">
+    <div class="full"><label for="aName">Name (English)</label><input id="aName" required value="${esc(a.name)}"></div>
+    <div class="full"><label for="aEs">Name (Spanish)</label><input id="aEs" value="${esc(a.es || '')}"></div>
+    <div><label for="aPrice">Rental price ($)</label><input id="aPrice" type="number" min="0" step="1" value="${a.price}"></div>
+    <div><label for="aQty">How many you own</label><input id="aQty" type="number" min="0" step="1" value="${a.qty}"></div>
+    <div><label for="aRepl">Replacement value ($)</label><input id="aRepl" type="number" min="0" step="1" value="${a.repl || 0}"></div>
+    <div><label for="aCat">Category</label><select id="aCat">${CATS.slice(1).map(([k, l]) => `<option value="${k}" ${a.cat === k ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+    <label class="check"><input type="checkbox" id="aPerFt" ${a.perFt ? 'checked' : ''}> Priced per foot (balloons)</label><div></div>
+    <div class="full"><label for="aDesc">Description</label><textarea id="aDesc">${esc(a.desc || '')}</textarea></div>
+    <div class="full"><label for="aDescEs">Description (Spanish)</label><textarea id="aDescEs">${esc(a.desc_es || '')}</textarea></div>
+    <div><label for="aFt">Real height (feet)</label><input id="aFt" type="number" min="0.3" max="12" step="0.1" value="${a.ft || 4}"></div><div></div>
+    <div class="full pane" style="background:var(--soft)"><b>Real piece for the Design Studio</b><p class="small muted" style="margin:4px 0 8px">Take the photo straight on, whole piece in frame, plain wall behind it. The background is removed automatically and the piece shows at its real height.</p>
+      <div class="row"><div id="cutPrev" style="height:120px;min-width:120px;display:grid;place-items:center;background:repeating-conic-gradient(#eee 0 25%,#fff 0 50%) 0 0/16px 16px;border-radius:10px;padding:6px">${a.cutout ? `<img src="${esc(a.cutout)}" alt="" style="max-height:108px">` : '<span class="small muted">No cut-out yet</span>'}</div>
+        <span class="row" style="gap:6px"><label class="chip" style="margin:0;color:inherit" for="aCut">Upload photo</label><input type="file" id="aCut" accept="image/*" data-cutpal="" hidden>${a.cutout ? '<button type="button" class="chip" data-cutdel="">Remove</button>' : ''}</span></div>
+      <label class="check"><input type="checkbox" id="aAuto" ${window.paAutoBg === false ? '' : 'checked'}> Remove the background automatically (turn off if you upload a PNG that is already cut out)</label>
+      <p class="small" id="cutMsg" aria-live="polite"></p></div>
+    <div class="full"><label for="aPhoto">Catalog photo (optional, shown on the collection card)</label><input id="aPhoto" type="file" accept="image/*"><div id="aPrev" style="margin-top:8px">${a.photo ? `<img src="${esc(a.photo)}" alt="" style="max-width:200px;border-radius:10px">` : ''}</div></div>
+    <label class="check full"><input type="checkbox" id="aMade" ${a.made ? 'checked' : ''}> Made fresh per event (balloons): no replacement value</label>
+    <label class="check full"><input type="checkbox" id="aActive" ${a.active !== false ? 'checked' : ''}> Show on the website</label>
+    <p class="err full" id="aErr"></p>
+    <div class="full row">${!isNew ? '<button type="button" class="btn ghost sm" id="aDel">Delete</button>' : '<span></span>'}<button class="btn">Save</button></div></form>`);
+  const collect = () => ({ name: $('#aName').value.trim(), es: $('#aEs').value.trim(), price: Math.max(0, +$('#aPrice').value), qty: Math.max(0, Math.floor(+$('#aQty').value)), repl: Math.max(0, +$('#aRepl').value), cat: $('#aCat').value, perFt: $('#aPerFt').checked, desc: $('#aDesc').value.trim(), desc_es: $('#aDescEs').value.trim(), made: $('#aMade').checked, active: $('#aActive').checked, ft: Math.min(12, Math.max(.3, +$('#aFt').value || 4)) });
+  const cutState = { a };
+  $('#sheet').onchange = async e => {
+    const inp = e.target; if (inp.id === 'aAuto') { window.paAutoBg = inp.checked; return; }
+    if (inp.id === 'aCat') { Object.assign(a, collect()); editAsset(null, a); return; }
+    if (!('cutpal' in inp.dataset) || !inp.files[0]) return; const f = inp.files[0];
+    const msg = $('#cutMsg'); msg.textContent = 'Working on the photo… this can take 20 to 40 seconds the first time.';
+    try {
+      let blob = f;
+      if ($('#aAuto').checked) { try { blob = await removeBg(f); } catch (err) { msg.textContent = 'Automatic background removal is not available here, so the photo is used as is. Tip: cut it out with Canva or remove.bg and upload the PNG.'; } }
+      const { blob: png, ar } = await trimAlpha(blob, LIVE ? 1400 : 700);
+      const url = await DB.uploadCutout(png);
+      a.cutout = url;
+      a.ar = ar; Object.assign(a, collect());
+      editAsset(null, a); $('#cutMsg').textContent = 'Done. Save to publish it.';
+    } catch (err) { msg.textContent = 'Could not use that photo: ' + err.message; }
+  };
+  $('#sheet').onclick = e => { const del = e.target.closest('[data-cutdel]'); if (!del) return; a.cutout = ''; Object.assign(a, collect()); editAsset(null, a); };
+  $('#aPhoto').onchange = async e => { const f = e.target.files[0]; if (!f) return; $('#aPrev').textContent = 'Uploading…'; try { a.photo = await DB.uploadPhoto(f); $('#aPrev').innerHTML = `<img src="${esc(a.photo)}" alt="" style="max-width:200px;border-radius:10px">`; } catch (err) { $('#aErr').textContent = err.message; } };
+  $('#aForm').onsubmit = async e => {
+    e.preventDefault();
+    Object.assign(a, collect());
+    if (!a.y) a.y = a.cat === 'backdrops' ? 472 : 580;
+    if (!a.name) { $('#aErr').textContent = 'Give the piece a name.'; return; }
+    try { await DB.saveAsset(a); ST.assets = await DB.assets(); closeModal(); renderAdmin(); toast('Saved'); } catch (err) { $('#aErr').textContent = err.message; }
+  };
+  if (!isNew) $('#aDel').onclick = async () => {
+    const id = a.id;
+    const used = AD.bookings.some(b => live(b) && daysTo(b.event.date) >= 0 && b.items.some(i => i.id === id));
+    if (used) { $('#aErr').textContent = 'This piece is in an upcoming booking. Hide it instead (uncheck "Show on the website").'; return; }
+    const btn = $('#aDel'); if (btn.dataset.sure !== '1') { btn.dataset.sure = '1'; btn.textContent = 'Tap again to delete for good'; return; }
+    await DB.deleteAsset(id); ST.assets = await DB.assets(); closeModal(); renderAdmin(); toast('Deleted');
+  };
+}
+
+function admSettings() {
+  const S = ST.S;
+  $('#admBody').innerHTML = `<form id="sForm" style="max-width:760px"><h3>Money</h3><div class="f2">
+    <div><label for="sDep">Retainer to hold a date (%)</label><input id="sDep" type="number" min="0" max="100" value="${S.depositPct}"></div>
+    <div><label for="sMin">Minimum order ($)</label><input id="sMin" type="number" min="0" value="${S.minOrder}"></div>
+    <div><label for="sCare">Care Plan price ($)</label><input id="sCare" type="number" min="0" value="${S.carePlan}"></div>
+    <div><label for="sCap">Care Plan covers up to ($)</label><input id="sCap" type="number" min="0" value="${S.carePlanCap}"></div>
+    <div><label for="sSec">Security deposit if no plan ($)</label><input id="sSec" type="number" min="0" value="${S.securityDeposit}"></div>
+    <div><label for="sInst">Installation add-on ($)</label><input id="sInst" type="number" min="0" value="${S.installFee}"></div>
+    <div><label for="sLate">Late return fee per day ($)</label><input id="sLate" type="number" min="0" value="${S.lateFee}"></div>
+    <div><label for="sBuf">Days blocked before and after events</label><input id="sBuf" type="number" min="0" max="3" value="${S.bufferDays}"></div></div>
+    <h3 style="margin-top:24px">Pickup and installation</h3><div class="f2">
+    <div class="full"><label for="sPlace">Pickup place (shown to clients)</label><input id="sPlace" value="${esc(S.pickupPlace)}"></div>
+    <div class="full"><label for="sSlots">Pickup times, one per line</label><textarea id="sSlots">${esc(S.pickupSlots.join('\n'))}</textarea></div>
+    <div class="full"><label for="sRet">Return time</label><input id="sRet" value="${esc(S.returnSlot)}"></div>
+    <div class="full"><label for="sArea">Installation area</label><input id="sArea" value="${esc(S.installArea)}"></div></div>
+    <h3 style="margin-top:24px">Notifications</h3><label for="sMail">Send new requests to</label><input id="sMail" type="email" value="${esc(S.notifyEmail)}">
+    ${LIVE ? '' : `<label for="sPin" style="margin-top:10px">Demo PIN</label><input id="sPin" value="${esc(S.pin)}">`}
+    <h3 style="margin-top:24px">Recent setups gallery</h3><p class="small muted">Upload photos from Instagram posts. They replace the drawn looks in the "Recent setups" section.</p>
+    <input type="file" id="sGal" accept="image/*" multiple><div class="ig" id="galPrev">${(S.gallery || []).map((g, i) => `<div style="position:relative"><img src="${esc(g)}" alt=""><button type="button" class="chip" data-gdel="${i}" style="position:absolute;top:6px;right:6px">Remove</button></div>`).join('')}</div>
+    <p class="err" id="sErr"></p><button class="btn" style="margin-top:12px">Save settings</button></form>`;
+  $('#sGal').onchange = async e => { for (const f of e.target.files) { try { S.gallery = [...(S.gallery || []), await DB.uploadPhoto(f)]; } catch (err) { $('#sErr').textContent = err.message; } } await DB.saveSettings(S); admSettings(); };
+  $('#galPrev').onclick = async e => { const i = e.target.dataset.gdel; if (i === undefined) return; S.gallery.splice(+i, 1); await DB.saveSettings(S); admSettings(); };
+  $('#sForm').onsubmit = async e => {
+    e.preventDefault(); const n = id => Math.max(0, +$(id).value);
+    Object.assign(S, { depositPct: Math.min(100, n('#sDep')), minOrder: n('#sMin'), carePlan: n('#sCare'), carePlanCap: n('#sCap'), securityDeposit: n('#sSec'), installFee: n('#sInst'), lateFee: n('#sLate'), pickupPlace: $('#sPlace').value.trim(), returnSlot: $('#sRet').value.trim(), installArea: $('#sArea').value.trim(), pickupSlots: $('#sSlots').value.split('\n').map(x => x.trim()).filter(Boolean), bufferDays: Math.min(3, Math.floor(n('#sBuf'))), notifyEmail: $('#sMail').value.trim() });
+    if (!LIVE) S.pin = $('#sPin').value.trim() || S.pin;
+    if (!S.pickupSlots.length) S.pickupSlots = [...SEED_SETTINGS.pickupSlots];
+    try { await DB.saveSettings(S); toast('Settings saved'); } catch (err) { $('#sErr').textContent = err.message; }
+  };
+}
+
+function bindAdmin() {
+  $('#admin').addEventListener('click', async e => {
+    const t = e.target;
+    const tab = t.closest('[data-tab]'); if (tab) { AD.tab = tab.dataset.tab; renderAdmin(); }
+    const f = t.closest('[data-af]'); if (f) { AD.filter = f.dataset.af; admRequests(); }
+    const mo = t.closest('[data-mon]'); if (mo) { AD.month = mo.dataset.mon; admCalendar(); }
+    const ed = t.closest('[data-edit]'); if (ed) editAsset(ed.dataset.edit);
+    if (t.id === 'newAsset') editAsset(null);
+    if (t.id === 'logout') { await DB.auth.signOut(); location.hash = 'top'; }
+  });
+  document.addEventListener('click', e => { const o = e.target.closest('[data-open]'); if (o && document.body.classList.contains('adm')) openBooking(o.dataset.open); });
+}
+
+/* ===== boot ===== */
+async function route() {
+  if (location.hash === '#admin') { await showAdmin(); }
+  else if (document.body.classList.contains('adm')) { hideAdmin(); ST.assets = await DB.assets(); ST.S = await DB.settings(); refreshAvail(); }
+}
+(async () => {
+  try {
+    await DB.init();
+    ST.assets = await DB.assets(); ST.S = await DB.settings();
+    $('#heroDate').min = todayISO(2); $('#heroDate').value = ST.date && ST.date >= todayISO(2) ? ST.date : '';
+    if (ST.date && ST.date < todayISO(2)) { ST.date = ''; lset('date', ''); }
+    bindSite(); bindAdmin();
+    await refreshAvail();
+    setInterval(() => { if (!window.heroPaused && !document.hidden && !document.body.classList.contains('adm') && !matchMedia('(prefers-reduced-motion: reduce)').matches) { heroLook = (heroLook + 1) % LOOKS.length; renderHero(); } }, 7000);
+    window.addEventListener('hashchange', route); route();
+  } catch (err) {
+    document.body.insertAdjacentHTML('afterbegin', `<p class="err" style="padding:16px">Something went wrong loading the site: ${esc(err.message)}</p>`);
+  }
+})();
+
+}
+</script>
+</body>
+</html>
