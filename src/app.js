@@ -200,7 +200,7 @@ function renderProjects() {
   $('#projCtaT').textContent = es ? '¿Te encanta este look?' : 'Love this look?';
   $('#projCtaP').textContent = es ? 'Karol lo puede recrear para tu fecha. O diseña tu propio montaje con sus piezas reales y mira el precio al instante.' : 'Karol can recreate it for your date. Or design your own setup with her real pieces and see the price as you go.';
   $('#projUse').textContent = es ? 'Quiero este look' : 'I want this look'; $('#projOwn').textContent = es ? 'Diseñar el mío' : 'Design my own';
-  $('#projPrev').hidden = $('#projNext').hidden = !!useVid; $('#projPlay').hidden = false;
+  $('#projPrev').hidden = $('#projNext').hidden = !!useVid; $('#projPlay').hidden = false; $('#projSteps').hidden = !!useVid;
   showStep(PJ.step, true);
 }
 /* --- sparkle particles + fairy flight (one rAF loop per stage) --- */
