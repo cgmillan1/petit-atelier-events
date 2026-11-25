@@ -126,13 +126,13 @@ details{border-bottom:1px solid var(--line);padding:14px 0}summary{cursor:pointe
 .herocta{background:#fffaf8;border-color:#ead7dd}
 .projbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px}
 .projdots{display:flex;gap:6px;margin-top:10px}.projdots i{flex:1;height:4px;border-radius:4px;background:#e2d6da;transition:background .4s}.projdots i.on{background:var(--blushd)}
-.projstage img.layer{opacity:0;transform:scale(.55);transform-origin:var(--ox,50%) var(--oy,50%);transition:opacity .45s ease,transform .9s cubic-bezier(.18,1.5,.4,1),filter 1.2s ease;filter:brightness(2.2) saturate(1.4) drop-shadow(0 0 18px #ffe9a8)}
+.projstage img.layer{opacity:0;transform:scale(.55);transform-origin:var(--ox,50%) var(--oy,50%);transition:opacity .25s ease,transform .45s cubic-bezier(.18,1.5,.4,1),filter .6s ease;filter:brightness(2.2) saturate(1.4) drop-shadow(0 0 18px #ffe9a8)}
 .projstage img.layer.on{opacity:1;transform:none;filter:none}
 .projstage canvas.fx{position:absolute;inset:0;width:100%;height:100%;z-index:6;pointer-events:none}
 .fairy{position:absolute;left:0;top:0;width:clamp(90px,20%,170px);aspect-ratio:1;z-index:7;pointer-events:none;will-change:transform}
 .fairy img{position:static!important;width:100%;height:100%;filter:drop-shadow(0 6px 14px rgba(255,214,140,.55));animation:bob 1.4s ease-in-out infinite;transform-origin:30% 20%}
-.fairy.wave img{animation:wave .32s ease-in-out 3 alternate}
-.fairy.spin img{animation:spin 1s cubic-bezier(.4,0,.2,1)}
+.fairy.wave img{animation:wave .15s ease-in-out 2 alternate}
+.fairy.spin img{animation:spin .6s cubic-bezier(.4,0,.2,1)}
 @keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-7%) rotate(3deg)}}
 @keyframes wave{from{transform:rotate(-10deg)}to{transform:rotate(12deg) translateY(-4%)}}
 @keyframes spin{to{transform:rotate(360deg) scale(1.1)}}
@@ -144,7 +144,7 @@ details{border-bottom:1px solid var(--line);padding:14px 0}summary{cursor:pointe
 .projstage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .projstage img.base{position:relative}
 .projstage img.layer{-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
-.projstage img.full{opacity:0;transition:opacity 1.2s ease}.projstage img.full.on{opacity:1}
+.projstage img.full{opacity:0;transition:opacity .6s ease}.projstage img.full.on{opacity:1}
 .projstage .tag{position:absolute;left:14px;bottom:14px;background:#fffaf8ee;color:#1f1b1c;border-radius:999px;padding:6px 14px;font-size:14px;z-index:5}
 .projsteps{margin:0;padding-left:20px;font-size:15px;color:var(--muted)}.projsteps li{padding:3px 0}.projsteps li.on{color:var(--ink)}.projsteps li.now{font-weight:600;color:var(--blushd)}
 
@@ -934,12 +934,12 @@ function showStep(k, instant) {
   const apply = () => { $$('#projStage .layer').forEach(l => l.classList.toggle('on', +l.dataset.k <= PJ.step)); $('#projStage .full')?.classList.toggle('on', PJ.step >= n); };
   if (PJ.step >= 1 && PJ.step < n) {
     const [cx, cy] = p.at[PJ.step - 1]; const tx = Math.min(.93, cx + .06), ty = Math.max(.06, cy - .08);
-    if (fwd) { flyTo(tx, ty, 850); setTimeout(wave, 800); setTimeout(() => { burst(cx, cy); apply(); }, 1050); }
+    if (fwd) { flyTo(tx, ty, 380); setTimeout(wave, 340); setTimeout(() => { burst(cx, cy); apply(); }, 430); }
     else { if (PJ.fx) { PJ.fx.to = null; PJ.fx.x = tx; PJ.fx.y = ty; } apply(); }
   } else if (PJ.step >= n) {
-    if (fwd) { flyTo(.5, .32, 800); setTimeout(() => { const f = $('#fairy'); f.classList.remove('spin'); void f.offsetWidth; f.classList.add('spin'); burst(.5, .45, true); apply(); }, 850); setTimeout(() => flyTo(.86, .1, 1100), 2000); }
+    if (fwd) { flyTo(.5, .32, 400); setTimeout(() => { const f = $('#fairy'); f.classList.remove('spin'); void f.offsetWidth; f.classList.add('spin'); burst(.5, .45, true); apply(); }, 420); setTimeout(() => flyTo(.86, .1, 700), 1100); }
     else { if (PJ.fx) { PJ.fx.to = null; PJ.fx.x = .86; PJ.fx.y = .1; } apply(); }
-  } else { if (PJ.fx) { if (fwd || !instant) flyTo(.86, .1, 700); else { PJ.fx.x = .86; PJ.fx.y = .1; } } apply(); }
+  } else { if (PJ.fx) { if (fwd || !instant) flyTo(.86, .1, 400); else { PJ.fx.x = .86; PJ.fx.y = .1; } } apply(); }
   $$('#projSteps i').forEach(li => li.classList.toggle('on', +li.dataset.k <= PJ.step));
   $('#projCount').textContent = PJ.step && PJ.step < n ? `${es ? 'Paso' : 'Step'} ${PJ.step} ${es ? 'de' : 'of'} ${n - 1}` : (es ? p.es : p.name);
   $('#projStep').textContent = PJ.step === 0 ? (es ? 'Un espacio vacío... y un poco de magia' : 'An empty space... and a little magic') : PJ.step >= n ? (es ? '¡Listo para la fiesta!' : 'Ready to party!') : (es ? p.steps[PJ.step - 1][1] : p.steps[PJ.step - 1][0]);
@@ -950,8 +950,8 @@ function playProject(restart) {
   const p = PJP(), n = p.steps.length + 1; if (p.video) return;
   if (restart || PJ.step >= n) showStep(0, true);
   if (reduced()) { showStep(n, true); return; }
-  PJ.timer = setInterval(() => { if (PJ.step >= n) { clearInterval(PJ.timer); PJ.timer = null; showStep(n); return; } showStep(PJ.step + 1); }, 2000);
-  setTimeout(() => { if (PJ.timer && PJ.step === 0) showStep(1); }, 900);
+  PJ.timer = setInterval(() => { if (PJ.step >= n) { clearInterval(PJ.timer); PJ.timer = null; showStep(n); return; } showStep(PJ.step + 1); }, 800);
+  setTimeout(() => { if (PJ.timer && PJ.step === 0) showStep(1); }, 400);
   showStep(PJ.step, true);
 }
 function useProject() {

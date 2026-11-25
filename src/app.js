@@ -235,12 +235,12 @@ function showStep(k, instant) {
   const apply = () => { $$('#projStage .layer').forEach(l => l.classList.toggle('on', +l.dataset.k <= PJ.step)); $('#projStage .full')?.classList.toggle('on', PJ.step >= n); };
   if (PJ.step >= 1 && PJ.step < n) {
     const [cx, cy] = p.at[PJ.step - 1]; const tx = Math.min(.93, cx + .06), ty = Math.max(.06, cy - .08);
-    if (fwd) { flyTo(tx, ty, 850); setTimeout(wave, 800); setTimeout(() => { burst(cx, cy); apply(); }, 1050); }
+    if (fwd) { flyTo(tx, ty, 380); setTimeout(wave, 340); setTimeout(() => { burst(cx, cy); apply(); }, 430); }
     else { if (PJ.fx) { PJ.fx.to = null; PJ.fx.x = tx; PJ.fx.y = ty; } apply(); }
   } else if (PJ.step >= n) {
-    if (fwd) { flyTo(.5, .32, 800); setTimeout(() => { const f = $('#fairy'); f.classList.remove('spin'); void f.offsetWidth; f.classList.add('spin'); burst(.5, .45, true); apply(); }, 850); setTimeout(() => flyTo(.86, .1, 1100), 2000); }
+    if (fwd) { flyTo(.5, .32, 400); setTimeout(() => { const f = $('#fairy'); f.classList.remove('spin'); void f.offsetWidth; f.classList.add('spin'); burst(.5, .45, true); apply(); }, 420); setTimeout(() => flyTo(.86, .1, 700), 1100); }
     else { if (PJ.fx) { PJ.fx.to = null; PJ.fx.x = .86; PJ.fx.y = .1; } apply(); }
-  } else { if (PJ.fx) { if (fwd || !instant) flyTo(.86, .1, 700); else { PJ.fx.x = .86; PJ.fx.y = .1; } } apply(); }
+  } else { if (PJ.fx) { if (fwd || !instant) flyTo(.86, .1, 400); else { PJ.fx.x = .86; PJ.fx.y = .1; } } apply(); }
   $$('#projSteps i').forEach(li => li.classList.toggle('on', +li.dataset.k <= PJ.step));
   $('#projCount').textContent = PJ.step && PJ.step < n ? `${es ? 'Paso' : 'Step'} ${PJ.step} ${es ? 'de' : 'of'} ${n - 1}` : (es ? p.es : p.name);
   $('#projStep').textContent = PJ.step === 0 ? (es ? 'Un espacio vacío... y un poco de magia' : 'An empty space... and a little magic') : PJ.step >= n ? (es ? '¡Listo para la fiesta!' : 'Ready to party!') : (es ? p.steps[PJ.step - 1][1] : p.steps[PJ.step - 1][0]);
@@ -251,8 +251,8 @@ function playProject(restart) {
   const p = PJP(), n = p.steps.length + 1; if (p.video) return;
   if (restart || PJ.step >= n) showStep(0, true);
   if (reduced()) { showStep(n, true); return; }
-  PJ.timer = setInterval(() => { if (PJ.step >= n) { clearInterval(PJ.timer); PJ.timer = null; showStep(n); return; } showStep(PJ.step + 1); }, 2000);
-  setTimeout(() => { if (PJ.timer && PJ.step === 0) showStep(1); }, 900);
+  PJ.timer = setInterval(() => { if (PJ.step >= n) { clearInterval(PJ.timer); PJ.timer = null; showStep(n); return; } showStep(PJ.step + 1); }, 800);
+  setTimeout(() => { if (PJ.timer && PJ.step === 0) showStep(1); }, 400);
   showStep(PJ.step, true);
 }
 function useProject() {
