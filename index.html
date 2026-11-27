@@ -271,6 +271,44 @@ body.printing #printDoc{display:block;position:fixed;inset:0;z-index:300;overflo
  .pd-boxes{margin:16px 0 10px}.pdoc h2{margin:14px 0 6px}
  .pd-bar{display:none!important}.pdoc{box-shadow:none;max-width:none;padding:0;border-radius:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
  .pd-t tr,.pd-sign,.pd-svg{break-inside:avoid}.pdoc h2,.pd-contract h4{break-after:avoid}}
+/* ---------- UI v2 (phones): shorter page, calmer bars ---------- */
+@media (max-width:900px){
+  body:not(.hascart) .mbar{display:none!important}
+  body:not(.hascart){padding-bottom:0!important}
+  body:not(.hascart) .msgfab{bottom:18px}
+}
+@media (max-width:600px){
+  #grid{grid-template-columns:1fr 1fr;gap:10px}
+  #grid .card{border-radius:14px}
+  #grid .card .pic{aspect-ratio:1/1;padding:8px}
+  #grid .card .pic img.cut{inset:8px;width:calc(100% - 16px);height:calc(100% - 16px)}
+  #grid .card .body{padding:10px 10px 12px;gap:4px}
+  #grid .card h3{font-size:16px;line-height:1.15}
+  #grid .card .body>p.small{display:none}
+  #grid .card .row{flex-wrap:wrap;gap:6px;margin:0}
+  #grid .card .badge{font-size:11px;padding:2px 8px}
+  #grid .card .btn.sm{width:100%}
+  .steps{grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+  .step{padding:12px 10px;font-size:14px;line-height:1.4;border-top-width:2px}
+  .step b{font-size:18px}
+}
+#themeChips .chip.more{font-weight:600;border-style:dashed}
+.datechosen{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 0;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+#studioLooks.empty{padding:10px;border:1px dashed var(--blushd);border-radius:14px;background:var(--panel)}
+#studioLooks.empty .chip{border-color:var(--blushd);font-weight:600}
+/* dashboard: one-tap to-do rows, tabs in one swipeable row */
+.todos{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel)}
+.todo{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;width:100%;padding:12px 14px;border:0;border-bottom:1px solid var(--line);background:none;text-align:left;cursor:pointer;font:inherit;color:inherit;min-height:56px}
+.todo:last-child{border-bottom:0}.todo:hover{background:var(--bg)}
+.todo .td-d{display:flex;flex-direction:column;min-width:76px}.todo .td-d small{color:var(--muted);font-size:12px}
+.todo .td-w{font-size:14px;line-height:1.35}.todo .td-go{font-size:22px;color:var(--muted)}
+@media (max-width:700px){.adm-top .tabs{display:flex;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;width:100%;-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}.adm-top .tabs::-webkit-scrollbar{display:none}.adm-top .tabs button{flex:none}}
+@media (max-width:600px){
+  #inspGrid{grid-auto-flow:column;grid-template-columns:none;grid-auto-columns:80%;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;padding-bottom:6px;scrollbar-width:none}
+  #inspGrid::-webkit-scrollbar{display:none}
+  #inspGrid>.card{scroll-snap-align:start}
+  #care .pane,#care .card{padding:16px}
+}
 @media print{.top,.mbar,footer,#site section.band:not(.printme){display:none}}
 </style>
 <script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
@@ -294,7 +332,7 @@ body.printing #printDoc{display:block;position:fixed;inset:0;z-index:300;overflo
 <main id="main">
 <section class="band" id="top"><div class="wrap hero" id="projects">
   <div class="herotext">
-    <p class="script" data-es="¡Hola!">Hello there!</p>
+    <p class="script" data-es="Renta de decoración y globos">Party decor &amp; balloons</p>
     <h1 id="heroH">Watch a party come to life.</h1>
     <p class="lead" id="heroLead">These are real setups Karol built. Pick one, watch it come together piece by piece, then book the same look for your date.</p>
     <div class="filters" id="projTabs" style="margin:0 0 14px"></div>
@@ -327,22 +365,6 @@ body.printing #printDoc{display:block;position:fixed;inset:0;z-index:300;overflo
   </div>
 </div></section>
 
-<section class="band" id="collection"><div class="wrap">
-  <p class="script" style="text-align:center" data-es="Rentas">Rentals</p>
-  <div class="row"><h2 style="margin:0" data-i="h_coll">The collection</h2><span class="muted" id="collAvail"></span></div>
-  <div class="filters" id="filters"></div>
-  <div class="grid" id="grid"></div>
-</div></section>
-
-<section class="band sage" id="balloons"><div class="wrap">
-  <p class="script" style="text-align:center" data-es="Guirnaldas de globos">Balloon garlands</p>
-  <div class="row"><h2 style="margin:0" data-es="Inspiraciones de globos">Balloon inspirations</h2><span class="muted" data-es="$22 por pie · hasta 3 colores · lista para recoger">$22 per foot · up to 3 colors · ready for pickup</span></div>
-  <p class="muted" style="max-width:52em" data-es="Elige un estilo, escoge tus colores o describe tu propia idea (una fiesta de sirenas, un cumpleaños de orejitas de ratón, lo que sea) y nuestro diseñador con IA sugiere colores, largo y ubicación alrededor de tus piezas reales. Karol confirma cada diseño contigo.">Pick a style, choose your colors, or describe your own idea (a mermaid party, a mouse-ears birthday, anything) and our AI designer suggests colors, length and placement around your real pieces. Karol confirms every design with you.</p>
-  <div class="grid" id="inspGrid" style="margin-top:16px"></div>
-  <p class="small muted" style="margin:22px 0 8px" data-es="Ideas rápidas de temas:">Quick theme ideas:</p>
-  <div class="filters" id="themeChips" style="margin:0"></div>
-</div></section>
-
 <section class="band" id="studio"><div class="wrap">
   <h2 data-i="studio_title">Design studio</h2>
   <p class="muted" data-i="studio_sub" style="max-width:48em">Tap a piece to place it, drag it where you want it, and pick a balloon palette. Your total updates as you go.</p>
@@ -361,6 +383,23 @@ body.printing #printDoc{display:block;position:fixed;inset:0;z-index:300;overflo
     <aside class="pane sum" id="summary" aria-live="polite"></aside>
   </div>
 </div></section>
+
+<section class="band" id="collection"><div class="wrap">
+  <p class="script" style="text-align:center" data-es="Rentas">Rentals</p>
+  <div class="row"><h2 style="margin:0" data-i="h_coll">The collection</h2><span class="muted" id="collAvail"></span></div>
+  <div class="filters" id="filters"></div>
+  <div class="grid" id="grid"></div>
+</div></section>
+
+<section class="band sage" id="balloons"><div class="wrap">
+  <p class="script" style="text-align:center" data-es="Guirnaldas de globos">Balloon garlands</p>
+  <div class="row"><h2 style="margin:0" data-es="Inspiraciones de globos">Balloon inspirations</h2><span class="muted" data-es="$22 por pie · hasta 3 colores · lista para recoger">$22 per foot · up to 3 colors · ready for pickup</span></div>
+  <p class="muted" style="max-width:52em" data-es="Elige un estilo, escoge tus colores o describe tu propia idea (una fiesta de sirenas, un cumpleaños de orejitas de ratón, lo que sea) y nuestro diseñador con IA sugiere colores, largo y ubicación alrededor de tus piezas reales. Karol confirma cada diseño contigo.">Pick a style, choose your colors, or describe your own idea (a mermaid party, a mouse-ears birthday, anything) and our AI designer suggests colors, length and placement around your real pieces. Karol confirms every design with you.</p>
+  <div class="grid" id="inspGrid" style="margin-top:16px"></div>
+  <p class="small muted" style="margin:22px 0 8px" data-es="Ideas rápidas de temas:">Quick theme ideas:</p>
+  <div class="filters" id="themeChips" style="margin:0"></div>
+</div></section>
+
 
 <section class="band sage" id="karol"><div class="wrap about">
   <img src="img/karol.webp" alt="Karol, founder of Petit Atelier Events" width="560" height="816" loading="lazy" decoding="async">
@@ -594,7 +633,7 @@ const I18N = {
     cta_design: 'Design my party', cta_browse: 'Browse the collection', avail_for: 'Availability for', pick_date: 'Pick your event date',
     add: 'Add', added: 'Added', remove: 'Remove', available: 'available', booked: 'Booked that date', only_left: 'left',
     studio_title: 'Design studio', studio_sub: 'Every piece here is a real photo of Karol\u2019s inventory. Tap a piece to place it, drag it where you want it, or try it on a photo of your own space. Your total updates as you go.',
-    your_setup: 'Your setup', empty_setup: 'Nothing here yet. Start from a look or tap any piece.', subtotal: 'Rental subtotal', colors: 'Balloon colors', length: 'Garland length (feet)', perft: 'per foot', photo_only: 'Photo only for now', real_photo: 'Real photo', about: 'Meet Karol', pickup: 'Pick up & return', install: 'Installation', get_it: 'How you get it', free: 'Free', space: 'Use a photo of my space', space_off: 'Back to the studio wall', room_scale: 'Piece size in your photo', protection: 'Protection',
+    your_setup: 'Your setup', empty_setup: 'Start with a look above, or tap any piece.', subtotal: 'Rental subtotal', colors: 'Balloon colors', length: 'Garland length (feet)', perft: 'per foot', photo_only: 'Photo only for now', real_photo: 'Real photo', about: 'Meet Karol', pickup: 'Pick up & return', install: 'Installation', get_it: 'How you get it', free: 'Free', space: 'Use a photo of my space', space_off: 'Back to the studio wall', room_scale: 'Piece size in your photo', protection: 'Protection',
     est_total: 'Estimated total', deposit_today: 'Retainer to hold your date', reserve: 'Reserve this setup', start_look: 'Start from a look', palette: 'Balloon palette', wall: 'Wall', clear: 'Clear all',
     made_fresh: 'Made fresh for your date', min_order: 'Minimum order', step_event: 'Your event', step_review: 'Protection', step_sign: 'Sign', step_done: 'Done',
     name: 'Full name', email: 'Email', phone: 'Phone', event_type: 'Event type', address: 'Event address (for installation)', slot: 'Pickup time', guests: 'Guests', start: 'Start time', setting: 'Setting', indoor: 'Indoor', outdoor: 'Outdoor', covered: 'Covered patio', notes: 'Notes for Karol (theme, colors, cake size)',
@@ -607,7 +646,7 @@ const I18N = {
     cta_design: 'Diseñar mi fiesta', cta_browse: 'Ver la colección', avail_for: 'Disponibilidad para', pick_date: 'Elige la fecha del evento',
     add: 'Agregar', added: 'Agregado', remove: 'Quitar', available: 'disponibles', booked: 'Reservado esa fecha', only_left: 'quedan',
     studio_title: 'Estudio de diseño', studio_sub: 'Cada pieza es una foto real del inventario de Karol. Toca una pieza para colocarla, arrástrala o pruébala en una foto de tu propio espacio. Tu total se actualiza al instante.',
-    your_setup: 'Tu montaje', empty_setup: 'Aún no hay nada. Empieza con un look o toca una pieza.', subtotal: 'Subtotal de renta', colors: 'Colores de globos', length: 'Largo de la guirnalda (pies)', perft: 'por pie', photo_only: 'Por ahora solo foto', real_photo: 'Foto real', about: 'Conoce a Karol', pickup: 'Recoger y devolver', install: 'Instalación', get_it: 'Cómo lo recibes', free: 'Gratis', space: 'Usar una foto de mi espacio', space_off: 'Volver a la pared del estudio', room_scale: 'Tamaño de las piezas en tu foto', protection: 'Protección',
+    your_setup: 'Tu montaje', empty_setup: 'Empieza con un look de arriba o toca una pieza.', subtotal: 'Subtotal de renta', colors: 'Colores de globos', length: 'Largo de la guirnalda (pies)', perft: 'por pie', photo_only: 'Por ahora solo foto', real_photo: 'Foto real', about: 'Conoce a Karol', pickup: 'Recoger y devolver', install: 'Instalación', get_it: 'Cómo lo recibes', free: 'Gratis', space: 'Usar una foto de mi espacio', space_off: 'Volver a la pared del estudio', room_scale: 'Tamaño de las piezas en tu foto', protection: 'Protección',
     est_total: 'Total estimado', deposit_today: 'Anticipo para apartar tu fecha', reserve: 'Reservar este montaje', start_look: 'Empieza con un look', palette: 'Paleta de globos', wall: 'Pared', clear: 'Borrar todo',
     made_fresh: 'Hecho a mano para tu fecha', min_order: 'Pedido mínimo', step_event: 'Tu evento', step_review: 'Protección', step_sign: 'Firma', step_done: 'Listo',
     name: 'Nombre completo', email: 'Correo', phone: 'Teléfono', event_type: 'Tipo de evento', address: 'Dirección del evento (para instalación)', slot: 'Hora para recoger', guests: 'Invitados', start: 'Hora de inicio', setting: 'Lugar', indoor: 'Interior', outdoor: 'Exterior', covered: 'Patio cubierto', notes: 'Notas para Karol (tema, colores, tamaño del pastel)',
@@ -986,7 +1025,7 @@ function renderGrid() {
     return `<article class="card"><button class="pic${a.photo ? ' photo' : ''}" data-info="${a.id}" aria-label="${esc(nm(a))} details">${pic(a)}</button><div class="body">
     <h3>${esc(nm(a))}</h3><p class="small muted" style="margin:0">${esc(ds(a))}</p>
     <div class="row" style="margin-top:auto;padding-top:8px"><span class="price">${priceTag(a)}</span>${availBadge(a)}</div>
-    <div class="row">${c[a.id] ? `<span class="small">${c[a.id]} ${ES() ? 'en tu montaje' : 'in your setup'}</span><button class="btn ghost sm" data-rm="${a.id}">${T('remove')}</button>` : `<span class="small muted">${canPlace(a) ? '' : T('photo_only')}</span>`}<button class="btn sm" data-add="${a.id}" ${dis ? 'disabled' : ''}>${canPlace(a) ? T('add') : (ES() ? 'Pídela en notas' : 'Ask in notes')}</button></div>
+    <div class="row">${c[a.id] ? `<span class="small">${c[a.id]} ${ES() ? 'en tu montaje' : 'in your setup'}</span><button class="btn ghost sm" data-rm="${a.id}">${T('remove')}</button>` : `${canPlace(a) ? '' : `<span class="small muted">${ES() ? 'Pídela en las notas de tu reserva' : 'Ask for it in your booking notes'}</span>`}`}${canPlace(a) ? `<button class="btn sm" data-add="${a.id}" ${dis ? 'disabled' : ''}>${T('add')}</button>` : ''}</div>
     </div></article>`;
   }).join('') || `<p class="muted">Nothing in this category yet.</p>`;
 }
@@ -1108,7 +1147,8 @@ function renderInspirations() {
     <p class="small muted" style="margin:0">${esc(ES() ? i.note_es : i.note)}</p>
     <p style="margin:6px 0 0">${i.colors.map(swatch).join('')} <span class="small muted">${i.colors.map(colorName).join(' · ')}</span></p>
     <div class="row" style="margin-top:auto;padding-top:8px"><span class="price">~${i.ft} ft · ${money(i.ft * (A('balloons')?.price || 22))}</span><button class="btn sm" data-insp="${i.id}">${ES() ? 'Usar este estilo' : 'Use this style'}</button></div></div></article>`).join('');
-  $('#themeChips').innerHTML = THEMES.map(t => `<button class="chip" data-theme="${esc(t.name)}">${t.colors.map(swatch).join('')} ${esc(ES() ? t.es : t.name)}</button>`).join('');
+  const showT = ST.allThemes ? THEMES : THEMES.slice(0, 8);
+  $('#themeChips').innerHTML = showT.map(t => `<button class="chip" data-theme="${esc(t.name)}">${t.colors.map(swatch).join('')} ${esc(ES() ? t.es : t.name)}</button>`).join('') + (THEMES.length > 8 ? `<button class="chip more" data-themesall aria-expanded="${!!ST.allThemes}">${ST.allThemes ? (ES() ? 'Ver menos' : 'Show fewer') : (ES() ? `Ver todos (${THEMES.length})` : `See all (${THEMES.length})`)}</button>` : '');
 }
 /* AI photo preview (live site): sends a picture of their real-piece layout to the ai-balloons function */
 async function stagePNG() {
@@ -1133,7 +1173,7 @@ function renderSummary() {
   $('#summary').innerHTML = `<h3>${T('your_setup')}</h3>
     ${P.items.length ? `<ul>${P.items.map(it => `<li><span>${esc(itemLabel(it))}</span><span>${money(it.price * it.qty)}</span></li>`).join('')}</ul>` : `<p class="small muted">${T('empty_setup')}</p>`}
     ${hasBalloons() ? `<p class="small" style="margin:0">${T('colors')}: ${ST.colors.length ? esc(ST.colors.map(colorName).join(', ')) : `<span class="err">${es ? 'elige en el estudio' : 'pick them in the studio'}</span>`}</p>` : ''}
-    <label for="sDate" style="margin-top:10px">${T('pick_date')}</label><input type="date" id="sDate" value="${esc(ST.date)}" min="${todayISO(2)}">
+    ${ST.date && !ST.editDate ? `<p class="datechosen"><span>${ES() ? 'Fecha del evento' : 'Event date'}: <b>${esc(new Date(ST.date + 'T12:00').toLocaleDateString(ES() ? 'es-MX' : 'en-US', { weekday: 'short', month: 'short', day: 'numeric' }))}</b></span><button class="btn ghost sm" data-chdate>${ES() ? 'Cambiar' : 'Change'}</button></p>` : `<label for="sDate" style="margin-top:10px">${T('pick_date')}</label><input type="date" id="sDate" value="${esc(ST.date)}" min="${todayISO(2)}">`}
     <fieldset style="border:0;padding:0;margin:12px 0 0"><legend class="small muted" style="margin-bottom:4px">${T('get_it')}</legend>
       <label class="radio" style="padding:10px;margin-bottom:6px"><input type="radio" name="sFul" value="pickup" ${ST.fulfillment !== 'install' ? 'checked' : ''}><span><b>${T('pickup')}</b> · ${T('free')}<br><span class="small muted">${esc(PLACE())}</span></span></label>
       <label class="radio" style="padding:10px;margin-bottom:0"><input type="radio" name="sFul" value="install" ${ST.fulfillment === 'install' ? 'checked' : ''}><span><b>${T('install')}</b> · ${money(S.installFee)}<br><span class="small muted">${es ? 'Entrega, montaje y desmontaje' : 'Delivery, setup and teardown'} · ${esc(AREA())}</span></span></label></fieldset>
@@ -1152,6 +1192,8 @@ function renderSummary() {
     ${LIVE ? '' : `<p class="demo">${es ? 'Modo demo: las solicitudes se guardan en este navegador.' : 'Demo mode: requests are saved in this browser until Supabase is connected.'}</p>`}`;
   $('#cartTotal').textContent = money(P.total); $('#mTotal').textContent = money(P.total);
   $('#mReserve').disabled = !canReserve(P);
+  document.body.classList.toggle('hascart', P.items.length > 0);
+  const sl = $('#studioLooks'); if (sl) sl.classList.toggle('empty', !P.items.length);
 }
 function canReserve(P) { return P.items.length && P.subtotal >= ST.S.minOrder && overbooked().length === 0 && (!hasBalloons() || ST.colors.length > 0); }
 function overbooked() { if (!ST.date) return []; const c = counts(); return Object.keys(c).filter(id => !A(id)?.made && c[id] > availLeft(id)); }
@@ -1163,6 +1205,7 @@ function renderWalls() {
 }
 function renderLooks() {
   $('#studioLooks').innerHTML = `<span class="small muted" style="align-self:center">${T('start_look')}:</span>` + LOOKS.map(l => `<button class="chip" data-look="${l.id}">${esc(ES() ? l.es : l.name)}</button>`).join('');
+  $('#studioLooks').classList.toggle('empty', !Object.keys(counts()).length);
 }
 let heroLook = 0;
 function renderHero() {
@@ -1352,11 +1395,13 @@ function bindSite() {
     const rm = t.closest('[data-rm]'); if (rm) { removeOne(rm.dataset.rm); renderAll(); }
     const pl = t.closest('[data-place]'); if (pl) { if (addPiece(pl.dataset.place)) renderAll(); }
     const info = t.closest('[data-info]'); if (info) showInfo(info.dataset.info);
+    if (t.closest('[data-chdate]')) { ST.editDate = true; renderSummary(); setTimeout(() => { const d = $('#sDate'); if (d) { d.focus(); try { d.showPicker && d.showPicker(); } catch (_) {} } }, 30); }
     const cat = t.closest('[data-cat]'); if (cat) { ST.cat = cat.dataset.cat; renderGrid(); }
     const sc = t.closest('[data-scat]'); if (sc) { ST.scat = sc.dataset.scat; renderPieces(); }
     if (t.id === 'menuBtn') { const n = $('#mainNav'), open = !n.classList.contains('open'); n.classList.toggle('open', open); t.setAttribute('aria-expanded', open); }
     if (t.closest('#mainNav a')) { $('#mainNav').classList.remove('open'); $('#menuBtn')?.setAttribute('aria-expanded', 'false'); }
     const ins = t.closest('[data-insp]'); if (ins) useInspiration(ins.dataset.insp);
+    if (t.closest('[data-themesall]')) { ST.allThemes = !ST.allThemes; renderInspirations(); if (!ST.allThemes) $('#themeChips').scrollIntoView({ block: 'nearest' }); }
     const th = t.closest('[data-theme]'); if (th) { const T0 = THEMES.find(x => x.name === th.dataset.theme); ST.balloon.request = ES() ? `Guirnalda alrededor del arco, fiesta ${T0.es}` : `Garland around the arch for a ${T0.name} party`; document.getElementById('studio').scrollIntoView(); renderBalloon(); aiPlan(); }
     const zm = t.closest('[data-zoom]'); if (zm) openModal(`<img src="${esc(zm.dataset.zoom)}" alt="" style="width:100%;border-radius:14px">`);
     const pj = t.closest('[data-proj]'); if (pj) { PJ.id = pj.dataset.proj; PJ.step = 0; renderProjects(); playProject(true); }
@@ -1379,7 +1424,7 @@ function bindSite() {
     const lg = t.closest('[data-lang]'); if (lg) { ST.lang = lg.dataset.lang; lset('lang', ST.lang); refreshAvail(); }
   });
   document.addEventListener('change', async e => {
-    if (e.target.id === 'heroDate' || e.target.id === 'sDate') { ST.date = e.target.value; lset('date', ST.date); $('#heroDate').value = ST.date; await refreshAvail(); }
+    if (e.target.id === 'heroDate' || e.target.id === 'sDate') { ST.editDate = false; ST.date = e.target.value; lset('date', ST.date); $('#heroDate').value = ST.date; await refreshAvail(); }
     if (e.target.id === 'spaceFile' && e.target.files[0]) { try { ST.space = await shrink(e.target.files[0], 1600); ST.roomScale = 1; renderWalls(); renderStage(); toast(ST.lang === 'es' ? 'Tu foto se queda solo en este dispositivo.' : 'Your photo stays on this device only.'); } catch { toast('Could not read that photo'); } }
     if (e.target.name === 'sFul') { ST.fulfillment = e.target.value; saveDraft(); renderSummary(); }
   });
@@ -1786,7 +1831,7 @@ function admOverview() {
     <div class="kpi"><span class="muted small">Events in the next 7 days</span><b>${next7.length}</b></div>
     <div class="kpi"><span class="muted small">Booked this month</span><b>${money(monthRev)}</b></div>
     <div class="kpi"><span class="muted small">Still to collect</span><b>${money(owed)}</b></div></div>
-    <div class="drawer"><div><h3>To do</h3>${todo.length ? `<table class="t stack"><thead><tr><th>Event</th><th>What</th><th></th></tr></thead><tbody>${todo.map(([b, w]) => `<tr><td>${esc(fmtShort(b.event.date))}<br><span class="small muted">${esc(b.customer.name)}</span></td><td>${esc(w)}</td><td><button class="btn sm ghost" data-open="${esc(b.code)}">Open</button></td></tr>`).join('')}</tbody></table>` : '<p class="muted">All caught up.</p>'}</div>
+    <div class="drawer"><div><h3>To do</h3>${todo.length ? `<div class="todos">${todo.map(([b, w]) => `<button class="todo" data-open="${esc(b.code)}"><span class="td-d"><b>${esc(fmtShort(b.event.date))}</b><small>${esc(b.customer.name)}</small></span><span class="td-w">${esc(w)}</span><span class="td-go" aria-hidden="true">›</span></button>`).join('')}</div>` : '<p class="muted">All caught up.</p>'}</div>
     <div><h3>Coming up</h3>${up.slice(0, 8).map(b => `<button class="pane row" style="width:100%;margin-bottom:8px;cursor:pointer;text-align:left" data-open="${esc(b.code)}"><span><b>${esc(fmtShort(b.event.date))}</b> · ${esc(b.event.type)}<br><span class="small muted">${esc(b.customer.name)} · ${b.items.reduce((s, i) => s + i.qty, 0)} pieces · ${isInst(b) ? 'Installation' : 'Pickup ' + esc((b.event.pickupSlot || '').split(',')[0])}</span></span><span class="st ${esc(b.status)}">${esc(stLabel(b))}</span></button>`).join('') || '<p class="muted">No upcoming events.</p>'}</div></div>`;
 }
 const hasRem = (b, k) => (b.reminders || []).some(r => r.kind === k);
