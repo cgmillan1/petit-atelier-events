@@ -147,8 +147,10 @@ grant execute on function public.create_booking(jsonb)    to anon, authenticated
 grant execute on function public.lookup_booking(text, text) to anon, authenticated;
 
 -- Photos bucket (public read, Karol writes)
-insert into storage.buckets (id, name, public) values ('photos', 'photos', true) on conflict do nothing;
-create policy "photos read"  on storage.objects for select using (bucket_id = 'photos');
+-- public bucket: files open by their link; no select policy, so nobody can list every file
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types) values ('photos', 'photos', true, 15728640, array['image/*'])
+  on conflict (id) do update set file_size_limit = excluded.file_size_limit, allowed_mime_types = excluded.allowed_mime_types;
+drop policy if exists "photos read" on storage.objects;
 create policy "photos admin" on storage.objects for all using (bucket_id = 'photos' and public.is_admin()) with check (bucket_id = 'photos' and public.is_admin());
 
 -- Karol's login email (must match the user you create in Authentication)
@@ -157,5 +159,7 @@ insert into public.admins (email) values ('askpetitatelier@gmail.com') on confli
 -- AI balloon designer: per-visitor daily limits (only the ai-balloons function touches this) and the previews bucket
 create table if not exists public.ai_usage (ip text not null, day date not null, mode text not null, n int not null default 0, primary key (ip, day, mode));
 alter table public.ai_usage enable row level security;   -- no policies: only the service role can read or write
-insert into storage.buckets (id, name, public) values ('ai', 'ai', true) on conflict do nothing;
-create policy "ai previews read" on storage.objects for select using (bucket_id = 'ai');
+-- AI previews open only by their long random link; no select policy, so customers' previews can't be listed
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types) values ('ai', 'ai', true, 8388608, array['image/png'])
+  on conflict (id) do update set file_size_limit = excluded.file_size_limit, allowed_mime_types = excluded.allowed_mime_types;
+drop policy if exists "ai previews read" on storage.objects;
