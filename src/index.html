@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Petit Atelier Events</title>
 <meta name="description" content="Balloon arches, backdrops and party decor rentals in Eagle Mountain, Utah. Design your setup online, see live pricing and reserve your date.">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Allura&family=Forum&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="fonts/fonts.css?v=1">
 <link rel="icon" href="img/logo-128.png">
 <style>
 /* VOICE: Karol's own voice from her guide: warm, personal, a little romantic.
@@ -218,6 +217,14 @@ table.t tr.click{cursor:pointer}table.t tr.click:hover td{background:var(--soft)
 @media(max-width:600px){table{font-size:13px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px}.stack td{display:flow-root;border:0;padding:3px 0;padding-inline-start:8em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:7.5em;margin-inline-start:-8em;white-space:normal;color:var(--muted)}.stack td:empty{display:none}}
 @media(prefers-reduced-motion:no-preference){.float{animation:float 6s ease-in-out infinite}@keyframes float{50%{transform:translateY(-4px)}}}
 @media print{.top,.mbar,footer,#site>section:not(.printme){display:none}}
+
+/* glow: light border that turns around the main call to action (one per screen) */
+@property --ga{syntax:'<angle>';initial-value:0deg;inherits:false}
+.btn.glow{position:relative;isolation:isolate}
+.btn.glow::before{content:"";position:absolute;inset:-2px;border-radius:inherit;z-index:-1;background:conic-gradient(from var(--ga),transparent 62%,#fff 80%,var(--gold) 90%,transparent);animation:gspin 3.6s linear infinite}
+.btn.glow::after{content:"";position:absolute;inset:0;border-radius:inherit;z-index:-1;background:inherit}
+@keyframes gspin{to{--ga:360deg}}
+@media (prefers-reduced-motion:reduce){.btn.glow::before{animation:none}}
 </style>
 <script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
 </head>
@@ -245,7 +252,7 @@ table.t tr.click{cursor:pointer}table.t tr.click:hover td{background:var(--soft)
     <div class="pane herocta">
       <b id="projCtaT">Love this look?</b>
       <p class="small muted" style="margin:4px 0 12px" id="projCtaP">Karol can recreate it for your date. Or design your own setup with her real pieces and see the price as you go.</p>
-      <div class="ctas" style="margin:0"><button class="btn blush" id="projUse">I want this look</button><a class="btn ghost" href="#studio" id="projOwn">Design my own</a></div>
+      <div class="ctas" style="margin:0"><button class="btn blush glow" id="projUse">I want this look</button><a class="btn ghost" href="#studio" id="projOwn">Design my own</a></div>
     </div>
     <div class="datebox" style="margin-top:16px"><label for="heroDate" style="margin:0" data-i="pick_date">Pick your event date</label><input type="date" id="heroDate"></div>
     <p class="small muted" id="heroAvail"></p>
